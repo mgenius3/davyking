@@ -1,12 +1,13 @@
 import 'package:davyking/core/constants/images.dart';
+import 'package:davyking/core/constants/routes.dart';
 import 'package:davyking/core/theme/colors.dart';
 import 'package:davyking/core/utils/spacing.dart';
 import 'package:davyking/features/auth/controllers/otp_verification_controller.dart';
-import 'package:davyking/features/common/controllers/primary_button_controller.dart';
-import 'package:davyking/features/common/data/models/primary_button_model.dart';
-import 'package:davyking/features/common/data/models/top_header_model.dart';
-import 'package:davyking/features/common/presentation/widget/primary_button_widget.dart';
-import 'package:davyking/features/common/presentation/widget/top_header_widget.dart';
+import 'package:davyking/core/controllers/primary_button_controller.dart';
+import 'package:davyking/core/models/primary_button_model.dart';
+import 'package:davyking/core/models/top_header_model.dart';
+import 'package:davyking/core/widgets/primary_button_widget.dart';
+import 'package:davyking/core/widgets/top_header_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -99,7 +100,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const TopHeaderWidget(
-                      model: TopHeaderModel(title: "OTP Verification")),
+                      data: TopHeaderModel(title: "OTP Verification")),
                   const SizedBox(height: 30),
                   Center(
                       child: Column(
@@ -139,12 +140,10 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                               children: businessController.textControllers
                                   .asMap()
                                   .entries
-                                  .map(
-                                    (entry) => codeBox(
-                                        entry.value, // controller
-                                        entry.key // index
-                                        ),
-                                  )
+                                  .map((entry) => codeBox(
+                                      entry.value, // controller
+                                      entry.key // index
+                                      ))
                                   .toList())),
                       const SizedBox(height: 20),
                       Center(
@@ -194,7 +193,9 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                           children: [
                             Image.asset(ImagesConstant.email_verify_successful),
                             TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Get.toNamed(RoutesConstant.home);
+                                },
                                 child: Text(
                                   'Go Home',
                                   style: TextStyle(

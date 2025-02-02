@@ -1,8 +1,8 @@
 import 'package:davyking/core/constants/routes.dart';
 import 'package:davyking/core/theme/dark_theme.dart';
 import 'package:davyking/core/theme/light_theme.dart';
-import 'package:davyking/features/common/controllers/mode_controller.dart';
-import 'package:davyking/features/common/presentation/states/mode.dart';
+import 'package:davyking/core/controllers/mode_controller.dart';
+import 'package:davyking/core/states/mode.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:async';
@@ -40,22 +40,22 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         WidgetsBinding.instance.platformDispatcher.platformBrightness;
   }
 
-  void startBrightnessCheck() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      didChangePlatformBrightness();
-    });
-  }
+  // void startBrightnessCheck() {
+  //   _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+  //     didChangePlatformBrightness();
+  //   });
+  // }
 
-  @override
-  void didChangePlatformBrightness() {
-    // Check for system theme change
-    final brightness =
-        WidgetsBinding.instance.platformDispatcher.platformBrightness;
-    controller.updateMode(brightness == Brightness.dark ? 'dark' : 'light');
-    setState(() {
-      _currentBrightness = brightness;
-    });
-  }
+  // @override
+  // void didChangePlatformBrightness() {
+  //   // Check for system theme change
+  //   final brightness =
+  //       WidgetsBinding.instance.platformDispatcher.platformBrightness;
+  //   controller.updateMode(brightness == Brightness.dark ? 'dark' : 'light');
+  //   setState(() {
+  //     _currentBrightness = brightness;
+  //   });
+  // }
 
   @override
   void dispose() {
@@ -70,7 +70,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     return Obx(() => GetMaterialApp(
         title: 'DavyKing',
         debugShowCheckedModeBanner: false,
-        initialRoute: RoutesConstant.splash,
+        initialRoute: RoutesConstant.home,
         theme: controller.currentMode.value.mode == 'dark'
             ? darkTheme()
             : lightTheme(),

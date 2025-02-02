@@ -7,11 +7,11 @@ import 'package:davyking/features/auth/data/models/input_field_model.dart';
 import 'package:davyking/features/auth/presentation/widget/button_continue_with.dart';
 import 'package:davyking/features/auth/presentation/widget/horizontal_line_widget.dart';
 import 'package:davyking/features/auth/presentation/widget/input_field_widget.dart';
-import 'package:davyking/features/common/controllers/primary_button_controller.dart';
-import 'package:davyking/features/common/data/models/primary_button_model.dart';
-import 'package:davyking/features/common/data/models/top_header_model.dart';
-import 'package:davyking/features/common/presentation/widget/primary_button_widget.dart';
-import 'package:davyking/features/common/presentation/widget/top_header_widget.dart';
+import 'package:davyking/core/controllers/primary_button_controller.dart';
+import 'package:davyking/core/models/primary_button_model.dart';
+import 'package:davyking/core/models/top_header_model.dart';
+import 'package:davyking/core/widgets/primary_button_widget.dart';
+import 'package:davyking/core/widgets/top_header_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -31,7 +31,7 @@ class LoginScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const TopHeaderWidget(model: TopHeaderModel(title: "Login")),
+              const TopHeaderWidget(data: TopHeaderModel(title: "Login")),
               Form(
                 key: controller.formKey,
                 child: Column(
@@ -79,7 +79,9 @@ class LoginScreen extends StatelessWidget {
                       model: const CustomPrimaryButtonModel(
                         text: "Login",
                       ),
-                      onPressed: () {})),
+                      onPressed: () {
+                        Get.toNamed(RoutesConstant.home);
+                      })),
               Column(
                 children: [
                   Row(

@@ -7,11 +7,11 @@ import 'package:davyking/features/auth/data/models/input_field_model.dart';
 import 'package:davyking/features/auth/presentation/widget/button_continue_with.dart';
 import 'package:davyking/features/auth/presentation/widget/horizontal_line_widget.dart';
 import 'package:davyking/features/auth/presentation/widget/input_field_widget.dart';
-import 'package:davyking/features/common/controllers/primary_button_controller.dart';
-import 'package:davyking/features/common/data/models/primary_button_model.dart';
-import 'package:davyking/features/common/data/models/top_header_model.dart';
-import 'package:davyking/features/common/presentation/widget/primary_button_widget.dart';
-import 'package:davyking/features/common/presentation/widget/top_header_widget.dart';
+import 'package:davyking/core/controllers/primary_button_controller.dart';
+import 'package:davyking/core/models/primary_button_model.dart';
+import 'package:davyking/core/models/top_header_model.dart';
+import 'package:davyking/core/widgets/primary_button_widget.dart';
+import 'package:davyking/core/widgets/top_header_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -21,7 +21,7 @@ class SignupScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final LoginController controller = Get.put(LoginController());
+    final SignupController controller = Get.put(SignupController());
 
     return Scaffold(
         body: SafeArea(
@@ -31,7 +31,7 @@ class SignupScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const TopHeaderWidget(model: TopHeaderModel(title: "Sign Up")),
+              const TopHeaderWidget(data: TopHeaderModel(title: "Sign Up")),
               Form(
                 key: controller.formKey,
                 child: Column(
@@ -172,11 +172,10 @@ class SignupScreen extends StatelessWidget {
                       child: Text(
                         'Login',
                         style: TextStyle(
-                          color: LightThemeColors.primaryColor,
-                          fontSize: 13.39,
-                          fontWeight: FontWeight.w500,
-                          height: 1.43,
-                        ),
+                            color: LightThemeColors.primaryColor,
+                            fontSize: 13.39,
+                            fontWeight: FontWeight.w500,
+                            height: 1.43),
                       ),
                     )
                   ],

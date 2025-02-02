@@ -1,8 +1,8 @@
 import 'package:davyking/core/constants/routes.dart';
 import 'package:davyking/core/theme/colors.dart';
-import 'package:davyking/features/common/controllers/primary_button_controller.dart';
-import 'package:davyking/features/common/data/models/primary_button_model.dart';
-import 'package:davyking/features/common/presentation/widget/primary_button_widget.dart';
+import 'package:davyking/core/controllers/primary_button_controller.dart';
+import 'package:davyking/core/models/primary_button_model.dart';
+import 'package:davyking/core/widgets/primary_button_widget.dart';
 import 'package:davyking/features/onboarding/controllers/onboarding_controllers.dart';
 
 import 'package:davyking/features/onboarding/presentation/widget/next_widget.dart';
