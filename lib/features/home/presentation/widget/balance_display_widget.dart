@@ -1,4 +1,6 @@
+import 'package:davyking/core/constants/routes.dart';
 import 'package:davyking/core/constants/symbols.dart';
+import 'package:davyking/core/controllers/user_auth_details_controller.dart';
 import 'package:davyking/features/home/controllers/balance_display_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,7 @@ class BalanceDisplayWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final BalanceDisplayController controller =
         Get.put(BalanceDisplayController());
+    final userAuthController = Get.find<UserAuthDetailsController>();
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
       height: 126,
@@ -50,10 +53,9 @@ class BalanceDisplayWidget extends StatelessWidget {
                     'Available Balance',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 10.75,
-                      fontWeight: FontWeight.w400,
-                    ),
+                        color: Colors.white,
+                        fontSize: 10.75,
+                        fontWeight: FontWeight.w400),
                   ),
                   const SizedBox(width: 4),
                   Obx(() => GestureDetector(
@@ -90,7 +92,7 @@ class BalanceDisplayWidget extends StatelessWidget {
           const SizedBox(height: 15),
           Obx(() => Text(
                 controller.showBalance.value
-                    ? '${Symbols.currency}7,564.09'
+                    ? '${Symbols.currency}${userAuthController.user.value?.walletBalance}'
                     : "******",
                 textAlign: TextAlign.center,
                 style: const TextStyle(
@@ -109,44 +111,49 @@ class BalanceDisplayWidget extends StatelessWidget {
                     fontSize: 10,
                     fontWeight: FontWeight.w400),
               ),
-              Container(
-                width: 57,
-                height: 28.45,
-                decoration: ShapeDecoration(
-                  color: Colors.white,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5)),
-                ),
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text.rich(
-                        TextSpan(
-                          children: [
-                            TextSpan(
-                              text: '+ ',
-                              style: TextStyle(
-                                color: Color(0xFF2E5572),
-                                fontSize: 8,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.w400,
+              GestureDetector(
+                onTap: () {
+                  Get.toNamed(RoutesConstant.deposit);
+                },
+                child: Container(
+                  width: 57,
+                  height: 28.45,
+                  decoration: ShapeDecoration(
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5)),
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: '+ ',
+                                style: TextStyle(
+                                  color: Color(0xFF2E5572),
+                                  fontSize: 8,
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.w400,
+                                ),
                               ),
-                            ),
-                            TextSpan(
-                              text: 'Deposit',
-                              style: TextStyle(
-                                color: Color(0xFF2E5572),
-                                fontSize: 10,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.w400,
+                              TextSpan(
+                                text: 'Deposit',
+                                style: TextStyle(
+                                  color: Color(0xFF2E5572),
+                                  fontSize: 10,
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.w400,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        textAlign: TextAlign.center),
-                  ],
+                            ],
+                          ),
+                          textAlign: TextAlign.center),
+                    ],
+                  ),
                 ),
               )
             ],

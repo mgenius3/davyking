@@ -1,3 +1,4 @@
+import 'package:davyking/core/controllers/user_auth_details_controller.dart';
 import 'package:davyking/core/theme/colors.dart';
 import 'package:davyking/core/utils/dimensions.dart';
 import 'package:davyking/core/models/top_header_model.dart';
@@ -16,8 +17,11 @@ class ProfileTemplatesWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final LightningModeController lightningModeController =
         Get.find<LightningModeController>();
+    final UserAuthDetailsController authDetailsController =
+        Get.find<UserAuthDetailsController>();
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Container(
           color: lightningModeController.currentMode.value.mode == "light"
@@ -63,28 +67,27 @@ class ProfileTemplatesWidget extends StatelessWidget {
                         children: [
                           Container(
                             width: 91.51,
-                            height: 107.59,
+                            height: 91.51,
                             decoration: ShapeDecoration(
                               image: const DecorationImage(
-                                image: NetworkImage(
-                                    "https://i.pinimg.com/474x/1b/28/b7/1b28b71422f46724fbc1c80de7edbac5.jpg"),
-                                fit: BoxFit.fill,
-                              ),
+                                  image: AssetImage("assets/images/pfp.jpg"),
+                                  fit: BoxFit.fill),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(28.83)),
                             ),
                           ),
                           const SizedBox(height: 8), // Spacing between elements
-                          Text(
-                            'Stephanie Eromosele',
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium
-                                ?.copyWith(
-                                    fontSize: 17.30,
-                                    fontWeight: FontWeight.w600,
-                                    height: 1.17),
-                          ),
+                          Obx(() => Text(
+                                authDetailsController.user.value?.name ?? "",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displayMedium
+                                    ?.copyWith(
+                                        fontSize: 17.30,
+                                        fontWeight: FontWeight.w600,
+                                        height: 1.17),
+                              )),
+                          const SizedBox(height: 3), // Spacing between elements
                           Text.rich(
                             TextSpan(
                               children: [
@@ -100,7 +103,9 @@ class ProfileTemplatesWidget extends StatelessWidget {
                                       ),
                                 ),
                                 TextSpan(
-                                    text: '25030024',
+                                    text: authDetailsController.user.value?.id
+                                            .toString() ??
+                                        "",
                                     style: Theme.of(context)
                                         .textTheme
                                         .displayMedium

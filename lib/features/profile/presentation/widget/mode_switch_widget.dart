@@ -25,11 +25,10 @@ Widget modeSwitch() {
                 ? Alignment.centerRight
                 : Alignment.centerLeft,
             child: Container(
-              width: 24,
-              height: 24,
-              decoration: const BoxDecoration(
-                  color: Colors.white, shape: BoxShape.circle),
-            ),
+                width: 24,
+                height: 24,
+                decoration: const BoxDecoration(
+                    color: Colors.white, shape: BoxShape.circle)),
           ),
         ),
       ));

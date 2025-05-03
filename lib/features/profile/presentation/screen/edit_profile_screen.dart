@@ -25,24 +25,37 @@ class EditProfileScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   profileInputField(ProfileInputFieldModel(
-                      inputcontroller: controller.userNameController,
-                      name: 'Username')),
+                      inputcontroller: controller.nameController,
+                      name: 'Name')),
                   const SizedBox(height: 20),
                   profileInputField(ProfileInputFieldModel(
-                      inputcontroller: controller.userNameController,
+                      inputcontroller: controller.phoneController,
                       name: 'Phone')),
                   const SizedBox(height: 20),
                   profileInputField(ProfileInputFieldModel(
-                      inputcontroller: controller.userNameController,
+                      inputcontroller: controller.emailController,
                       name: 'Email Address')),
                   const SizedBox(height: 40),
-                  SizedBox(
-                    height: 50,
-                    child: CustomPrimaryButton(
-                        controller: CustomPrimaryButtonController(
-                            model: const CustomPrimaryButtonModel(text: 'Save'),
-                            onPressed: () {})),
-                  ),
+                  Obx(() => controller.isLoading.value
+                      ? CustomPrimaryButton(
+                          controller: CustomPrimaryButtonController(
+                              model: const CustomPrimaryButtonModel(
+                                  child: SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(
+                                          color: Colors.white))),
+                              onPressed: () {}),
+                        )
+                      : CustomPrimaryButton(
+                          controller: CustomPrimaryButtonController(
+                              model: const CustomPrimaryButtonModel(
+                                text: 'Edit Profile',
+                                textColor: Colors.white,
+                              ),
+                              onPressed: () {
+                                controller.editProfile();
+                              }))),
                   const SizedBox(height: 20),
                 ],
               ),

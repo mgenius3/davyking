@@ -1,5 +1,6 @@
 import 'package:davyking/features/auth/data/models/input_field_model.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 Widget authInputField(AuthInputFieldModel params) {
   return Column(
@@ -7,11 +8,10 @@ Widget authInputField(AuthInputFieldModel params) {
     children: [
       Text(
         params.name,
-        style: const TextStyle(
-            color: Colors.black,
-            fontSize: 13.39,
-            fontWeight: FontWeight.w500,
-            height: 1.43),
+        style: Theme.of(Get.context!)
+            .textTheme
+            .displaySmall
+            ?.copyWith(fontSize: 12, fontWeight: FontWeight.w500),
       ),
       const SizedBox(height: 5),
       TextFormField(

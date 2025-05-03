@@ -1,4 +1,5 @@
 import 'package:davyking/core/constants/routes.dart';
+import 'package:davyking/core/controllers/user_auth_details_controller.dart';
 import 'package:davyking/core/theme/colors.dart';
 import 'package:davyking/core/states/mode.dart';
 import 'package:davyking/features/profile/data/model/profile_list_model.dart';
@@ -87,12 +88,17 @@ class ProfileIndexScreen extends StatelessWidget {
                   icon: Icons.account_balance,
                   routes: RoutesConstant.withdrawalBank)),
           const SizedBox(height: 70),
-          profileListWidget(
-              data: ProfileListModel(
-                  profileListName: 'Logout',
-                  color: Colors.red,
-                  icon: Icons.logout,
-                  routes: RoutesConstant.signin)),
+          GestureDetector(
+            onTap: () {
+              Get.find<UserAuthDetailsController>().logout();
+            },
+            child: profileListWidget(
+                data: ProfileListModel(
+                    profileListName: 'Logout',
+                    color: Colors.red,
+                    icon: Icons.logout,
+                    routes: RoutesConstant.signin)),
+          ),
           SizedBox(height: Get.height * 0.1),
         ],
       ),

@@ -1,16 +1,10 @@
-// lightning_mode_controller.dart
 import 'package:get/get.dart';
 import '../models/mode_model.dart';
 import '../controllers/mode_controller.dart';
 
 class LightningModeController extends GetxController {
-  final LightningModeService _service;
-
-  // Observed state
-  var currentMode = LightningMode(mode: 'light').obs; // Default to light mode
-
-  LightningModeController({required LightningModeService service})
-      : _service = service;
+  final LightningModeService _service = LightningModeService();
+  var currentMode = Rx<LightningMode>(LightningMode(mode: 'light')); // Default
 
   @override
   void onInit() {
@@ -18,24 +12,20 @@ class LightningModeController extends GetxController {
     _loadModeFromStorage();
   }
 
-  // Update the mode and persist it using the service
+  // Update the mode and persist it
   Future<void> updateMode(String mode) async {
-    switch (mode) {
-      case 'dark':
-        currentMode.value = LightningMode(mode: 'dark');
-        break;
-      default:
-        currentMode.value = LightningMode(mode: 'light');
-    }
-    // Save mode using the service
+    currentMode.value = LightningMode(mode: mode);
     await _service.saveMode(mode);
+    update();
   }
 
-  // Load mode from secure storage using the service
+  // Load mode from storage before setting UI state
   Future<void> _loadModeFromStorage() async {
     String? savedMode = await _service.getSavedMode();
+    print("Saved mode from storage: $savedMode");
     if (savedMode != null) {
-      await updateMode(savedMode);
+      currentMode.value = LightningMode(mode: savedMode); // Set the value
+      update();
     }
   }
 }

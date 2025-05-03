@@ -1,5 +1,5 @@
-import 'package:davyking/core/states/mode.dart';
 import 'package:get/get.dart';
+import 'package:davyking/core/states/mode.dart';
 
 class ModeSwitchController extends GetxController {
   late final LightningModeController lightningModeController;
@@ -8,10 +8,17 @@ class ModeSwitchController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    // Ensure LightningModeController is loaded first
     lightningModeController = Get.find<LightningModeController>();
-    isOn = (lightningModeController.currentMode.value.mode == "light")
-        ? false.obs
-        : true.obs;
+
+    // Wait for storage loading before setting isOn
+    ever(lightningModeController.currentMode, (_) {
+      isOn.value = lightningModeController.currentMode.value.mode == "dark";
+    });
+
+    isOn = (lightningModeController.currentMode.value.mode == "dark")
+        ? true.obs
+        : false.obs;
   }
 
   void toggleSwitch() {

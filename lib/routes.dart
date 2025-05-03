@@ -2,14 +2,22 @@
 import 'package:davyking/core/constants/routes.dart';
 import 'package:davyking/features/airtime/presentation/screens/airtime_details_screen.dart';
 import 'package:davyking/features/airtime/presentation/screens/index_screen.dart';
-import 'package:davyking/features/auth/presentation/screens/login_screen.dart';
+import 'package:davyking/features/auth/presentation/screens/signin_screen.dart';
 import 'package:davyking/features/auth/presentation/screens/otp_verify_screen.dart';
 import 'package:davyking/features/auth/presentation/screens/reset_password/forgot_password.dart';
 import 'package:davyking/features/auth/presentation/screens/reset_password/set_a_new_password.dart';
 import 'package:davyking/features/auth/presentation/screens/signup_screen.dart';
+import 'package:davyking/features/crypto/presentation/screens/buy_crypto/field_screen.dart';
+import 'package:davyking/features/crypto/presentation/screens/buy_crypto/index_screen.dart';
+import 'package:davyking/features/crypto/presentation/screens/crypto_transaction_details_screen.dart';
+import 'package:davyking/features/crypto/presentation/screens/sell_crypto/field_screen.dart';
+import 'package:davyking/features/crypto/presentation/screens/sell_crypto/index_screen.dart';
+import 'package:davyking/features/deposit/presentation/screen/index_screen.dart';
 import 'package:davyking/features/giftcards/presentation/screens/buy_giftcards/field_details_screen.dart';
 import 'package:davyking/features/giftcards/presentation/screens/buy_giftcards/field_screen.dart';
 import 'package:davyking/features/giftcards/presentation/screens/buy_giftcards/index_screen.dart';
+import 'package:davyking/features/giftcards/presentation/screens/giftcard_transaction_details_screen.dart';
+import 'package:davyking/features/giftcards/presentation/screens/sell_giftcards/field_details_screen.dart';
 import 'package:davyking/features/giftcards/presentation/screens/sell_giftcards/field_screen.dart';
 import 'package:davyking/features/giftcards/presentation/screens/sell_giftcards/index_screen.dart';
 import 'package:davyking/features/home/presentation/screens/home_screen.dart';
@@ -22,8 +30,10 @@ import 'package:davyking/features/profile/presentation/screen/security/change_pi
 import 'package:davyking/features/profile/presentation/screen/security/index_screen.dart';
 import 'package:davyking/features/profile/presentation/screen/security/terms_conditions.dart';
 import 'package:davyking/features/profile/presentation/screen/withdrawal_bank/index_screen.dart';
+import 'package:davyking/features/recent_transaction/presentation/screens/index_screen.dart';
 import 'package:davyking/features/splash/presentation/screens/splash1_screen.dart';
 import 'package:davyking/features/splash/presentation/screens/splash_screen.dart';
+import 'package:davyking/features/wallet/presentation/screens/withdraw.dart';
 import 'package:get/get.dart';
 
 class AppRoutes {
@@ -61,6 +71,10 @@ class AppRoutes {
         page: () => NotificationScreen(),
         transition: Transition.zoom),
     GetPage(
+        name: RoutesConstant.recent_transaction,
+        page: () => RecentTransactionScreen(),
+        transition: Transition.zoom),
+    GetPage(
         name: RoutesConstant.airtime,
         page: () => AirtimeScreen(),
         transition: Transition.zoom),
@@ -68,8 +82,18 @@ class AppRoutes {
         name: RoutesConstant.airtime_details,
         page: () => AirtimeDetailsScreen()),
 
-    //crypto
-    // GetPage(name: RoutesConstant., page: () =>)
+    //Crypto
+    GetPage(name: RoutesConstant.buy_crypto, page: () => BuyCryptoScreen()),
+    GetPage(
+        name: RoutesConstant.buy_crypto_field,
+        page: () => BuyCryptoInputField()),
+    GetPage(name: RoutesConstant.sell_crypto, page: () => SellCryptoScreen()),
+    GetPage(
+        name: RoutesConstant.sell_crypto_field,
+        page: () => SellCryptoInputField()),
+    GetPage(
+        name: RoutesConstant.cryptoTransactionDetails,
+        page: () => CryptoTransactionDetailsScreen()),
 
     //GiftCards
     GetPage(name: RoutesConstant.buy_giftcard, page: () => BuyGiftCardScreen()),
@@ -84,6 +108,15 @@ class AppRoutes {
     GetPage(
         name: RoutesConstant.sell_giftcard_field,
         page: () => SellGiftCardInputField()),
+    GetPage(
+        name: RoutesConstant.sell_giftcard_field_details,
+        page: () => SellGiftCardDetailsScreen()),
+    GetPage(
+        name: RoutesConstant.giftCardTransactionDetails,
+        page: () => GiftCardTransactionDetailsScreen()),
+
+    //withdraw
+    GetPage(name: RoutesConstant.withdraw, page: () => WithdrawScreen()),
 
     //profile
     GetPage(name: RoutesConstant.profile, page: () => ProfileIndexScreen()),
@@ -116,6 +149,9 @@ class AppRoutes {
     GetPage(
         name: RoutesConstant.withdrawalBank,
         page: () => WithdrawalBankScreen(),
-        transition: Transition.rightToLeft)
+        transition: Transition.rightToLeft),
+
+    //deposit
+    GetPage(name: RoutesConstant.deposit, page: () => DepositScreen())
   ];
 }

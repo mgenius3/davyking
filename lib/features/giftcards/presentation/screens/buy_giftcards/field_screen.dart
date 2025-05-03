@@ -1,6 +1,8 @@
 import 'package:davyking/core/constants/routes.dart';
 import 'package:davyking/core/controllers/primary_button_controller.dart';
 import 'package:davyking/core/models/primary_button_model.dart';
+import 'package:davyking/core/states/mode.dart';
+import 'package:davyking/core/theme/colors.dart';
 import 'package:davyking/core/utils/spacing.dart';
 import 'package:davyking/core/models/top_header_model.dart';
 import 'package:davyking/core/widgets/primary_button_widget.dart';
@@ -15,272 +17,363 @@ class BuyGiftCardInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final args = Get.arguments; // Access the arguments
-    GiftcardsListModel data = GiftcardsListModel.fromJson(args);
-    final BuyGiftcardController controller = Get.put(BuyGiftcardController());
+    // Access the arguments
+    final GiftcardsListModel data = Get.arguments as GiftcardsListModel;
+
+    // Pass the gift card data to the controller during initialization
+    final BuyGiftcardController controller =
+        Get.put(BuyGiftcardController(giftCardData: data));
+    final LightningModeController lightningModeController =
+        Get.find<LightningModeController>();
 
     return Scaffold(
       body: SafeArea(
-          child: Container(
-        margin: Spacing.defaultMarginSpacing,
-        child: Column(children: [
-          const TopHeaderWidget(data: TopHeaderModel(title: 'Buy Gift Card')),
-          const SizedBox(height: 30),
-          Container(
-            width: 229.09,
-            height: 148.38,
-            decoration: ShapeDecoration(
-              image: DecorationImage(
-                image: AssetImage(data.image_url),
-                fit: BoxFit.fill,
-              ),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.79)),
-              shadows: const [
-                BoxShadow(
-                    color: Color(0x1E000000),
-                    blurRadius: 5.42,
-                    offset: Offset(0, 5.42),
-                    spreadRadius: 0)
-              ],
-            ),
-          ),
-          const SizedBox(height: 30),
-          Container(
-            width: Get.width,
-            height: 40,
-            padding: const EdgeInsets.symmetric(horizontal: 9.33),
-            decoration: ShapeDecoration(
-              color: const Color(0xFFE4F6EF),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(1.87),
-              ),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
+        child: Container(
+          margin: Spacing.defaultMarginSpacing,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  data.name,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                      color: Color(0xFF093030),
-                      fontSize: 11.19,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w500,
-                      height: 1.83),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 20),
-          Obx(
-            () => DropdownButtonFormField<String>(
-              value: controller.selectedCountry.value,
-              icon: const Icon(Icons.keyboard_arrow_down),
-              borderRadius: BorderRadius.circular(12.79),
-              items: controller.countries
-                  .map((country) => DropdownMenuItem(
-                        value: country,
-                        child: Text(country),
-                      ))
-                  .toList(),
-              onChanged: controller.updateSelectedCountry,
-              decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  filled: true,
-                  fillColor: Color(0xFFF7F7F7)),
-            ),
-          ),
-          const SizedBox(height: 20),
-          Container(
-            width: Get.width,
-            height: 50,
-            padding: const EdgeInsets.symmetric(horizontal: 9.33),
-            decoration: ShapeDecoration(
-              color: const Color(0xFFF7F7F7),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(1.87)),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text("Select Quantity", style: TextStyle(fontSize: 16)),
-                Container(
-                  // width: 96,
-                  height: 33.67,
-                  decoration: ShapeDecoration(
-                    color: Colors.white.withOpacity(0.8999999761581421),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.36),
+                const TopHeaderWidget(
+                    data: TopHeaderModel(title: 'Buy Gift Card')),
+                const SizedBox(height: 30),
+                Center(
+                  child: Container(
+                    width: 229.09,
+                    height: 148.38,
+                    decoration: ShapeDecoration(
+                      image: DecorationImage(
+                          image: NetworkImage(data.image), fit: BoxFit.fill),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.79)),
+                      shadows: const [
+                        BoxShadow(
+                            color: Color(0x1E000000),
+                            blurRadius: 5.42,
+                            offset: Offset(0, 5.42),
+                            spreadRadius: 0)
+                      ],
                     ),
-                    shadows: const [
-                      BoxShadow(
-                          color: Color(0x14000000),
-                          blurRadius: 4.90,
-                          offset: Offset(0, 4.90),
-                          spreadRadius: 0)
-                    ],
+                  ),
+                ),
+                const SizedBox(height: 30),
+                Container(
+                  width: Get.width,
+                  height: 40,
+                  padding: const EdgeInsets.symmetric(horizontal: 9.33),
+                  decoration: ShapeDecoration(
+                    color: const Color(0xFFE4F6EF),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(1.87),
+                    ),
                   ),
                   child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      IconButton(
-                        padding: EdgeInsets.zero,
-                        onPressed: controller.decrementQuantity,
-                        icon: const Icon(Icons.remove, color: Colors.red),
-                      ),
-                      Obx(() => Text(
-                            "${controller.quantity.value}",
-                            style: const TextStyle(fontSize: 16),
-                          )),
-                      IconButton(
-                        padding: EdgeInsets.zero,
-                        onPressed: controller.incrementQuantity,
-                        icon: const Icon(Icons.add, color: Colors.green),
+                      Text(
+                        data.name,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            color: Color(0xFF093030),
+                            fontSize: 11.19,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w500,
+                            height: 1.83),
                       ),
                     ],
                   ),
                 ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
-          Obx(
-            () => DropdownButtonFormField<String>(
-              icon: const Icon(Icons.keyboard_arrow_down),
-              value: controller.selectedRange.value,
-              items: controller.ranges
-                  .map((range) => DropdownMenuItem(
-                        value: range,
-                        child: Text(range),
-                      ))
-                  .toList(),
-              onChanged: controller.updateSelectedRange,
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-                filled: true,
-                fillColor: Color(0xFFF7F7F7),
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 20),
-          // Price Buttons
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                // width: 160,
-                height: 42,
-                padding: const EdgeInsets.only(
-                    top: 10, left: 11, right: 114, bottom: 10),
-                decoration: ShapeDecoration(
-                  color: const Color(0xFFF7F7F7),
-                  shape: RoundedRectangleBorder(
-                      side:
-                          const BorderSide(width: 1, color: Color(0xFF263238)),
-                      borderRadius: BorderRadius.circular(5)),
+                const SizedBox(height: 20),
+                // Obx(
+                //   () => DropdownButtonFormField<String>(
+                //       style: TextStyle(fontSize: 16, color: Colors.black),
+                //       value: controller.selectedCountry.value.isEmpty
+                //           ? null
+                //           : controller.selectedCountry.value,
+                //       icon: const Icon(Icons.keyboard_arrow_down),
+                //       borderRadius: BorderRadius.circular(12.79),
+                //       items: controller.countries
+                //           .map((country) => DropdownMenuItem(
+                //                 value: country,
+                //                 child: Text(country),
+                //               ))
+                //           .toList(),
+                //       onChanged: controller.updateSelectedCountry,
+                //       decoration: const InputDecoration(
+                //           border: InputBorder.none,
+                //           filled: true,
+                //           fillColor: Color(0xFFF7F7F7),
+                //           labelText: 'Select Country',
+                //           labelStyle: TextStyle(color: Colors.black))),
+                // ),
+                // const SizedBox(height: 20),
+                Container(
+                  width: Get.width,
+                  height: 50,
+                  padding: const EdgeInsets.symmetric(horizontal: 9.33),
+                  decoration: ShapeDecoration(
+                    color: const Color(0xFFF7F7F7),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(1.87)),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text("Select Quantity",
+                          style: TextStyle(fontSize: 16, color: Colors.black)),
+                      Container(
+                        height: 33.67,
+                        decoration: ShapeDecoration(
+                          color: Colors.white.withOpacity(0.8999999761581421),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.36),
+                          ),
+                          shadows: const [
+                            BoxShadow(
+                                color: Color(0x14000000),
+                                blurRadius: 4.90,
+                                offset: Offset(0, 4.90),
+                                spreadRadius: 0)
+                          ],
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            IconButton(
+                              padding: EdgeInsets.zero,
+                              onPressed: controller.decrementQuantity,
+                              icon: const Icon(Icons.remove, color: Colors.red),
+                            ),
+                            Obx(() => Text(
+                                  "${controller.quantity.value}",
+                                  style: const TextStyle(
+                                      fontSize: 16, color: Colors.black),
+                                )),
+                            IconButton(
+                              padding: EdgeInsets.zero,
+                              onPressed: controller.incrementQuantity,
+                              icon: const Icon(Icons.add, color: Colors.green),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                const SizedBox(height: 16),
+                Obx(
+                  () => DropdownButtonFormField<String>(
+                    dropdownColor:
+                        lightningModeController.currentMode.value.mode ==
+                                "light"
+                            ? Colors.black
+                            : Colors.white,
+                    style: Theme.of(context).textTheme.displayMedium,
+                    icon: const Icon(Icons.keyboard_arrow_down),
+                    value: controller.selectedRange.value.isEmpty
+                        ? null
+                        : controller.selectedRange.value,
+                    items: controller.ranges
+                        .map((range) => DropdownMenuItem(
+                              value: range,
+                              child: Text(
+                                range,
+                                style: TextStyle(
+                                    color: DarkThemeColors.primaryColor),
+                                // selectionColor: Colors.black,
+                              ),
+                            ))
+                        .toList(),
+                    onChanged: controller.updateSelectedRange,
+                    decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Color(0xFFF7F7F7),
+                        labelText: 'Select Buy Range (₦)',
+                        labelStyle: TextStyle(color: Colors.black)),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                // Price Buttons (Dynamic)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      '\$100',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Color(0xE5093030),
+                    Container(
+                      height: 42,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 11, vertical: 10),
+                      decoration: ShapeDecoration(
+                        color: const Color(0xFFF7F7F7),
+                        shape: RoundedRectangleBorder(
+                            side: const BorderSide(
+                                width: 1, color: Color(0xFF263238)),
+                            borderRadius: BorderRadius.circular(5)),
+                      ),
+                      child: Text(
+                        '₦${data.denomination}/giftcard',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            color: Color(0xE5093030),
+                            fontSize: 15,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w500,
+                            height: 1.47),
+                      ),
+                    ),
+                    Container(
+                      height: 42,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 10),
+                      decoration: ShapeDecoration(
+                        color: const Color(0xFFF7F7F7),
+                        shape: RoundedRectangleBorder(
+                            side: const BorderSide(
+                                width: 1, color: Color(0xFF263238)),
+                            borderRadius: BorderRadius.circular(5)),
+                      ),
+                      child: Text(
+                        'Buy Rate: ${(double.parse(data.buyRate)).toStringAsFixed(2)}',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            color: Color(0xE5093030),
+                            fontSize: 12,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w600,
+                            height: 1.83),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                // Total Amount
+                Obx(() => Container(
+                      width: Get.width,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 10),
+                      decoration: ShapeDecoration(
+                        color: const Color(0xFFF7F7F7),
+                        shape: RoundedRectangleBorder(
+                          side: const BorderSide(
+                              width: 1, color: Color(0xFF093030)),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                      child: Text(
+                        "Total: ₦${controller.totalAmount.toStringAsFixed(2)}",
+                        style: const TextStyle(
+                            color: Color(0xE5093030),
+                            fontSize: 15,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w600,
+                            height: 1.78),
+                      ),
+                    )),
+                const SizedBox(height: 40),
+                // New Payment Screenshot Upload Section
+                Container( 
+                  width: Get.width,
+                  padding: const EdgeInsets.all(12),
+                  decoration: ShapeDecoration(
+                    color: const Color(0xFFF7F7F7),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Upload Payment Screenshot",
+                        style: TextStyle(
+                          color: Color(0xFF093030),
                           fontSize: 15,
                           fontFamily: 'Poppins',
                           fontWeight: FontWeight.w500,
-                          height: 1.47),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                // width: 160,
-                height: 42,
-                padding: const EdgeInsets.only(
-                  top: 10,
-                  left: 92,
-                  right: 16,
-                  bottom: 10,
-                ),
-                decoration: ShapeDecoration(
-                  color: Color(0xFFF7F7F7),
-                  shape: RoundedRectangleBorder(
-                      side: BorderSide(width: 1, color: Color(0xFF263238)),
-                      borderRadius: BorderRadius.circular(5)),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      'N1,250/\$',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Color(0xE5093030),
-                          fontSize: 12,
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w500,
-                          height: 1.83),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-
-          const SizedBox(height: 20),
-
-          // Total Amount
-          Obx(() => Container(
-                width: Get.width,
-                // height: 45,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                decoration: ShapeDecoration(
-                  color: const Color(0xFFF7F7F7),
-                  shape: RoundedRectangleBorder(
-                    side: const BorderSide(width: 1, color: Color(0xFF093030)),
-                    borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Obx(() => controller.paymentScreenshot.value == null
+                          ? ElevatedButton.icon(
+                              onPressed: () => controller.uploadScreenshot(),
+                              icon: const Icon(Icons.upload),
+                              label: const Text("Choose Image"),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                foregroundColor: const Color(0xFF093030),
+                                minimumSize: const Size(double.infinity, 45),
+                              ),
+                            )
+                          : Column(
+                              children: [
+                                Container(
+                                  height: 100,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    image: DecorationImage(
+                                      image: FileImage(
+                                          controller.paymentScreenshot.value!),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          controller.uploadScreenshot(),
+                                      child: const Text("Change Image"),
+                                    ),
+                                    TextButton(
+                                      onPressed: () =>
+                                          controller.removeScreenshot(),
+                                      child: const Text(
+                                        "Remove",
+                                        style: TextStyle(color: Colors.red),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            )),
+                    ],
                   ),
                 ),
-                child: Text(
-                  "₦ ${controller.totalAmount.toStringAsFixed(2)}",
-                  style: const TextStyle(
-                      color: Color(0xE5093030),
-                      fontSize: 15,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w500,
-                      height: 1.78),
+                const SizedBox(height: 40),
+
+                // Buy Button
+                CustomPrimaryButton(
+                  controller: CustomPrimaryButtonController(
+                    model: const CustomPrimaryButtonModel(text: 'Buy'),
+                    onPressed: () {
+                      if (controller.validateInputs()) {
+                        Get.toNamed(RoutesConstant.buy_giftcard_field_details,
+                            arguments: {
+                              "id": data.id,
+                              "image_url": data.image,
+                              "name": data.name,
+                              "selectedCountry":
+                                  controller.selectedCountry.value,
+                              "quantity": controller.quantity.value,
+                              "selectedRange": controller.selectedRange.value,
+                              "totalAmount": controller.totalAmount.value,
+                              "paymentScreenshot":
+                                  controller.paymentScreenshot.value?.path,
+                            });
+                      }
+                    },
+                  ),
                 ),
-              )),
-
-          const SizedBox(height: 40),
-
-          CustomPrimaryButton(
-              controller: CustomPrimaryButtonController(
-                  model: const CustomPrimaryButtonModel(text: 'Buy'),
-                  onPressed: () {
-                    Get.toNamed(RoutesConstant.buy_giftcard_field_details,
-                        arguments: {
-                          "image_url": data.image_url,
-                          "name": data.name,
-                          "selectedCountry": controller.selectedCountry.value,
-                          "quantity": controller.quantity.value,
-                          "selectedRange": controller.selectedRange.value,
-                          "totalAmount": controller.totalAmount
-                        });
-                  }))
-        ]),
-      )),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

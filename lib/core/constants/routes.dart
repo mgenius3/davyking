@@ -15,6 +15,7 @@ class RoutesConstant {
   static const String notification = '/notifications';
   static const String airtime = '/airtime';
   static const String airtime_details = '/airtime/details';
+  static const String recent_transaction = '/recent_transactions';
 
   //profile
   static const String profile = '/profile';
@@ -34,9 +35,31 @@ class RoutesConstant {
   static const String buy_giftcard_field = '/giftcard/buy/inputfield';
   static const String buy_giftcard_field_details =
       '/giftcard/buy/inputfield_details';
+  static const String giftCardTransactionDetails =
+      '/giftcard/giftcard_transaction_details';
 
   static const String sell_giftcard = '/giftcard/sell';
   static const String sell_giftcard_field = '/giftcard/sell/inputfield';
   static const String sell_giftcard_field_details =
       '/giftcard/sell/inputfield_details';
+
+  //crypto
+  static const String crypto = '/crypto';
+  static const String buy_crypto = '/crypto/buy';
+  static const String buy_crypto_field = '/crypto/buy/inputfield';
+  static const String buy_crypto_field_details =
+      '/crypto/buy/inputfield_details';
+  static const String cryptoTransactionDetails =
+      '/crypto/crypto_transaction_details';
+
+  static const String sell_crypto = '/crypto/sell';
+  static const String sell_crypto_field = '/crypto/sell/inputfield';
+  static const String sell_crypto_field_details =
+      '/giftcard/sell/inputfield_details';
+
+  //wallet
+  static const String withdraw = '/withdraw';
+
+  //deposit
+  static const String deposit = '/deposit';
 }

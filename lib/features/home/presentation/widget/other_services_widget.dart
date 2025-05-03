@@ -22,58 +22,63 @@ class OtherServicesWidget extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         Wrap(
-          alignment: WrapAlignment.spaceAround,
+          alignment: WrapAlignment.spaceBetween,
           spacing: 5,
           runSpacing: 20,
           children: [
             servicesContainer(
-                data: const OtherServicesModel(
-                    color: Color(0x1950C2D6),
-                    icon: Icons.phone_android,
-                    name: "Airtime",
-                    route: RoutesConstant.airtime)),
+              data: const OtherServicesModel(
+                color: Color(0x1950C2D6),
+                icon: Icons.phone_android, // Suitable for airtime
+                name: "Airtime",
+                route: RoutesConstant.airtime,
+              ),
+            ),
             servicesContainer(
-                data: const OtherServicesModel(
-                    color: Color(0x1950C2D6),
-                    icon: Icons.phone_android,
-                    name: "Data",
-                    route: RoutesConstant.airtime)),
+              data: const OtherServicesModel(
+                color: Color(0x1950C2D6),
+                icon: Icons.signal_cellular_alt, // Represents mobile data
+                name: "Data",
+                route: RoutesConstant
+                    .airtime, // Note: Should this route be different?
+              ),
+            ),
             servicesContainer(
-                data: const OtherServicesModel(
-                    color: Color(0x1950C2D6),
-                    icon: Icons.currency_exchange,
-                    name: "Buy Crypto",
-                    route: RoutesConstant.airtime)),
+              data: const OtherServicesModel(
+                color: Color(0x1950C2D6),
+                icon: Icons
+                    .currency_bitcoin, // Represents cryptocurrency purchase
+                name: "Buy Crypto",
+                route: RoutesConstant
+                    .buy_crypto, // Note: Should this route be specific to crypto?
+              ),
+            ),
             servicesContainer(
-                data: const OtherServicesModel(
-                    color: Color(0x1950C2D6),
-                    icon: Icons.currency_bitcoin,
-                    name: "Sell Crypto",
-                    route: RoutesConstant.airtime)),
+              data: const OtherServicesModel(
+                color: Color(0x1950C2D6),
+                icon: Icons.sell, // Represents selling action
+                name: "Sell Crypto",
+                route: RoutesConstant
+                    .sell_crypto, // Note: Should this route be specific to crypto?
+              ),
+            ),
             servicesContainer(
-                data: const OtherServicesModel(
-                    color: Color(0x1950C2D6),
-                    icon: Icons.phone_android,
-                    name: "Buy GiftCard",
-                    route: RoutesConstant.buy_giftcard)),
+              data: const OtherServicesModel(
+                color: Color(0x1950C2D6),
+                icon: Icons.card_giftcard, // Perfect for gift card purchase
+                name: "Buy GiftCard",
+                route: RoutesConstant.buy_giftcard,
+              ),
+            ),
             servicesContainer(
-                data: const OtherServicesModel(
-                    color: Color(0x1950C2D6),
-                    icon: Icons.phone_android,
-                    name: "Sell GiftCard",
-                    route: RoutesConstant.sell_giftcard)),
-            servicesContainer(
-                data: const OtherServicesModel(
-                    color: Color(0x1950C2D6),
-                    icon: Icons.phone_android,
-                    name: "Sell GiftCard",
-                    route: RoutesConstant.airtime)),
-            servicesContainer(
-                data: const OtherServicesModel(
-                    color: Color(0x1950C2D6),
-                    icon: Icons.phone_android,
-                    name: "Sell GiftCard",
-                    route: RoutesConstant.airtime))
+              data: const OtherServicesModel(
+                color: Color(0x1950C2D6),
+                icon: Icons
+                    .attach_money, // Suitable for redeeming/selling a gift card
+                name: "Sell GiftCard",
+                route: RoutesConstant.sell_giftcard,
+              ),
+            ),
           ],
         ),
       ],
@@ -87,7 +92,8 @@ Widget servicesContainer({required OtherServicesModel data}) {
         Get.toNamed(data.route);
       },
       child: SizedBox(
-        width: Get.width * .18,
+        // width: Get.width * .18,
+        width: Get.width * .24,
         child: Column(
           children: [
             Container(

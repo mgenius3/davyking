@@ -1,20 +1,29 @@
+import 'dart:convert';
+
 import 'package:davyking/core/constants/routes.dart';
+import 'package:davyking/core/controllers/admin_bank_details_controller.dart';
+import 'package:davyking/core/controllers/currency_rate_controller.dart';
+import 'package:davyking/core/controllers/user_auth_details_controller.dart';
+import 'package:davyking/core/services/secure_storage_service.dart';
 import 'package:davyking/core/theme/dark_theme.dart';
 import 'package:davyking/core/theme/light_theme.dart';
 import 'package:davyking/core/controllers/mode_controller.dart';
 import 'package:davyking/core/states/mode.dart';
+import 'package:davyking/core/models/user_auth_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:async';
 import 'routes.dart';
 
-// import 'package:go_router/go_router.dart';
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Dependency Injection
-  Get.put(LightningModeService()); // Service
-  Get.put(LightningModeController(service: Get.find())); // Controller
+  // Get.put(LightningModeService()); // Service
+  Get.put(LightningModeController()); // Controller
+  Get.put(UserAuthDetailsController());
+  Get.put(AdminBankDetailsController());
+  Get.put(CurrencyRateController());
+
   runApp(const MyApp());
 }
 
@@ -25,10 +34,19 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
-  final LightningModeController controller =
-      Get.find<LightningModeController>();
+  final LightningModeController controller = Get.put(LightningModeController());
+  final UserAuthDetailsController authController =
+      Get.put(UserAuthDetailsController());
+
   Brightness? _currentBrightness;
   Timer? _timer;
+
+  void _getUserAuthDetails() async {
+    final storageService = SecureStorageService();
+    var user_details = await storageService.getData('user_details');
+    authController
+        .saveUser(UserAuthResponse.fromJson(jsonDecode(user_details!)));
+  }
 
   @override
   void initState() {
@@ -38,6 +56,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     // Initial system brightness check
     _currentBrightness =
         WidgetsBinding.instance.platformDispatcher.platformBrightness;
+
+    _getUserAuthDetails();
   }
 
   // void startBrightnessCheck() {
@@ -70,6 +90,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     return Obx(() => GetMaterialApp(
         title: 'DavyKing',
         debugShowCheckedModeBanner: false,
+        // initialRoute: RoutesConstant.splash,
         initialRoute: RoutesConstant.home,
         theme: controller.currentMode.value.mode == 'dark'
             ? darkTheme()

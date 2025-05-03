@@ -2,7 +2,7 @@ import 'package:davyking/core/constants/images.dart';
 import 'package:davyking/core/constants/routes.dart';
 import 'package:davyking/core/theme/colors.dart';
 import 'package:davyking/core/utils/spacing.dart';
-import 'package:davyking/features/auth/controllers/login_controller.dart';
+import 'package:davyking/features/auth/controllers/signin_controller.dart';
 import 'package:davyking/features/auth/data/models/input_field_model.dart';
 import 'package:davyking/features/auth/presentation/widget/button_continue_with.dart';
 import 'package:davyking/features/auth/presentation/widget/horizontal_line_widget.dart';
@@ -39,7 +39,7 @@ class LoginScreen extends StatelessWidget {
                   children: [
                     authInputField(AuthInputFieldModel(
                       inputcontroller: controller.emailController,
-                      hintText: "benmos16@gmail.com",
+                      // hintText: "benmos16@gmail.com",
                       name: "Email Address",
                     )),
                     const SizedBox(height: 20),
@@ -74,45 +74,57 @@ class LoginScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              CustomPrimaryButton(
-                  controller: CustomPrimaryButtonController(
-                      model: const CustomPrimaryButtonModel(
-                        text: "Login",
-                      ),
-                      onPressed: () {
-                        Get.toNamed(RoutesConstant.home);
-                      })),
-              Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      horizontalLine(),
-                      const SizedBox(width: 5),
-                      Text(
-                        'OR',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.black.withOpacity(0.7300000190734863),
-                          fontSize: 14,
-                          fontFamily: 'Lexend',
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      const SizedBox(width: 5),
-                      horizontalLine(),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  continueWithButton(
-                      iconRoutes: SvgConstant.appleIcon,
-                      text: "Continue With Apple"),
-                  const SizedBox(height: 15),
-                  continueWithButton(
-                      iconRoutes: SvgConstant.googleIcon,
-                      text: "Continue With Google")
-                ],
-              ),
+              Obx(() => controller.isLoading.value
+                  ? CustomPrimaryButton(
+                      controller: CustomPrimaryButtonController(
+                          model: const CustomPrimaryButtonModel(
+                              child: SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                      color: Colors.white))),
+                          onPressed: () {}),
+                    )
+                  : CustomPrimaryButton(
+                      controller: CustomPrimaryButtonController(
+                          model: const CustomPrimaryButtonModel(
+                            text: 'Sign In',
+                            textColor: Colors.white,
+                          ),
+                          onPressed: () {
+                            controller.signIn();
+                          }))),
+              // Column(
+              //   children: [
+              //     Row(
+              //       mainAxisAlignment: MainAxisAlignment.center,
+              //       children: [
+              //         horizontalLine(),
+              //         const SizedBox(width: 5),
+              //         Text(
+              //           'OR',
+              //           textAlign: TextAlign.center,
+              //           style: TextStyle(
+              //             color: Colors.black.withOpacity(0.7300000190734863),
+              //             fontSize: 14,
+              //             fontFamily: 'Lexend',
+              //             fontWeight: FontWeight.w400,
+              //           ),
+              //         ),
+              //         const SizedBox(width: 5),
+              //         horizontalLine(),
+              //       ],
+              //     ),
+              //     const SizedBox(height: 10),
+              //     continueWithButton(
+              //         iconRoutes: SvgConstant.appleIcon,
+              //         text: "Continue With Apple"),
+              //     const SizedBox(height: 15),
+              //     continueWithButton(
+              //         iconRoutes: SvgConstant.googleIcon,
+              //         text: "Continue With Google")
+              //   ],
+              // ),
               SizedBox(
                 width: Get.context!.width,
                 child: Row(
@@ -121,7 +133,7 @@ class LoginScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const Text(
-                      'New to Foxcrypto?',
+                      'New Here? ',
                       style: TextStyle(
                           color: Color(0xFF484C58),
                           fontSize: 13.39,
@@ -136,11 +148,10 @@ class LoginScreen extends StatelessWidget {
                       child: Text(
                         'Create an account',
                         style: TextStyle(
-                          color: LightThemeColors.primaryColor,
-                          fontSize: 13.39,
-                          fontWeight: FontWeight.w500,
-                          height: 1.43,
-                        ),
+                            color: LightThemeColors.primaryColor,
+                            fontSize: 13.39,
+                            fontWeight: FontWeight.w500,
+                            height: 1.43),
                       ),
                     )
                   ],
