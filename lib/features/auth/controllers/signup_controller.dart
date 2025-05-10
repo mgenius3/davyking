@@ -4,7 +4,6 @@ import 'package:davyking/core/constants/routes.dart';
 import 'package:davyking/core/errors/error_mapper.dart';
 import 'package:davyking/core/errors/failure.dart';
 import 'package:davyking/core/services/secure_storage_service.dart';
-import 'package:davyking/core/theme/colors.dart';
 import 'package:davyking/core/utils/snackbar.dart';
 import 'package:davyking/features/auth/data/models/sign_up_request_model.dart';
 import 'package:davyking/core/models/user_auth_response_model.dart';
@@ -108,7 +107,8 @@ class SignupController extends GetxController {
     final storageService = SecureStorageService();
     await storageService.saveData('auth_token', response.token);
     await storageService.saveData(
-        'user_details', jsonEncode(response.toJson()));
+        'user_details', jsonEncode(response.user.toJson()));
+    await storageService.saveData("user_has", "sign_in");
   }
 
   // Update API client with new token

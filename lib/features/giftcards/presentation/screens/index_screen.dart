@@ -67,12 +67,11 @@ class GiftCardScreen extends StatelessWidget {
                                 'Buy',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w600,
-                                  height: 0.71,
-                                ),
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w600,
+                                    height: 0.71),
                               ),
                             ],
                           ),
@@ -104,12 +103,11 @@ class GiftCardScreen extends StatelessWidget {
                                 'Sell',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w600,
-                                  height: 1.10,
-                                ),
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w600,
+                                    height: 1.10),
                               ),
                             ],
                           ),
@@ -120,6 +118,8 @@ class GiftCardScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 Expanded(
+                    child: RefreshIndicator(
+                  onRefresh: controller.fetchAllGiftCardsTransaction,
                   child: controller.isLoading.value
                       ? const Center(child: CircularProgressIndicator())
                       : controller.errorMessage.isNotEmpty
@@ -155,7 +155,7 @@ class GiftCardScreen extends StatelessWidget {
                                     );
                                   },
                                 ),
-                ),
+                )),
               ],
             ),
           ),

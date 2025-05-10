@@ -64,11 +64,16 @@ class BuyCryptoController extends GetxController {
   Future<void> fetchCryptocurrencies() async {
     try {
       isLoading.value = true;
+
       final cryptos = controller.all_crypto;
-      availableCryptos.assignAll(cryptos);
-      if (cryptos.isNotEmpty) {
-        updateCurrentRate();
-      }
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        availableCryptos.assignAll(cryptos);
+
+        if (cryptos.isNotEmpty) {
+          updateCurrentRate();
+        }
+      });
     } catch (e) {
       Get.snackbar('Error', 'Failed to fetch cryptocurrencies: $e');
     } finally {
@@ -114,6 +119,8 @@ class BuyCryptoController extends GetxController {
 
     double rate = double.tryParse(selectedCrypto.value!.buyRate) ?? 0.0;
     double inputAmount = double.tryParse(amountController.text) ?? 0.0;
+    double currentPrice =
+        double.tryParse(selectedCrypto.value!.currentPrice) ?? 0.0;
 
     if (isCryptoAmount.value) {
       // Input is in crypto, calculate fiat
@@ -122,7 +129,7 @@ class BuyCryptoController extends GetxController {
     } else {
       // Input is in fiat, calculate crypto
       fiatAmount.value = inputAmount;
-      cryptoAmount.value = inputAmount / rate;
+      cryptoAmount.value = inputAmount / (rate * currentPrice);
     }
   }
 
@@ -253,13 +260,11 @@ class BuyCryptoController extends GetxController {
 
   // Submit buy crypto transaction
   Future<void> submitBuyCrypto() async {
-    if (!validateInputs()) return;
-
     isLoading.value = true;
 
     try {
       Map<String, dynamic> fields = {
-        "name": selectedCrypto.value!.name,
+        "crypto_name": selectedCrypto.value!.name,
         "user_id": userAuthDetailsController.user.value!.id,
         "crypto_currency_id": selectedCrypto.value!.id,
         "type": "buy",
@@ -269,10 +274,8 @@ class BuyCryptoController extends GetxController {
         "payment_method": paymentMethod.value.toLowerCase().replaceAll(
             ' ', '_'), // Convert to API format (e.g., "bank_transfer")
       };
-
       await cryptoRepository.transactCrypto(
           fields, paymentScreenshot.value?.path ?? "");
-
       Get.snackbar('Success', 'Crypto purchase submitted successfully');
       Get.toNamed(RoutesConstant.home);
     } catch (e) {

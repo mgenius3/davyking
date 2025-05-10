@@ -120,6 +120,8 @@ class CryptoScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 Expanded(
+                    child: RefreshIndicator(
+                  onRefresh: controller.fetchAllCryptosTransaction,
                   child: controller.isLoading.value
                       ? const Center(child: CircularProgressIndicator())
                       : controller.errorMessage.isNotEmpty
@@ -155,7 +157,7 @@ class CryptoScreen extends StatelessWidget {
                                     );
                                   },
                                 ),
-                ),
+                )),
               ],
             ),
           ),

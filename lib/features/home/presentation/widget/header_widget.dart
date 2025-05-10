@@ -44,13 +44,16 @@ class HomeHeaderWidget extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Hi, ${authController.user.value?.name ?? "User"}',
-                  style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                      height: 1.17),
-                ),
+                Obx(() => Text(
+                      'Hi, ${authController.user.value?.name ?? "User"}',
+                      style: Theme.of(context)
+                          .textTheme
+                          .displayMedium
+                          ?.copyWith(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                              height: 1.17),
+                    )),
                 const SizedBox(height: 5),
                 Text(
                   getGreeting(),
@@ -88,10 +91,10 @@ class HomeHeaderWidget extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(2),
                 decoration: ShapeDecoration(
-                  color: lightningModeController.currentMode.value.mode ==
-                          "light"
-                      ? const Color(0xFFDFF7E2)
-                      : DarkThemeColors.primaryColor,
+                  color:
+                      lightningModeController.currentMode.value.mode == "light"
+                          ? const Color(0xFFDFF7E2)
+                          : DarkThemeColors.primaryColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),

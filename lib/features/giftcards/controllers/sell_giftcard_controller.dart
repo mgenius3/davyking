@@ -1,6 +1,7 @@
 import 'package:davyking/core/constants/routes.dart';
 import 'package:davyking/core/controllers/user_auth_details_controller.dart';
 import 'package:davyking/features/giftcards/data/repositories/gift-card_repository.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:davyking/features/giftcards/data/model/giftcards_list_model.dart';
 import 'dart:io';
@@ -36,19 +37,22 @@ class SellGiftcardController extends GetxController {
   void onInit() {
     super.onInit();
     // Initialize default values
-    selectedCountry.value = countries.isNotEmpty ? countries[0] : '';
 
-    // Use admin-defined ranges from giftCard
-    if (giftCard != null && giftCard!.ranges.isNotEmpty) {
-      ranges.assignAll(giftCard!.ranges);
-    } else {
-      // Fallback if no ranges are defined
-      ranges.assignAll(['10 - 50', '50 - 100', '100 - 500']);
-    }
-    selectedRange.value = ranges.isNotEmpty ? ranges[0] : '';
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      selectedCountry.value = countries.isNotEmpty ? countries[0] : '';
 
-    // Calculate initial total amount after giftCard is set
-    calculateTotalAmount();
+      // // Use admin-defined ranges from giftCard
+      // if (giftCard != null && giftCard!.ranges.isNotEmpty) {
+      //   ranges.assignAll(giftCard!.ranges);
+      // } else {
+      //   // Fallback if no ranges are defined
+      //   ranges.assignAll(['10 - 50', '50 - 100', '100 - 500']);
+      // }
+      // selectedRange.value = ranges.isNotEmpty ? ranges[0] : '';
+
+      // Calculate initial total amount after giftCard is set
+      calculateTotalAmount();
+    });
   }
 
   // Update selected country
@@ -91,45 +95,41 @@ class SellGiftcardController extends GetxController {
     double denomination = double.tryParse(giftCard!.denomination) ?? 0.0;
     double sellRate = double.tryParse(giftCard!.sellRate) ?? 0.0;
     totalAmount.value = denomination * sellRate * quantity.value;
-    if (!isTotalAmountInRange()) {
-      Get.snackbar(
-          'Error', 'Total gift card value does not match the selected range');
-    }
+    // if (!isTotalAmountInRange()) {
+    //   Get.snackbar(
+    //       'Error', 'Total gift card value does not match the selected range');
+    // }
   }
 
   // Check if the total gift card value matches the selected range
-  bool isTotalAmountInRange() {
-    if (selectedRange.value.isEmpty) return true;
-    double totalDollarValue = (double.tryParse(giftCard!.denomination) ?? 0.0) *
-        quantity.value *
-        (double.tryParse(giftCard!.sellRate) ?? 0.0);
-    var rangeParts = selectedRange.value.split(' - ');
-    double min = double.parse(rangeParts[0].replaceAll('\$', ''));
-    double max = double.parse(rangeParts[1].replaceAll('\$', ''));
-    return totalDollarValue >= min && totalDollarValue <= max;
-  }
+  // bool isTotalAmountInRange() {
+  //   if (selectedRange.value.isEmpty) return true;
+  //   double totalDollarValue = (double.tryParse(giftCard!.denomination) ?? 0.0) *
+  //       quantity.value *
+  //       (double.tryParse(giftCard!.sellRate) ?? 0.0);
+  //   var rangeParts = selectedRange.value.split(' - ');
+  //   double min = double.parse(rangeParts[0].replaceAll('\$', ''));
+  //   double max = double.parse(rangeParts[1].replaceAll('\$', ''));
+  //   return totalDollarValue >= min && totalDollarValue <= max;
+  // }
 
   // Validate inputs before proceeding
   bool validateInputs() {
-    // if (selectedCountry.value.isEmpty) {
-    //   Get.snackbar('Error', 'Please select a country');
+    // if (selectedRange.value.isEmpty) {
+    //   Get.snackbar('Error', 'Please select a range');
     //   return false;
     // }
-    if (selectedRange.value.isEmpty) {
-      Get.snackbar('Error', 'Please select a range');
-      return false;
-    }
     if (quantity.value <= 0) {
       Get.snackbar('Error', 'Quantity must be greater than 0');
       return false;
     }
-    if (!isTotalAmountInRange()) {
-      Get.snackbar(
-          'Error', 'Total gift card value does not match the selected range');
-      return false;
-    }
+    // if (!isTotalAmountInRange()) {
+    //   Get.snackbar(
+    //       'Error', 'Total gift card value does not match the selected range');
+    //   return false;
+    // }
     if (paymentScreenshot.value == null) {
-      Get.snackbar('Error', 'Please upload a payment screenshot');
+      Get.snackbar('Error', 'Please upload a giftcard image');
       return false;
     }
     return true;
@@ -159,11 +159,11 @@ class SellGiftcardController extends GetxController {
 
     try {
       Map<String, dynamic> fields = {
-        "name": giftCard!.name,
+        "gift_card_name": giftCard!.name,
         "user_id": userAuthDetailsController.user.value!.id,
         "gift_card_id": giftCard!.id,
         "type": "sell",
-        "amount": totalAmount.value.toString(),
+        "amount": quantity.value.toString(),
         "status": 'pending'
       };
 

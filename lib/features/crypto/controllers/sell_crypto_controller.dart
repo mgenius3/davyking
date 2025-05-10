@@ -33,6 +33,7 @@ class SellCryptoController extends GetxController {
   }
 
   final CryptoRepository cryptoRepository = CryptoRepository();
+
   final UserAuthDetailsController userAuthDetailsController =
       Get.find<UserAuthDetailsController>();
   final CryptoController controller = Get.find<CryptoController>();
@@ -58,11 +59,18 @@ class SellCryptoController extends GetxController {
   Future<void> fetchCryptocurrencies() async {
     try {
       isLoading.value = true;
+
       final cryptos = controller.all_crypto;
-      availableCryptos.assignAll(cryptos);
-      if (cryptos.isNotEmpty) {
-        updateCurrentRate();
-      }
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        availableCryptos.assignAll(cryptos);
+
+        if (cryptos.isNotEmpty) {
+          updateCurrentRate();
+        } else {
+          print('crypto\'s is empty');
+        }
+      });
     } catch (e) {
       Get.snackbar('Error', 'Failed to fetch cryptocurrencies: $e');
     } finally {
@@ -102,6 +110,8 @@ class SellCryptoController extends GetxController {
 
     double rate = double.tryParse(selectedCrypto.value!.sellRate) ?? 0.0;
     double inputAmount = double.tryParse(amountController.text) ?? 0.0;
+    double currentPrice =
+        double.tryParse(selectedCrypto.value!.currentPrice) ?? 0.0;
 
     if (isCryptoAmount.value) {
       // Input is in crypto, calculate fiat
@@ -110,8 +120,9 @@ class SellCryptoController extends GetxController {
     } else {
       // Input is in fiat, calculate crypto
       fiatAmount.value = inputAmount;
-      cryptoAmount.value = inputAmount / rate;
+      cryptoAmount.value = inputAmount / (rate * currentPrice);
     }
+
   }
 
   // Real-time validation for amount (ensure it doesn't exceed user's balance)
@@ -171,13 +182,11 @@ class SellCryptoController extends GetxController {
 
   // Submit sell crypto transaction
   Future<void> submitSellCrypto() async {
-    if (!validateInputs()) return;
-
     isLoading.value = true;
 
     try {
       Map<String, dynamic> fields = {
-        "name": selectedCrypto.value!.name,
+        "crypto_name": selectedCrypto.value!.name,
         "user_id": userAuthDetailsController.user.value!.id,
         "crypto_currency_id": selectedCrypto.value!.id,
         "type": "sell",
@@ -190,7 +199,7 @@ class SellCryptoController extends GetxController {
       };
 
       await cryptoRepository.transactCrypto(
-          fields, proofScreenshot.value!.path);
+          fields, proofScreenshot.value?.path ?? "");
 
       Get.snackbar('Success', 'Crypto sell request submitted successfully');
       Get.toNamed(RoutesConstant.home);

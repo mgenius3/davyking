@@ -2,15 +2,15 @@ class CurrencyRateModel {
   final int id;
   final String currencyCode;
   final String rate;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
   CurrencyRateModel({
     required this.id,
     required this.currencyCode,
     required this.rate,
-    required this.createdAt,
-    required this.updatedAt,
+    this.createdAt,
+    this.updatedAt,
   });
 
   // Factory method to create an instance from JSON
@@ -30,8 +30,8 @@ class CurrencyRateModel {
       'id': id,
       'currency_code': currencyCode,
       'rate': rate,
-      'created_at': createdAt.toIso8601String(),
-      'updated_at': updatedAt.toIso8601String(),
+      'created_at': createdAt?.toIso8601String(),
+      'updated_at': updatedAt?.toIso8601String(),
     };
   }
 }

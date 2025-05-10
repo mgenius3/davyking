@@ -4,9 +4,7 @@ import 'package:davyking/core/errors/failure.dart';
 import 'package:davyking/features/crypto/data/model/crypto_list_model.dart';
 import 'package:davyking/features/crypto/data/model/crypto_transaction_model.dart';
 import 'package:davyking/features/crypto/data/repositories/crypto_repository.dart';
-import 'package:davyking/features/giftcards/data/model/giftcards_list_model.dart';
-import 'package:davyking/features/giftcards/data/model/giftcards_transaction_model.dart';
-import 'package:davyking/features/giftcards/data/repositories/gift-card_repository.dart';
+
 import 'package:get/get.dart';
 
 class CryptoController extends GetxController {

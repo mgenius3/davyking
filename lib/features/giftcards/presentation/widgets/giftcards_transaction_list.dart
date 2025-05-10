@@ -21,8 +21,7 @@ class GiftcardsTransactionListWidget extends StatelessWidget {
                 height: 60,
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: NetworkImage(
-                            ApiUrl.domain + "storage/" + data.giftCard.image))),
+                        image: NetworkImage(data.giftCard.image))),
               ),
               const SizedBox(width: 20),
               Expanded(

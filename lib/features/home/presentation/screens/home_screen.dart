@@ -1,3 +1,6 @@
+import 'package:davyking/core/controllers/transaction_log_controller.dart';
+import 'package:davyking/core/controllers/user_auth_details_controller.dart';
+import 'package:davyking/core/theme/colors.dart';
 import 'package:davyking/core/utils/spacing.dart';
 import 'package:davyking/core/models/persistent_tab_item_model.dart';
 import 'package:davyking/core/widgets/persistent_bottom_nav_bar.dart';
@@ -13,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../widget/balance_display_widget.dart';
 import 'package:flutter/cupertino.dart';
+import './chat_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -40,7 +44,6 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Fixed Header (Won't Scroll)
                   Container(
                     margin: Spacing.defaultMarginSpacing,
                     child: HomeHeaderWidget(),
@@ -48,6 +51,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 10), // Optional spacing
                   // Scrollable Content
                   Expanded(
+                      child: RefreshIndicator(
+                    onRefresh: () async {
+                      await Get.find<UserAuthDetailsController>()
+                          .getUserDetail();
+                      await Get.find<TransactionLogController>()
+                          .fetchTransactionLogs();
+                    },
                     child: SingleChildScrollView(
                       child: Container(
                         margin: Spacing.defaultMarginSpacing,
@@ -71,10 +81,17 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
-                  ),
+                  )),
                 ],
               ),
             ),
+            floatingActionButton: FloatingActionButton(
+                onPressed: () {
+                  Get.to(() => const ChatScreen());
+                },
+                backgroundColor: DarkThemeColors.background,
+                child: const Icon(Icons.support_agent_outlined,
+                    color: Colors.white)),
           )),
       PersistentTabItem(
           navigatorkey: _tab2navigatorKey,
@@ -95,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
           navigatorkey: _tab5navigatorKey,
           title: 'Profile',
           icon: CupertinoIcons.profile_circled,
-          tab: ProfileIndexScreen()),
+          tab: ProfileIndexScreen())
     ]);
   }
 }

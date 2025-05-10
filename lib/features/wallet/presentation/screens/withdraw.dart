@@ -1,11 +1,13 @@
 import 'package:davyking/core/constants/routes.dart';
 import 'package:davyking/core/controllers/primary_button_controller.dart';
+import 'package:davyking/core/controllers/transaction_auth_controller.dart';
 import 'package:davyking/core/controllers/user_auth_details_controller.dart';
 import 'package:davyking/core/models/primary_button_model.dart';
 import 'package:davyking/core/models/top_header_model.dart';
 import 'package:davyking/core/utils/spacing.dart';
 import 'package:davyking/core/widgets/primary_button_widget.dart';
 import 'package:davyking/core/widgets/top_header_widget.dart';
+import 'package:davyking/features/wallet/controllers/withdraw_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -20,15 +22,12 @@ class WithdrawScreen extends StatefulWidget {
 
 class _WithdrawScreenState extends State<WithdrawScreen> {
   final TextEditingController amountController = TextEditingController();
-  String? selectedPaymentMethod;
-  final List<Map<String, String>> paymentMethods = [
-    {'name': 'Ibrahim Victor Abdul', 'type': 'Opay'},
-    // Add more payment methods as needed
-  ];
 
-  final double maxDailyLimit = 1000000.00; // N1,000,000.00
   final UserAuthDetailsController userAuthDetailsController =
       Get.find<UserAuthDetailsController>();
+  final WithdrawController withdrawController = Get.put(WithdrawController());
+  final TransactionAuthController transactionAuthController =
+      Get.find<TransactionAuthController>();
 
   @override
   void dispose() {
@@ -46,7 +45,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const TopHeaderWidget(
-                  data: TopHeaderModel(title: 'Account Details')),
+                  data: TopHeaderModel(title: 'Withdraw Funds')),
               const SizedBox(height: 30),
               // _buildTopBar(),
               const SizedBox(height: 20),
@@ -61,34 +60,34 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                       const SizedBox(height: 20),
                       _buildPaymentMethodField(context),
                       const SizedBox(height: 50),
-                      CustomPrimaryButton(
-                          controller: CustomPrimaryButtonController(
-                              model: const CustomPrimaryButtonModel(
-                                  text: "Withdraw"),
-                              onPressed: () {
-                                final amount =
-                                    double.tryParse(amountController.text);
-                                if (amount == null || amount <= 0) {
-                                  Get.snackbar(
-                                      'Error', 'Please enter a valid amount');
-                                  return;
-                                }
-                                if (amount > maxDailyLimit) {
-                                  Get.snackbar('Error',
-                                      'Amount exceeds daily limit of N$maxDailyLimit');
-                                  return;
-                                }
-                                if (selectedPaymentMethod == null) {
-                                  Get.snackbar('Error',
-                                      'Please select a payment method');
-                                  return;
-                                }
-                                // Submit withdrawal request (not implemented)
-                                Get.snackbar(
-                                    'Success', 'Withdrawal request submitted!');
-                              }))
-                      // _buildContinueButton()
-                      ,
+                      Obx(() => withdrawController.isLoading.value
+                          ? CustomPrimaryButton(
+                              controller: CustomPrimaryButtonController(
+                                  model: const CustomPrimaryButtonModel(
+                                      child: SizedBox(
+                                          width: 20,
+                                          height: 20,
+                                          child: CircularProgressIndicator(
+                                              color: Colors.white))),
+                                  onPressed: () {}),
+                            )
+                          : CustomPrimaryButton(
+                              controller: CustomPrimaryButtonController(
+                                  model: const CustomPrimaryButtonModel(
+                                      text: 'Withdraw Funds'),
+                                  onPressed: () async {
+                                    bool isAuthenticated =
+                                        await transactionAuthController
+                                            .authenticate(
+                                      context,
+                                      'withdrawal of ${withdrawController.amountController.text}',
+                                    );
+
+                                    if (isAuthenticated) {
+                                      withdrawController.withdrawFunds();
+                                    }
+                                  }),
+                            )),
                     ],
                   ),
                 ),
@@ -178,7 +177,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
         ),
         const SizedBox(height: 10),
         TextField(
-          controller: amountController,
+          controller: withdrawController.amountController,
           keyboardType: TextInputType.number,
           decoration: InputDecoration(
             hintText: 'Enter amount',
@@ -198,7 +197,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
         ),
         const SizedBox(height: 8),
         Text(
-          'Max daily amount - N${maxDailyLimit.toStringAsFixed(2)}',
+          'Max daily amount - N${double.parse(userAuthDetailsController.user.value?.walletBalance ?? "0")}',
           style: const TextStyle(
             fontSize: 14,
             color: Colors.grey,
@@ -232,12 +231,17 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  selectedPaymentMethod ?? 'Select a Payment Method',
-                  style: TextStyle(
-                    color: selectedPaymentMethod == null
-                        ? Colors.grey
-                        : Colors.black,
+                Obx(
+                  () => Text(
+                    withdrawController.selectedPaymentMethod.value.isEmpty
+                        ? 'Select a Payment Method'
+                        : withdrawController.selectedPaymentMethod.value,
+                    style: TextStyle(
+                      color:
+                          withdrawController.selectedPaymentMethod.value.isEmpty
+                              ? Colors.grey
+                              : Colors.black,
+                    ),
                   ),
                 ),
                 const Icon(Icons.arrow_drop_down, color: Colors.grey),
@@ -285,38 +289,36 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                 ),
               ),
               const SizedBox(height: 40),
-              // ...paymentMethods.map((method) {
-              //   return ListTile(
-              //     title: Text(method['name']!),
-              //     subtitle: Text(method['type']!),
-              //     onTap: () {
-              //       setState(() {
-              //         selectedPaymentMethod =
-              //             '${method['name']} (${method['type']})';
-              //       });
-              //       Navigator.pop(context);
-              //     },
-              //   );
-              // }).toList(),
-              ...paymentMethods.map((method) {
-                return DottedBorder(
-                  dashPattern: [6, 3], // 6px line, 3px gap
-                  strokeWidth: 1,
-                  color: Colors.grey,
-                  borderType: BorderType.RRect,
-                  radius: Radius.circular(8),
-                  child: Container(
-                    padding: EdgeInsets.all(12),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(method['name']!),
-                        Text(method['type']!),
-                      ],
+              if (userAuthDetailsController
+                      .user.value?.withdrawalBank?.accountNumber !=
+                  null)
+                GestureDetector(
+                  onTap: () {
+                    withdrawController.updateSelectedInput();
+                    Navigator.pop(context);
+                  },
+                  child: DottedBorder(
+                    dashPattern: [6, 3], // 6px line, 3px gap
+                    strokeWidth: 1,
+                    color: Colors.grey,
+                    borderType: BorderType.RRect,
+                    radius: Radius.circular(8),
+                    child: Container(
+                      padding: EdgeInsets.all(12),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(userAuthDetailsController
+                                  .user.value?.withdrawalBank?.accountNumber ??
+                              ""),
+                          Text(userAuthDetailsController
+                                  .user.value?.withdrawalBank?.bankName ??
+                              " "),
+                        ],
+                      ),
                     ),
                   ),
-                );
-              }),
+                ),
               const SizedBox(height: 20),
               GestureDetector(
                 onTap: () {
@@ -329,12 +331,12 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                     color: Colors.green.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Add new payment method',
-                        style: TextStyle(
+                        '${userAuthDetailsController.user.value?.withdrawalBank?.bankName == null ? 'Add' : 'Change'} Bank',
+                        style: const TextStyle(
                           color: Colors.green,
                           fontWeight: FontWeight.w500,
                         ),

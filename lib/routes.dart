@@ -33,6 +33,7 @@ import 'package:davyking/features/profile/presentation/screen/withdrawal_bank/in
 import 'package:davyking/features/recent_transaction/presentation/screens/index_screen.dart';
 import 'package:davyking/features/splash/presentation/screens/splash1_screen.dart';
 import 'package:davyking/features/splash/presentation/screens/splash_screen.dart';
+import 'package:davyking/features/wallet/presentation/screens/details_screen.dart';
 import 'package:davyking/features/wallet/presentation/screens/withdraw.dart';
 import 'package:get/get.dart';
 
@@ -115,8 +116,11 @@ class AppRoutes {
         name: RoutesConstant.giftCardTransactionDetails,
         page: () => GiftCardTransactionDetailsScreen()),
 
-    //withdraw
+    //wallet
     GetPage(name: RoutesConstant.withdraw, page: () => WithdrawScreen()),
+    GetPage(
+        name: RoutesConstant.wallet_transaction_details,
+        page: () => WalletTransactionDetailsScreen()),
 
     //profile
     GetPage(name: RoutesConstant.profile, page: () => ProfileIndexScreen()),

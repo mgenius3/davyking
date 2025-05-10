@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:davyking/core/errors/app_exception.dart';
 import 'package:davyking/core/errors/dio_error_handler.dart';
 import 'package:davyking/core/models/user_auth_response_model.dart';
@@ -21,38 +23,63 @@ class UserAuthDetailsController extends GetxController {
 
   //method to update user details
   void updateUser(User response) {
-    user.value = response as User;
+    user.value = response;
   }
 
   // Method to clear user details on logout
-  void logout() async {
+  Future<void> logout() async {
     final storageService = SecureStorageService();
     user.value = null;
-    token.value = "";
+    token.value = "no_token";
     await storageService.clearAll();
+    await storageService.saveData("user_has", "log_out");
+  }
+
+  Future<void> getUserDetail() async {
+    try {
+      final response = await apiClient.get('${ApiUrl.users}/${user.value?.id}');
+      User user_response = User.fromJson(response.data['user']);
+      Get.find<UserAuthDetailsController>().updateUser(user_response);
+      updateUser(user_response);
+      await _storeAuthDetails(user_response);
+    } on DioException catch (e) {
+      print(e.message);
+      throw AppException(DioErrorHandler.handleDioError(e));
+    } catch (e) {
+      print("error 49");
+      print(e);
+      throw AppException("An unexpected error occurred.");
+    }
+  }
+
+  void loadUserDetails() async {
+    try {
+      final storageService = SecureStorageService();
+      var user_details = await storageService.getData('user_details');
+
+      if (user_details != null) {
+        var user_details_decode = jsonDecode(user_details);
+        updateUser(User.fromJson(user_details_decode));
+      }
+      //refech user details
+      await getUserDetail();
+    } catch (e) {
+      print("66 error");
+      print(e);
+    }
+  }
+
+  // Store authentication details
+  Future<void> _storeAuthDetails(User response) async {
+    final storageService = SecureStorageService();
+    await storageService.saveData(
+        'user_details', jsonEncode(response.toJson()));
   }
 
   @override
   void onInit() {
     super.onInit();
-    getUserDetail();
-  }
-
-  Future<void> getUserDetail() async {
-    try {
-      final response = await apiClient.get('${ApiUrl.users}/${user.value!.id}');
-
-      User user_response = User.fromJson(response.data['user']);
-      Get.find<UserAuthDetailsController>().updateUser(user_response);
-    } on DioException catch (e) {
-      // final responseData = e.response?.data;
-
-      // if (responseData['message'].toString().isNotEmpty) {
-      //   throw AppException("Edit profile failed ${responseData['message']}");
-      // }
-      throw AppException(DioErrorHandler.handleDioError(e));
-    } catch (e) {
-      throw AppException("An unexpected error occurred.");
-    }
+    loadUserDetails();
+    // getUserDetail();
   }
 }

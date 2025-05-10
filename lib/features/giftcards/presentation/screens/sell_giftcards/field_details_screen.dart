@@ -10,6 +10,7 @@ import 'package:davyking/features/giftcards/controllers/buy_giftcard_controller.
 import 'package:davyking/features/giftcards/controllers/sell_giftcard_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:davyking/core/controllers/transaction_auth_controller.dart';
 
 class SellGiftCardDetailsScreen extends StatelessWidget {
   const SellGiftCardDetailsScreen({super.key});
@@ -22,6 +23,8 @@ class SellGiftCardDetailsScreen extends StatelessWidget {
         Get.find<SellGiftcardController>();
     final data =
         Get.arguments as Map<String, dynamic>; // Retrieve the arguments
+    final TransactionAuthController transactionAuthController =
+        Get.find<TransactionAuthController>();
 
     return Scaffold(
       body: SafeArea(
@@ -230,8 +233,12 @@ class SellGiftCardDetailsScreen extends StatelessWidget {
                           text: 'Proceed',
                           textColor: Colors.white,
                         ),
-                        onPressed: () {
-                          controller.submitSellGiftCard();
+                        onPressed: () async {
+                          bool isAuthenticated = await transactionAuthController
+                              .authenticate(context, 'Sell GiftCard');
+                          if (isAuthenticated) {
+                            controller.submitSellGiftCard();
+                          }
                         }))),
           ],
         ),

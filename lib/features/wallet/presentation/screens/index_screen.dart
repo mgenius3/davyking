@@ -1,7 +1,8 @@
 import 'package:davyking/core/constants/routes.dart';
+import 'package:davyking/core/controllers/user_auth_details_controller.dart';
 import 'package:davyking/core/utils/spacing.dart';
-import 'package:davyking/features/crypto/data/model/crypto_transaction_model.dart';
-import 'package:davyking/features/crypto/data/repositories/crypto_repository.dart';
+import 'package:davyking/features/wallet/controllers/index_controller.dart';
+import 'package:davyking/features/wallet/data/model/wallet_transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -14,8 +15,10 @@ class WalletScreen extends StatefulWidget {
 }
 
 class _WalletScreenState extends State<WalletScreen> {
-  String selectedFilter = 'ALL'; // Default filter
-  final CryptoRepository cryptoRepository = CryptoRepository();
+  String selectedFilter = 'All'; // Default filter
+  final WalletController walletController = Get.put(WalletController());
+  final UserAuthDetailsController userAuthDetailsController =
+      Get.find<UserAuthDetailsController>();
 
   @override
   Widget build(BuildContext context) {
@@ -33,36 +36,37 @@ class _WalletScreenState extends State<WalletScreen> {
               _buildFilterTabs(),
               const SizedBox(height: 20),
               Expanded(
-                child: FutureBuilder<List<CryptoTransactionModel>>(
-                  future: null,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
+                child: RefreshIndicator(
+                  onRefresh: walletController.fetchWalletData,
+                  child: Obx(() {
+                    if (walletController.isLoading.value) {
                       return const Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    } else if (walletController
+                        .all_wallet_transaction.isEmpty) {
                       return const Center(
                           child: Text('No transactions found.'));
                     }
 
-                    final transactions = snapshot.data!;
                     // Filter transactions based on selected filter
-                    final filteredTransactions = selectedFilter == 'ALL'
-                        ? transactions
-                        : transactions
+                    final filteredTransactions = selectedFilter == 'All'
+                        ? walletController.all_wallet_transaction
+                        : walletController.all_wallet_transaction
                             .where((tx) =>
                                 tx.status.toLowerCase() ==
-                                selectedFilter.toLowerCase())
+                                (selectedFilter == 'Failed'
+                                    ? 'failed'
+                                    : selectedFilter.toLowerCase()))
                             .toList();
 
                     return ListView.builder(
+                      physics: const AlwaysScrollableScrollPhysics(),
                       itemCount: filteredTransactions.length,
                       itemBuilder: (context, index) {
                         final transaction = filteredTransactions[index];
                         return _buildTransactionItem(transaction);
                       },
                     );
-                  },
+                  }),
                 ),
               ),
             ],
@@ -76,10 +80,6 @@ class _WalletScreenState extends State<WalletScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        // IconButton(
-        //   icon: const Icon(Icons.arrow_back, color: Colors.black),
-        //   onPressed: () => Get.back(),
-        // ),
         const SizedBox(),
         const Text(
           'Wallet',
@@ -98,73 +98,77 @@ class _WalletScreenState extends State<WalletScreen> {
   }
 
   Widget _buildWalletBalanceCard() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Colors.green, Colors.greenAccent],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Wallet Balance',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
+    return Obx(() => Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Colors.green, Colors.greenAccent],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 10,
+                offset: Offset(0, 5),
               ),
-              SizedBox(height: 10),
-              Text(
-                'N0.00',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Wallet Balance',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'NGN ${userAuthDetailsController.user.value?.walletBalance ?? ""}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Get.toNamed(RoutesConstant.withdraw);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.green,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const Text(
+                  'Withdraw funds',
+                  style: TextStyle(fontSize: 12),
                 ),
               ),
             ],
           ),
-          ElevatedButton(
-            onPressed: () {
-              Get.toNamed(RoutesConstant.withdraw);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              foregroundColor: Colors.green,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            child: const Text('withdraw funds'),
-          ),
-        ],
-      ),
-    );
+        ));
   }
 
   Widget _buildFilterTabs() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _buildFilterTab('ALL'),
-        _buildFilterTab('Successful'),
-        _buildFilterTab('Cancel'),
+        _buildFilterTab('All'),
+        _buildFilterTab('Success'),
+        _buildFilterTab('Pending'),
+        _buildFilterTab('Failed'),
       ],
     );
   }
@@ -178,7 +182,7 @@ class _WalletScreenState extends State<WalletScreen> {
         });
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         decoration: BoxDecoration(
           color: isSelected ? Colors.green : Colors.white,
           borderRadius: BorderRadius.circular(20),
@@ -187,23 +191,19 @@ class _WalletScreenState extends State<WalletScreen> {
         child: Text(
           title,
           style: TextStyle(
-            color: isSelected ? Colors.white : Colors.black,
-            fontWeight: FontWeight.w500,
-          ),
+              color: isSelected ? Colors.white : Colors.black,
+              fontWeight: FontWeight.w500,
+              fontSize: 12),
         ),
       ),
     );
   }
 
-  Widget _buildTransactionItem(CryptoTransactionModel transaction) {
-    // Determine the currency symbol based on the amount (simplified logic)
-    String currencySymbol = transaction.fiatAmount.contains('50000')
-        ? 'N' // NGN for 50,000 (as in the image)
-        : '\$'; // USD for others (as in the image)
-
+  Widget _buildTransactionItem(WalletTransactionModel transaction) {
     return GestureDetector(
       onTap: () {
-        Get.toNamed('/crypto-transaction-details', arguments: transaction);
+        Get.toNamed(RoutesConstant.wallet_transaction_details,
+            arguments: transaction);
       },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 8),
@@ -221,26 +221,31 @@ class _WalletScreenState extends State<WalletScreen> {
         ),
         child: Row(
           children: [
-            // Crypto Icon
+            // Transaction Icon (placeholder)
             Container(
               width: 40,
               height: 40,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: NetworkImage(transaction.cryptoCurrency.image),
-                  fit: BoxFit.cover,
-                ),
+                color: transaction.type == 'deposit'
+                    ? Colors.green
+                    : Colors.orange,
+              ),
+              child: Icon(
+                transaction.type == 'deposit'
+                    ? Icons.arrow_downward
+                    : Icons.arrow_upward,
+                color: Colors.white,
               ),
             ),
             const SizedBox(width: 16),
-            // Crypto Name and Date
+            // Transaction Details
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    transaction.cryptoCurrency.name,
+                    '${transaction.type.capitalizeFirst} via ${transaction.gateway.capitalizeFirst}',
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -248,7 +253,7 @@ class _WalletScreenState extends State<WalletScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Send • ${DateFormat('MMM d, yyyy').format(transaction.createdAt)}',
+                    'Ref: ${transaction.reference} • ${DateFormat('MMM d, yyyy').format(transaction.createdAt)}',
                     style: const TextStyle(
                       fontSize: 14,
                       color: Colors.grey,
@@ -262,7 +267,7 @@ class _WalletScreenState extends State<WalletScreen> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  '$currencySymbol${double.parse(transaction.fiatAmount).toStringAsFixed(0)}',
+                  'NGN ${transaction.amount}',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -274,10 +279,13 @@ class _WalletScreenState extends State<WalletScreen> {
                     Text(
                       transaction.status.capitalizeFirst ?? '',
                       style: TextStyle(
-                          fontSize: 14,
-                          color: transaction.status.toLowerCase() == 'success'
-                              ? Colors.green
-                              : Colors.red),
+                        fontSize: 14,
+                        color: transaction.status.toLowerCase() == 'success'
+                            ? Colors.green
+                            : (transaction.status.toLowerCase() == 'failed'
+                                ? Colors.red
+                                : Colors.orange),
+                      ),
                     ),
                     const SizedBox(width: 4),
                     const Icon(Icons.arrow_forward_ios,

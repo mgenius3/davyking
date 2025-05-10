@@ -2,7 +2,6 @@ import 'package:davyking/core/constants/routes.dart';
 import 'package:davyking/core/controllers/primary_button_controller.dart';
 import 'package:davyking/core/models/primary_button_model.dart';
 import 'package:davyking/core/states/mode.dart';
-import 'package:davyking/core/theme/colors.dart';
 import 'package:davyking/core/utils/spacing.dart';
 import 'package:davyking/core/models/top_header_model.dart';
 import 'package:davyking/core/widgets/primary_button_widget.dart';
@@ -10,6 +9,8 @@ import 'package:davyking/core/widgets/top_header_widget.dart';
 import 'package:davyking/features/giftcards/controllers/sell_giftcard_controller.dart';
 import 'package:davyking/features/giftcards/data/model/giftcards_list_model.dart';
 import 'package:flutter/material.dart';
+import 'package:davyking/core/controllers/currency_rate_controller.dart';
+
 import 'package:get/get.dart';
 
 class SellGiftCardInputField extends StatelessWidget {
@@ -24,6 +25,8 @@ class SellGiftCardInputField extends StatelessWidget {
         Get.put(SellGiftcardController(giftCardData: data));
     final LightningModeController lightningModeController =
         Get.find<LightningModeController>();
+    final CurrencyRateController currencyRateController =
+        Get.find<CurrencyRateController>();
 
     return Scaffold(
       body: SafeArea(
@@ -162,38 +165,38 @@ class SellGiftCardInputField extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-                Obx(
-                  () => DropdownButtonFormField<String>(
-                    dropdownColor:
-                        lightningModeController.currentMode.value.mode ==
-                                "light"
-                            ? Colors.black
-                            : Colors.white,
-                    style: Theme.of(context).textTheme.displayMedium,
-                    icon: const Icon(Icons.keyboard_arrow_down),
-                    value: controller.selectedRange.value.isEmpty
-                        ? null
-                        : controller.selectedRange.value,
-                    items: controller.ranges
-                        .map((range) => DropdownMenuItem(
-                              value: range,
-                              child: Text(
-                                range,
-                                style: TextStyle(
-                                    color: DarkThemeColors.primaryColor),
-                                // selectionColor: Colors.black,
-                              ),
-                            ))
-                        .toList(),
-                    onChanged: controller.updateSelectedRange,
-                    decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Color(0xFFF7F7F7),
-                        labelText: 'Select Sell Range (\$)',
-                        labelStyle: TextStyle(color: Colors.black)),
-                  ),
-                ),
+                // Obx(
+                //   () => DropdownButtonFormField<String>(
+                //     dropdownColor:
+                //         lightningModeController.currentMode.value.mode ==
+                //                 "light"
+                //             ? Colors.black
+                //             : Colors.white,
+                //     style: Theme.of(context).textTheme.displayMedium,
+                //     icon: const Icon(Icons.keyboard_arrow_down),
+                //     value: controller.selectedRange.value.isEmpty
+                //         ? null
+                //         : controller.selectedRange.value,
+                //     items: controller.ranges
+                //         .map((range) => DropdownMenuItem(
+                //               value: range,
+                //               child: Text(
+                //                 range,
+                //                 style: TextStyle(
+                //                     color: DarkThemeColors.primaryColor),
+                //                 // selectionColor: Colors.black,
+                //               ),
+                //             ))
+                //         .toList(),
+                //     onChanged: controller.updateSelectedRange,
+                //     decoration: const InputDecoration(
+                //         border: InputBorder.none,
+                //         filled: true,
+                //         fillColor: Color(0xFFF7F7F7),
+                //         labelText: 'Select Sell Range (\$)',
+                //         labelStyle: TextStyle(color: Colors.black)),
+                //   ),
+                // ),
                 const SizedBox(height: 20),
                 // Price Buttons (Dynamic)
                 Row(
@@ -259,14 +262,22 @@ class SellGiftCardInputField extends StatelessWidget {
                           borderRadius: BorderRadius.circular(5),
                         ),
                       ),
-                      child: Text(
-                        "Total: \$${controller.totalAmount.toStringAsFixed(2)}",
-                        style: const TextStyle(
-                            color: Color(0xE5093030),
-                            fontSize: 15,
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.w600,
-                            height: 1.78),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Total Amount',
+                            style: TextStyle(color: Colors.black, fontSize: 15),
+                          ),
+                          Column(
+                            children: currencyRateController.currencyRates
+                                .map((exchange) => Obx(() => Text(
+                                    '${exchange.currencyCode} ${controller.totalAmount.value * double.parse(exchange.rate)}',
+                                    style: const TextStyle(
+                                        color: Colors.black, fontSize: 15))))
+                                .toList(),
+                          )
+                        ],
                       ),
                     )),
                 const SizedBox(height: 40),

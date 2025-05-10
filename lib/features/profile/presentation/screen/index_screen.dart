@@ -38,59 +38,80 @@ class ProfileIndexScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-          profileListWidget(
-              data: ProfileListModel(
-                  color:
-                      lightningModeController.currentMode.value.mode == "light"
-                          ? LightThemeColors.primaryColor
-                          : DarkThemeColors.primaryColor,
-                  profileListName: 'Edit Profile',
-                  icon: Icons.person,
-                  routes: RoutesConstant.editprofile)),
+          GestureDetector(
+              onTap: () {
+                Get.toNamed(RoutesConstant.editprofile);
+              },
+              child: profileListWidget(
+                data: ProfileListModel(
+                    color: lightningModeController.currentMode.value.mode ==
+                            "light"
+                        ? LightThemeColors.primaryColor
+                        : DarkThemeColors.primaryColor,
+                    profileListName: 'Edit Profile',
+                    icon: Icons.person,
+                    routes: RoutesConstant.editprofile),
+              )),
+          // const SizedBox(height: 20),
+          // profileListWidget(
+          //     data: ProfileListModel(
+          //         color:
+          //             lightningModeController.currentMode.value.mode == "light"
+          //                 ? LightThemeColors.primaryColor
+          //                 : DarkThemeColors.primaryColor,
+          //         profileListName: 'Wallet',
+          //         icon: Icons.wallet,
+          //         routes: '')),
           const SizedBox(height: 20),
-          profileListWidget(
-              data: ProfileListModel(
-                  color:
-                      lightningModeController.currentMode.value.mode == "light"
+
+          GestureDetector(
+              onTap: () {
+                Get.toNamed(RoutesConstant.profileSecurity);
+              },
+              child: profileListWidget(
+                  data: ProfileListModel(
+                      color: lightningModeController.currentMode.value.mode ==
+                              "light"
                           ? LightThemeColors.primaryColor
                           : DarkThemeColors.primaryColor,
-                  profileListName: 'Wallet',
-                  icon: Icons.wallet,
-                  routes: '')),
+                      profileListName: 'Security',
+                      icon: Icons.security,
+                      routes: RoutesConstant.profileSecurity))),
           const SizedBox(height: 20),
-          profileListWidget(
-              data: ProfileListModel(
-                  color:
-                      lightningModeController.currentMode.value.mode == "light"
+
+          GestureDetector(
+              onTap: () {
+                Get.toNamed(RoutesConstant.helpAndFaq);
+              },
+              child: profileListWidget(
+                  data: ProfileListModel(
+                      color: lightningModeController.currentMode.value.mode ==
+                              "light"
                           ? LightThemeColors.primaryColor
                           : DarkThemeColors.primaryColor,
-                  profileListName: 'Security',
-                  icon: Icons.security,
-                  routes: RoutesConstant.profileSecurity)),
+                      profileListName: 'Help & FAQ',
+                      icon: Icons.support_agent,
+                      routes: RoutesConstant.helpAndFaq))),
           const SizedBox(height: 20),
-          profileListWidget(
-              data: ProfileListModel(
-                  color:
-                      lightningModeController.currentMode.value.mode == "light"
+
+          GestureDetector(
+              onTap: () {
+                Get.toNamed(RoutesConstant.withdrawalBank);
+              },
+              child: profileListWidget(
+                  data: ProfileListModel(
+                      color: lightningModeController.currentMode.value.mode ==
+                              "light"
                           ? LightThemeColors.primaryColor
                           : DarkThemeColors.primaryColor,
-                  profileListName: 'Help & FAQ',
-                  icon: Icons.support_agent,
-                  routes: RoutesConstant.helpAndFaq)),
-          const SizedBox(height: 20),
-          profileListWidget(
-              data: ProfileListModel(
-                  color:
-                      lightningModeController.currentMode.value.mode == "light"
-                          ? LightThemeColors.primaryColor
-                          : DarkThemeColors.primaryColor,
-                  profileListName: 'Withdrawal Bank',
-                  icon: Icons.account_balance,
-                  routes: RoutesConstant.withdrawalBank)),
+                      profileListName: 'Withdrawal Bank',
+                      icon: Icons.account_balance,
+                      routes: RoutesConstant.withdrawalBank))),
           const SizedBox(height: 70),
           GestureDetector(
-            onTap: () {
-              Get.find<UserAuthDetailsController>().logout();
+            onTap: () async {
+              await Get.find<UserAuthDetailsController>().logout();
+              Get.offAllNamed(RoutesConstant.signin);
             },
             child: profileListWidget(
                 data: ProfileListModel(

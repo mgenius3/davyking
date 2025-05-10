@@ -29,3 +29,11 @@ Future<void> copyToClipboard({
     );
   }
 }
+
+String shortenString(String input, int maxLength, {bool addEllipsis = true}) {
+  if (input.length <= maxLength) return input;
+  if (addEllipsis && maxLength > 3) {
+    return input.substring(0, maxLength - 3) + '...';
+  }
+  return input.substring(0, maxLength);
+}

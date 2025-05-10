@@ -14,8 +14,8 @@ class EditProfileRepository {
 
   Future<User> editProfile(EditProfileRequest request) async {
     try {
-      final response = await apiClient
-          .patch('${ApiUrl.users}/${request.id}', data: request.toJson());
+      final response = await apiClient.patch('${ApiUrl.users}/${request.id}',
+          data: request.toJson());
 
       return User.fromJson(response.data['user']);
     } on DioException catch (e) {
@@ -23,6 +23,23 @@ class EditProfileRepository {
 
       if (responseData['message'].toString().isNotEmpty) {
         throw AppException("Edit profile failed ${responseData['message']}");
+      }
+      throw AppException(DioErrorHandler.handleDioError(e));
+    } catch (e) {
+      throw AppException("An unexpected error occurred.");
+    }
+  }
+
+  Future<User> updateWithdrawalBank(String url, Map body) async {
+    try {
+      final response = await apiClient.patch(url, data: body);
+
+      return User.fromJson(response.data['user']);
+    } on DioException catch (e) {
+      final responseData = e.response?.data;
+
+      if (responseData['message'].toString().isNotEmpty) {
+        throw AppException("Update withdrawal bank ${responseData['message']}");
       }
       throw AppException(DioErrorHandler.handleDioError(e));
     } catch (e) {

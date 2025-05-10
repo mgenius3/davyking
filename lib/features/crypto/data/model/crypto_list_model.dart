@@ -7,6 +7,7 @@ class CryptoListModel {
   final String network;
   final String buyRate; // Kept as String to match your data
   final String sellRate; // Kept as String to match your data
+  final String currentPrice;
   final int isEnabled; // 1 or 0 as per your data
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -21,6 +22,7 @@ class CryptoListModel {
     required this.network,
     required this.buyRate,
     required this.sellRate,
+    required this.currentPrice,
     required this.isEnabled,
     required this.createdAt,
     required this.updatedAt,
@@ -38,6 +40,7 @@ class CryptoListModel {
       network: json['network'] as String,
       buyRate: json['buy_rate'] as String,
       sellRate: json['sell_rate'] as String,
+      currentPrice: json['current_price'] as String,
       isEnabled: json['is_enabled'] as int,
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),
@@ -56,6 +59,7 @@ class CryptoListModel {
       'buy_rate': buyRate,
       'sell_rate': sellRate,
       'is_enabled': isEnabled,
+      'current_price': currentPrice,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
       'wallet_address': wallet_address,

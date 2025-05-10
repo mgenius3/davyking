@@ -19,9 +19,9 @@ class _AdScreenState extends State<AdScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Obx(() => SizedBox(
         height: controller.ads.isEmpty ? 0 : 130,
-        child: Obx(() => controller.isLoading.value
+        child: controller.isLoading.value
             ? _buildShimmerList()
             : controller.errorMessage.value.isNotEmpty
                 ? Center(child: Text(controller.errorMessage.value))
@@ -75,8 +75,7 @@ class _AdScreenState extends State<AdScreen> {
               height: 100, // Adjust height based on your AdWidget
               width: double.infinity,
               decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(8)
-                  ),
+                  color: Colors.white, borderRadius: BorderRadius.circular(8)),
             ),
           ),
         );

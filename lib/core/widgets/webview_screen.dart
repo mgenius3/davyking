@@ -1,41 +1,80 @@
-import 'package:davyking/core/widgets/back_navigation_widget.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
-void openWebView(BuildContext context, String url, String name) {
-  double padding = 20; // Padding inside the Container
+class WebViewScreen extends StatefulWidget {
+  final String initialUrl;
+  final String? title;
+  final Function(String)? onPageStarted;
+  final Function(String)? onPageFinished;
+  final NavigationDelegate? navigationDelegate;
 
-  final WebViewController controller = WebViewController()
-    ..setJavaScriptMode(JavaScriptMode.unrestricted)
-    ..loadRequest(Uri.parse(url));
+  const WebViewScreen({
+    super.key,
+    required this.initialUrl,
+    this.title,
+    this.onPageStarted,
+    this.onPageFinished,
+    this.navigationDelegate,
+  });
 
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => Scaffold(
-        body: Padding(
-          padding: EdgeInsets.all(padding),
-          child: Column(
-            children: [
-              const SizedBox(height: 30),
-              Row(
-                children: [
-                  BackNavigationWidget(),
-                  const SizedBox(width: 20),
-                  Text(
-                    name,
-                    style: const TextStyle(fontFamily: "Work Sans"),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Expanded(
-                child: WebViewWidget(controller: controller),
-              ),
-            ],
-          ),
+  @override
+  WebViewScreenState createState() => WebViewScreenState();
+}
+
+class WebViewScreenState extends State<WebViewScreen> {
+  bool isLoading = true;
+  late WebViewController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialize WebView controller
+    _controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageStarted: (String url) {
+            setState(() {
+              isLoading = true;
+            });
+            widget.onPageStarted?.call(url);
+          },
+          onPageFinished: (String url) {
+            setState(() {
+              isLoading = false;
+            });
+            widget.onPageFinished?.call(url);
+          },
+          onNavigationRequest: widget.navigationDelegate != null
+              ? widget.navigationDelegate!.onNavigationRequest
+              : (NavigationRequest request) => NavigationDecision.navigate,
         ),
+      )
+      ..loadRequest(Uri.parse(widget.initialUrl));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title ?? 'WebView'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () {
+              _controller.reload();
+            },
+          ),
+        ],
       ),
-    ),
-  );
+      body: Stack(
+        children: [
+          WebViewWidget(controller: _controller),
+          if (isLoading) const Center(child: CircularProgressIndicator()),
+        ],
+      ),
+    );
+  }
 }

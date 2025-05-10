@@ -1,5 +1,3 @@
-
-
 import 'package:davyking/core/models/user_auth_response_model.dart';
 
 class CryptoTransactionModel {
@@ -21,25 +19,24 @@ class CryptoTransactionModel {
   final User user;
   final CryptoCurrency cryptoCurrency;
 
-  CryptoTransactionModel({
-    required this.id,
-    required this.userId,
-    required this.cryptoCurrencyId,
-    required this.type,
-    required this.amount,
-    required this.fiatAmount,
-    required this.status,
-    this.proofFile,
-    this.paymentMethod,
-    this.walletAddress,
-    required this.confirmations,
-    this.txHash,
-    this.adminNotes,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.user,
-    required this.cryptoCurrency,
-  });
+  CryptoTransactionModel(
+      {required this.id,
+      required this.userId,
+      required this.cryptoCurrencyId,
+      required this.type,
+      required this.amount,
+      required this.fiatAmount,
+      required this.status,
+      this.proofFile,
+      this.paymentMethod,
+      this.walletAddress,
+      required this.confirmations,
+      this.txHash,
+      this.adminNotes,
+      required this.createdAt,
+      required this.updatedAt,
+      required this.user,
+      required this.cryptoCurrency});
 
   factory CryptoTransactionModel.fromJson(Map<String, dynamic> json) {
     return CryptoTransactionModel(
@@ -93,6 +90,7 @@ class CryptoCurrency {
   final String network;
   final String buyRate;
   final String sellRate;
+  final String currentPrice;
   final bool isEnabled;
   final String image;
   final String? walletAddress;
@@ -106,6 +104,7 @@ class CryptoCurrency {
     required this.network,
     required this.buyRate,
     required this.sellRate,
+    required this.currentPrice,
     required this.isEnabled,
     required this.image,
     this.walletAddress,
@@ -115,18 +114,18 @@ class CryptoCurrency {
 
   factory CryptoCurrency.fromJson(Map<String, dynamic> json) {
     return CryptoCurrency(
-      id: json['id'],
-      name: json['name'],
-      symbol: json['symbol'],
-      network: json['network'],
-      buyRate: json['buy_rate'].toString(),
-      sellRate: json['sell_rate'].toString(),
-      isEnabled: json['is_enabled'] == 1,
-      image: json['image'],
-      walletAddress: json['wallet_address'],
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
-    );
+        id: json['id'],
+        name: json['name'],
+        symbol: json['symbol'],
+        network: json['network'],
+        buyRate: json['buy_rate'].toString(),
+        sellRate: json['sell_rate'].toString(),
+        currentPrice: json['current_price'].toString(),
+        isEnabled: json['is_enabled'] == 1,
+        image: json['image'],
+        walletAddress: json['wallet_address'],
+        createdAt: DateTime.parse(json['created_at']),
+        updatedAt: DateTime.parse(json['updated_at']));
   }
 
   Map<String, dynamic> toJson() {
@@ -137,11 +136,12 @@ class CryptoCurrency {
       'network': network,
       'buy_rate': buyRate,
       'sell_rate': sellRate,
+      'current_price': currentPrice,
       'is_enabled': isEnabled ? 1 : 0,
       'image': image,
       'wallet_address': walletAddress,
       'created_at': createdAt.toIso8601String(),
-      'updated_at': updatedAt.toIso8601String(),
+      'updated_at': updatedAt.toIso8601String()
     };
   }
 }

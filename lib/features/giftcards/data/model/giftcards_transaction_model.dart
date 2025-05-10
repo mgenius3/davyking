@@ -95,7 +95,7 @@ class GiftCard {
   final String sellRate;
   final bool isEnabled;
   final int stock;
-  final String? ranges;
+  // final String? ranges;
   final String image;
 
   GiftCard({
@@ -107,7 +107,7 @@ class GiftCard {
     required this.sellRate,
     required this.isEnabled,
     required this.stock,
-    this.ranges,
+    // this.ranges,
     required this.image,
   });
 
@@ -121,8 +121,8 @@ class GiftCard {
       sellRate: json['sell_rate'],
       isEnabled: json['is_enabled'] == 1,
       stock: json['stock'],
-      ranges: json['ranges'],
-      image: json['image'],
+      // ranges: json['ranges'],
+      image: json['image']
     );
   }
 }

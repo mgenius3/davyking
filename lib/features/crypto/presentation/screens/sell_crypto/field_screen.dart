@@ -12,6 +12,7 @@ import 'package:davyking/features/crypto/data/model/crypto_list_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:io';
+import 'package:davyking/core/controllers/transaction_auth_controller.dart';
 
 class SellCryptoInputField extends StatelessWidget {
   const SellCryptoInputField({super.key});
@@ -26,6 +27,8 @@ class SellCryptoInputField extends StatelessWidget {
         Get.find<LightningModeController>();
     final CurrencyRateController currencyRateController =
         Get.find<CurrencyRateController>();
+    final TransactionAuthController transactionAuthController =
+        Get.find<TransactionAuthController>();
 
     return Scaffold(
       body: SafeArea(
@@ -304,7 +307,34 @@ class SellCryptoInputField extends StatelessWidget {
                         style: TextStyle(color: Colors.black, fontSize: 15),
                       ),
                       Obx(() => Text(
-                            '\$${controller.currentRate.value.toStringAsFixed(2)}/\$',
+                            '${controller.currentRate.value.toStringAsFixed(2)}/${controller.selectedCrypto.value?.symbol}',
+                            style: const TextStyle(
+                                color: Colors.black, fontSize: 15),
+                          )),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                // Current Rate
+                Container(
+                  width: Get.width,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  decoration: ShapeDecoration(
+                    color: const Color(0xFFF7F7F7),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5)),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Total Crypto to Send',
+                        style: TextStyle(color: Colors.black, fontSize: 15),
+                      ),
+                      Obx(() => Text(
+                            '${controller.cryptoAmount.value} ${controller.selectedCrypto.value?.symbol}',
                             style: const TextStyle(
                                 color: Colors.black, fontSize: 15),
                           )),
@@ -321,8 +351,7 @@ class SellCryptoInputField extends StatelessWidget {
                   decoration: ShapeDecoration(
                     color: const Color(0xFFF7F7F7),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
+                        borderRadius: BorderRadius.circular(5)),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -335,7 +364,7 @@ class SellCryptoInputField extends StatelessWidget {
                         children: currencyRateController.currencyRates
                             .map(
                               (x) => Obx(() => Text(
-                                    '${x.currencyCode} ${controller.fiatAmount.value * double.parse(x.rate)}',
+                                    '${x.currencyCode} ${controller.fiatAmount.value * double.parse(x.rate) * num.parse(controller.isCryptoAmount.value ? controller.selectedCrypto.value!.currentPrice : "1")}',
                                     style: const TextStyle(
                                         color: Colors.black, fontSize: 15),
                                   )),
@@ -345,9 +374,7 @@ class SellCryptoInputField extends StatelessWidget {
                     ],
                   ),
                 ),
-
                 const SizedBox(height: 20),
-
                 // Proof of Coin Transfer Upload Section
                 Container(
                   width: Get.width,
@@ -440,9 +467,17 @@ class SellCryptoInputField extends StatelessWidget {
                         controller: CustomPrimaryButtonController(
                           model: const CustomPrimaryButtonModel(
                               text: 'Sell Crypto'),
-                          onPressed: () {
+                          onPressed: () async {
                             if (controller.validateInputs()) {
-                              controller.submitSellCrypto();
+                              bool isAuthenticated =
+                                  await transactionAuthController.authenticate(
+                                context,
+                                'Sell Crypto',
+                              );
+
+                              if (isAuthenticated) {
+                                controller.submitSellCrypto();
+                              }
                             }
                           },
                         ),

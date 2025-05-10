@@ -9,6 +9,7 @@ import 'package:davyking/core/widgets/top_header_widget.dart';
 import 'package:davyking/features/giftcards/controllers/buy_giftcard_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:davyking/core/controllers/transaction_auth_controller.dart';
 
 class BuyGiftCardDetailsScreen extends StatelessWidget {
   const BuyGiftCardDetailsScreen({super.key});
@@ -20,6 +21,8 @@ class BuyGiftCardDetailsScreen extends StatelessWidget {
     final BuyGiftcardController controller = Get.find<BuyGiftcardController>();
     final data =
         Get.arguments as Map<String, dynamic>; // Retrieve the arguments
+    final TransactionAuthController transactionAuthController =
+        Get.find<TransactionAuthController>();
 
     return Scaffold(
       body: SafeArea(
@@ -137,28 +140,29 @@ class BuyGiftCardDetailsScreen extends StatelessWidget {
                             const SizedBox(height: 5),
                             details('Status', 'pending'),
                             const SizedBox(height: 5),
-                            Text('Payment Screenshort',
-                                textAlign: TextAlign.center,
-                                style: Theme.of(Get.context!)
-                                    .textTheme
-                                    .displayMedium
-                                    ?.copyWith(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500,
-                                        height: 1.38)),
+                            if (controller.paymentScreenshot.value != null)
+                              Text('Payment Screenshort',
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(Get.context!)
+                                      .textTheme
+                                      .displayMedium
+                                      ?.copyWith(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500,
+                                          height: 1.38)),
                             const SizedBox(height: 5),
-                            Container(
-                              height: 100,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                image: DecorationImage(
-                                  image: FileImage(
-                                      controller.paymentScreenshot.value!),
-                                  fit: BoxFit.cover,
+                            if (controller.paymentScreenshot.value != null)
+                              Container(
+                                height: 100,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  image: DecorationImage(
+                                      image: FileImage(
+                                          controller.paymentScreenshot.value!),
+                                      fit: BoxFit.cover),
                                 ),
-                              ),
-                            )
+                              )
                           ],
                         ),
                       ),
@@ -227,8 +231,12 @@ class BuyGiftCardDetailsScreen extends StatelessWidget {
                           text: 'Proceed',
                           textColor: Colors.white,
                         ),
-                        onPressed: () {
-                          controller.submitBuyGiftCard();
+                        onPressed: () async {
+                          bool isAuthenticated = await transactionAuthController
+                              .authenticate(context, 'Buy GiftCard');
+                          if (isAuthenticated) {
+                            controller.submitBuyGiftCard();
+                          }
                         }))),
           ],
         ),

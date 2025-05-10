@@ -10,6 +10,8 @@ import 'package:davyking/core/widgets/top_header_widget.dart';
 import 'package:davyking/features/giftcards/controllers/buy_giftcard_controller.dart';
 import 'package:davyking/features/giftcards/data/model/giftcards_list_model.dart';
 import 'package:flutter/material.dart';
+import 'package:davyking/core/controllers/currency_rate_controller.dart';
+
 import 'package:get/get.dart';
 
 class BuyGiftCardInputField extends StatelessWidget {
@@ -25,6 +27,8 @@ class BuyGiftCardInputField extends StatelessWidget {
         Get.put(BuyGiftcardController(giftCardData: data));
     final LightningModeController lightningModeController =
         Get.find<LightningModeController>();
+    final CurrencyRateController currencyRateController =
+        Get.find<CurrencyRateController>();
 
     return Scaffold(
       body: SafeArea(
@@ -86,29 +90,6 @@ class BuyGiftCardInputField extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                // Obx(
-                //   () => DropdownButtonFormField<String>(
-                //       style: TextStyle(fontSize: 16, color: Colors.black),
-                //       value: controller.selectedCountry.value.isEmpty
-                //           ? null
-                //           : controller.selectedCountry.value,
-                //       icon: const Icon(Icons.keyboard_arrow_down),
-                //       borderRadius: BorderRadius.circular(12.79),
-                //       items: controller.countries
-                //           .map((country) => DropdownMenuItem(
-                //                 value: country,
-                //                 child: Text(country),
-                //               ))
-                //           .toList(),
-                //       onChanged: controller.updateSelectedCountry,
-                //       decoration: const InputDecoration(
-                //           border: InputBorder.none,
-                //           filled: true,
-                //           fillColor: Color(0xFFF7F7F7),
-                //           labelText: 'Select Country',
-                //           labelStyle: TextStyle(color: Colors.black))),
-                // ),
-                // const SizedBox(height: 20),
                 Container(
                   width: Get.width,
                   height: 50,
@@ -172,26 +153,27 @@ class BuyGiftCardInputField extends StatelessWidget {
                             : Colors.white,
                     style: Theme.of(context).textTheme.displayMedium,
                     icon: const Icon(Icons.keyboard_arrow_down),
-                    value: controller.selectedRange.value.isEmpty
+                    value: controller.selectedPaymentMethod.value.isEmpty
                         ? null
-                        : controller.selectedRange.value,
-                    items: controller.ranges
-                        .map((range) => DropdownMenuItem(
-                              value: range,
+                        : controller.selectedPaymentMethod.value,
+                    items: controller.paymentMethods
+                        .map((method) => DropdownMenuItem(
+                              value: method,
                               child: Text(
-                                range,
+                                method == 'bank_transfer'
+                                    ? 'Bank Transfer'
+                                    : 'Wallet Balance',
                                 style: TextStyle(
                                     color: DarkThemeColors.primaryColor),
-                                // selectionColor: Colors.black,
                               ),
                             ))
                         .toList(),
-                    onChanged: controller.updateSelectedRange,
+                    onChanged: controller.updateSelectedPaymentMethod,
                     decoration: const InputDecoration(
                         border: InputBorder.none,
                         filled: true,
                         fillColor: Color(0xFFF7F7F7),
-                        labelText: 'Select Buy Range (₦)',
+                        labelText: 'Select Payment Method',
                         labelStyle: TextStyle(color: Colors.black)),
                   ),
                 ),
@@ -212,7 +194,7 @@ class BuyGiftCardInputField extends StatelessWidget {
                             borderRadius: BorderRadius.circular(5)),
                       ),
                       child: Text(
-                        '₦${data.denomination}/giftcard',
+                        '\$${data.denomination}/giftcard',
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                             color: Color(0xE5093030),
@@ -260,92 +242,106 @@ class BuyGiftCardInputField extends StatelessWidget {
                           borderRadius: BorderRadius.circular(5),
                         ),
                       ),
-                      child: Text(
-                        "Total: ₦${controller.totalAmount.toStringAsFixed(2)}",
-                        style: const TextStyle(
-                            color: Color(0xE5093030),
-                            fontSize: 15,
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.w600,
-                            height: 1.78),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Total Amount',
+                            style: TextStyle(color: Colors.black, fontSize: 15),
+                          ),
+                          Column(
+                            children: currencyRateController.currencyRates
+                                .map((exchange) => Obx(() => Text(
+                                    '${exchange.currencyCode} ${controller.totalAmount.value * double.parse(exchange.rate)}',
+                                    style: const TextStyle(
+                                        color: Colors.black, fontSize: 15))))
+                                .toList(),
+                          )
+                        ],
                       ),
                     )),
                 const SizedBox(height: 40),
-                // New Payment Screenshot Upload Section
-                Container( 
-                  width: Get.width,
-                  padding: const EdgeInsets.all(12),
-                  decoration: ShapeDecoration(
-                    color: const Color(0xFFF7F7F7),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Upload Payment Screenshot",
-                        style: TextStyle(
-                          color: Color(0xFF093030),
-                          fontSize: 15,
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w500,
+                // Payment Screenshot Upload Section (Conditional)
+                Obx(() => controller.selectedPaymentMethod.value ==
+                        'bank_transfer'
+                    ? Container(
+                        width: Get.width,
+                        padding: const EdgeInsets.all(12),
+                        decoration: ShapeDecoration(
+                          color: const Color(0xFFF7F7F7),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                      Obx(() => controller.paymentScreenshot.value == null
-                          ? ElevatedButton.icon(
-                              onPressed: () => controller.uploadScreenshot(),
-                              icon: const Icon(Icons.upload),
-                              label: const Text("Choose Image"),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                foregroundColor: const Color(0xFF093030),
-                                minimumSize: const Size(double.infinity, 45),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Upload Payment Screenshot",
+                              style: TextStyle(
+                                color: Color(0xFF093030),
+                                fontSize: 15,
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.w500,
                               ),
-                            )
-                          : Column(
-                              children: [
-                                Container(
-                                  height: 100,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    image: DecorationImage(
-                                      image: FileImage(
-                                          controller.paymentScreenshot.value!),
-                                      fit: BoxFit.cover,
+                            ),
+                            const SizedBox(height: 10),
+                            Obx(() => controller.paymentScreenshot.value == null
+                                ? ElevatedButton.icon(
+                                    onPressed: () =>
+                                        controller.uploadScreenshot(),
+                                    icon: const Icon(Icons.upload),
+                                    label: const Text("Choose Image"),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      foregroundColor: const Color(0xFF093030),
+                                      minimumSize:
+                                          const Size(double.infinity, 45),
                                     ),
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    TextButton(
-                                      onPressed: () =>
-                                          controller.uploadScreenshot(),
-                                      child: const Text("Change Image"),
-                                    ),
-                                    TextButton(
-                                      onPressed: () =>
-                                          controller.removeScreenshot(),
-                                      child: const Text(
-                                        "Remove",
-                                        style: TextStyle(color: Colors.red),
+                                  )
+                                : Column(
+                                    children: [
+                                      Container(
+                                        height: 100,
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          image: DecorationImage(
+                                            image: FileImage(controller
+                                                .paymentScreenshot.value!),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            )),
-                    ],
-                  ),
-                ),
+                                      const SizedBox(height: 10),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          TextButton(
+                                            onPressed: () =>
+                                                controller.uploadScreenshot(),
+                                            child: const Text("Change Image"),
+                                          ),
+                                          TextButton(
+                                            onPressed: () =>
+                                                controller.removeScreenshot(),
+                                            child: const Text(
+                                              "Remove",
+                                              style:
+                                                  TextStyle(color: Colors.red),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  )),
+                          ],
+                        ),
+                      )
+                    : const SizedBox.shrink()),
                 const SizedBox(height: 40),
-
                 // Buy Button
                 CustomPrimaryButton(
                   controller: CustomPrimaryButtonController(
@@ -360,7 +356,8 @@ class BuyGiftCardInputField extends StatelessWidget {
                               "selectedCountry":
                                   controller.selectedCountry.value,
                               "quantity": controller.quantity.value,
-                              "selectedRange": controller.selectedRange.value,
+                              "selectedPaymentMethod":
+                                  controller.selectedPaymentMethod.value,
                               "totalAmount": controller.totalAmount.value,
                               "paymentScreenshot":
                                   controller.paymentScreenshot.value?.path,

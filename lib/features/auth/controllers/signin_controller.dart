@@ -61,7 +61,7 @@ class LoginController extends GetxController {
       await _storeAuthDetails(response);
       await _updateApiToken();
       // showSnackbar("Success", "Sign-in successful!", isError: false);
-      Get.toNamed(RoutesConstant.home);
+      Get.offAllNamed(RoutesConstant.home); // <- updated here
     } catch (e) {
       // Handle error
       Failure failure = ErrorMapper.map(e as Exception);
@@ -77,7 +77,8 @@ class LoginController extends GetxController {
     final storageService = SecureStorageService();
     await storageService.saveData('auth_token', response.token);
     await storageService.saveData(
-        'user_details', jsonEncode(response.toJson()));
+        'user_details', jsonEncode(response.user.toJson()));
+    await storageService.saveData("user_has", "sign_in");
   }
 
   // Update API client with new token

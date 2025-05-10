@@ -12,6 +12,7 @@ import 'package:davyking/features/crypto/controllers/buy_crypto_controller.dart'
 import 'package:davyking/features/crypto/data/model/crypto_list_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:davyking/core/controllers/transaction_auth_controller.dart';
 
 class BuyCryptoInputField extends StatelessWidget {
   const BuyCryptoInputField({super.key});
@@ -28,6 +29,8 @@ class BuyCryptoInputField extends StatelessWidget {
         Get.find<AdminBankDetailsController>();
     final CurrencyRateController currencyRateController =
         Get.find<CurrencyRateController>();
+    final TransactionAuthController transactionAuthController =
+        Get.find<TransactionAuthController>();
 
     return Scaffold(
       body: SafeArea(
@@ -91,12 +94,11 @@ class BuyCryptoInputField extends StatelessWidget {
                           .toList(),
                       onChanged: controller.updateSelectedCrypto,
                       decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Color(0xFFF7F7F7),
-                        labelText: 'Select Asset',
-                        labelStyle: TextStyle(color: Colors.black),
-                      ),
+                          border: InputBorder.none,
+                          filled: true,
+                          fillColor: Color(0xFFF7F7F7),
+                          labelText: 'Select Asset',
+                          labelStyle: TextStyle(color: Colors.black)),
                     )),
                 const SizedBox(height: 20),
 
@@ -315,7 +317,7 @@ class BuyCryptoInputField extends StatelessWidget {
                         style: TextStyle(color: Colors.black, fontSize: 15),
                       ),
                       Obx(() => Text(
-                            '\$${controller.currentRate.value.toStringAsFixed(2)}/\$',
+                            '${controller.currentRate.value.toStringAsFixed(2)}/${controller.selectedCrypto.value?.symbol}',
                             style: const TextStyle(
                                 color: Colors.black, fontSize: 15),
                           )),
@@ -332,8 +334,7 @@ class BuyCryptoInputField extends StatelessWidget {
                   decoration: ShapeDecoration(
                     color: const Color(0xFFF7F7F7),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
+                        borderRadius: BorderRadius.circular(5)),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -344,18 +345,16 @@ class BuyCryptoInputField extends StatelessWidget {
                       ),
                       Column(
                         children: currencyRateController.currencyRates
-                            .map(
-                              (x) => Obx(() => Text(
-                                    '${x.currencyCode} ${controller.fiatAmount.value * double.parse(x.rate)}',
-                                    style: const TextStyle(
-                                        color: Colors.black, fontSize: 15),
-                                  )),
-                            )
+                            .map((exchange) => Obx(() => Text(
+                                '${exchange.currencyCode} ${controller.fiatAmount.value * double.parse(exchange.rate) * num.parse(controller.isCryptoAmount.value ? controller.selectedCrypto.value!.currentPrice : "1")}',
+                                style: const TextStyle(
+                                    color: Colors.black, fontSize: 15))))
                             .toList(),
                       )
                     ],
                   ),
                 ),
+
                 const SizedBox(height: 20),
                 // Conditionally Display Admin Bank Details and Image Upload for Bank Transfer
                 Obx(() => controller.paymentMethod.value == 'Bank Transfer'
@@ -556,9 +555,16 @@ class BuyCryptoInputField extends StatelessWidget {
                         controller: CustomPrimaryButtonController(
                           model: const CustomPrimaryButtonModel(
                               text: 'Buy Crypto'),
-                          onPressed: () {
+                          onPressed: () async {
+                            // transactionAuthController.resetPin(context);
                             if (controller.validateInputs()) {
-                              controller.submitBuyCrypto();
+                              bool isAuthenticated =
+                                  await transactionAuthController.authenticate(
+                                      context, 'Buy Crypto');
+
+                              if (isAuthenticated) {
+                                controller.submitBuyCrypto();
+                              }
                             }
                           },
                         ),

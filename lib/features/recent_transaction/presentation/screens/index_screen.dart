@@ -14,7 +14,8 @@ class RecentTransactionScreen extends StatelessWidget {
     return Scaffold(
         body: SafeArea(
             child: Scaffold(
-                body: Container(
+                body: SingleChildScrollView(
+                    child: Container(
       margin: const EdgeInsets.only(
           left: Dimensions.defaultLeftSpacing,
           right: Dimensions.defaultRightSpacing,
@@ -24,7 +25,7 @@ class RecentTransactionScreen extends StatelessWidget {
           const TopHeaderWidget(
               data: TopHeaderModel(
                   title: "Recent Transactions", child: SizedBox())),
-          const SizedBox(height: 50),
+          const SizedBox(height: 20),
           SingleChildScrollView(
             child: Obx(
               () => controller.transactionLogs.isEmpty
@@ -32,88 +33,78 @@ class RecentTransactionScreen extends StatelessWidget {
                       child: Text('No activity yet'),
                     )
                   : SizedBox(
-                      height: 400, // Specify the height for scrollable area
-                      child: SingleChildScrollView(
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(
-                              maxHeight: 400 // Restrict ListView height
+                      height: Get.height -
+                          100, // Specify the height for scrollable area
+                      child: ListView.builder(
+                        shrinkWrap: true, // Ensures it takes only needed space
+                        physics:
+                            const BouncingScrollPhysics(), // Smooth scrolling
+                        itemCount: controller.transactionLogs.length,
+                        itemBuilder: (context, index) {
+                          final log = controller.transactionLogs[index];
+                          return Card(
+                            margin: const EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 16),
+                            child: ListTile(
+                              title: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    log.transactionType
+                                            .replaceAll('_', ' ')
+                                            .capitalizeFirst ??
+                                        '',
+                                  ),
+                                  Text(
+                                    '\$${log.details['total_amount']}',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
                               ),
-                          child: ListView.builder(
-                            shrinkWrap:
-                                true, // Ensures it takes only needed space
-                            physics:
-                                const BouncingScrollPhysics(), // Smooth scrolling
-                            itemCount: controller.transactionLogs.length,
-                            itemBuilder: (context, index) {
-                              final log = controller.transactionLogs[index];
-                              return Card(
-                                margin: const EdgeInsets.symmetric(
-                                    vertical: 8, horizontal: 16),
-                                child: ListTile(
-                                  title: Row(
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('${log.details['message']}'),
+                                      Text(
+                                        '${log.details['type']}'
+                                                .capitalizeFirst ??
+                                            '',
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        log.transactionType
-                                                .replaceAll('_', ' ')
-                                                .capitalizeFirst ??
-                                            '',
+                                        'Date: ${log.timestamp.toString().substring(0, 10)}',
+                                        style: const TextStyle(fontSize: 12),
                                       ),
                                       Text(
-                                        '\$${log.details['total_amount']}',
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold),
+                                        'Time: ${log.timestamp.toString().substring(11, 16)}',
+                                        style: const TextStyle(fontSize: 12),
                                       ),
                                     ],
                                   ),
-                                  subtitle: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const SizedBox(height: 10),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text('${log.details['message']}'),
-                                          Text(
-                                            '${log.details['type']}'
-                                                    .capitalizeFirst ??
-                                                '',
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            'Date: ${log.timestamp.toString().substring(0, 10)}',
-                                            style:
-                                                const TextStyle(fontSize: 12),
-                                          ),
-                                          Text(
-                                            'Time: ${log.timestamp.toString().substring(11, 16)}',
-                                            style:
-                                                const TextStyle(fontSize: 12),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ),
             ),
-          )
+          ),
         ],
       ),
-    ))));
+    )))));
   }
 }

@@ -1,12 +1,10 @@
 import 'dart:convert';
-
 import 'package:davyking/core/controllers/user_auth_details_controller.dart';
 import 'package:davyking/core/errors/error_mapper.dart';
 import 'package:davyking/core/services/secure_storage_service.dart';
 import 'package:davyking/core/utils/snackbar.dart';
 import 'package:davyking/core/models/user_auth_response_model.dart';
 import 'package:davyking/features/profile/data/model/edit_profile_request_model.dart';
-import 'package:davyking/features/profile/data/model/edit_profile_response_model.dart';
 import 'package:davyking/features/profile/data/repositories/edit_profile_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -67,7 +65,6 @@ class EditProfileController extends GetxController {
       showSnackbar("Success", "Edit profile successful!", isError: false);
       // Get.offNamed(RoutePaths.tab_nav);
     } catch (e) {
-      print(e);
       final failure = ErrorMapper.map(e as Exception);
       showSnackbar("Error", failure.message);
     } finally {

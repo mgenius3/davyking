@@ -59,6 +59,8 @@ class RoutesConstant {
 
   //wallet
   static const String withdraw = '/withdraw';
+  static const String wallet_transaction_details =
+      '/wallet-transaction-details';
 
   //deposit
   static const String deposit = '/deposit';

@@ -9,6 +9,7 @@ import 'package:davyking/core/constants/api_url.dart';
 import 'package:davyking/core/errors/app_exception.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:davyking/core/utils/upload_image_to_cloudinary.dart';
 import 'package:dio/dio.dart' as dio; // For MultipartFile
 
 class GiftCardRepository {
@@ -43,29 +44,24 @@ class GiftCardRepository {
   }
 
   Future<void> transactGiftCard(
-      Map<String, dynamic> fields, String filepath) async {
+      Map<String, dynamic> data, String filepath) async {
     try {
-      // Prepare files
-      Map<String, dio.MultipartFile> files = {};
-      files['proof_file'] = await dio.MultipartFile.fromFile(
-        filepath,
-        filename:
-            'payment_screenshot_${DateTime.now().millisecondsSinceEpoch}.jpg',
-      );
+      String? file_url = await uploadImageToCloudinary(filepath);
 
-      final response = await apiClient.postMultipart(
-          ApiUrl.gift_card_transaction,
-          fields: fields,
-          files: files);
+      data['proof_file'] = file_url;
+
+      final response = await apiClient.post(
+        ApiUrl.gift_card_transaction,
+        data: data,
+      );
 
       if (response.data['status'] == "success") {
         Get.showSnackbar(
           GetSnackBar(
-            title: 'Success',
-            message: 'Transaction created successfully',
-            duration: const Duration(seconds: 3),
-            backgroundColor: DarkThemeColors.primaryColor,
-          ),
+              title: 'Success',
+              message: 'Transaction created successfully',
+              duration: const Duration(seconds: 3),
+              backgroundColor: DarkThemeColors.primaryColor),
         );
       }
     } on DioException catch (e) {
@@ -85,9 +81,11 @@ class GiftCardRepository {
             'Failed to fetch gift cards: ${response.data['message'] ?? 'Unknown error'}');
       }
 
+      print(response.data['data'].runtimeType);
       // Extract the 'data' field, default to empty list if null
-      final List<dynamic> giftCardsJson =
-          response.data['data'] as List<dynamic>? ?? [];
+      final List<dynamic> giftCardsJson = response.data['data'];
+
+      print(giftCardsJson);
 
       // Map each item to GiftcardsListModel
       return giftCardsJson
@@ -97,6 +95,7 @@ class GiftCardRepository {
     } on DioException catch (e) {
       throw AppException(DioErrorHandler.handleDioError(e));
     } catch (e) {
+      print(e);
       throw AppException(
           "An unexpected error occurred while fetching gift cards.");
     }

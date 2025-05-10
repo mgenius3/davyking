@@ -1,8 +1,8 @@
 import 'dart:convert';
-
 import 'package:davyking/core/constants/routes.dart';
 import 'package:davyking/core/controllers/admin_bank_details_controller.dart';
 import 'package:davyking/core/controllers/currency_rate_controller.dart';
+import 'package:davyking/core/controllers/transaction_auth_controller.dart';
 import 'package:davyking/core/controllers/user_auth_details_controller.dart';
 import 'package:davyking/core/services/secure_storage_service.dart';
 import 'package:davyking/core/theme/dark_theme.dart';
@@ -10,6 +10,7 @@ import 'package:davyking/core/theme/light_theme.dart';
 import 'package:davyking/core/controllers/mode_controller.dart';
 import 'package:davyking/core/states/mode.dart';
 import 'package:davyking/core/models/user_auth_response_model.dart';
+import 'package:davyking/features/crypto/controllers/index_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:async';
@@ -23,6 +24,7 @@ void main() async {
   Get.put(UserAuthDetailsController());
   Get.put(AdminBankDetailsController());
   Get.put(CurrencyRateController());
+  Get.put(TransactionAuthController());
 
   runApp(const MyApp());
 }
@@ -36,17 +38,11 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final LightningModeController controller = Get.put(LightningModeController());
   final UserAuthDetailsController authController =
-      Get.put(UserAuthDetailsController());
+      Get.find<UserAuthDetailsController>();
 
   Brightness? _currentBrightness;
   Timer? _timer;
-
-  void _getUserAuthDetails() async {
-    final storageService = SecureStorageService();
-    var user_details = await storageService.getData('user_details');
-    authController
-        .saveUser(UserAuthResponse.fromJson(jsonDecode(user_details!)));
-  }
+  late String _initialRoutes;
 
   @override
   void initState() {
@@ -57,7 +53,26 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     _currentBrightness =
         WidgetsBinding.instance.platformDispatcher.platformBrightness;
 
-    _getUserAuthDetails();
+    _checkToken();
+  }
+
+  void _checkToken() async {
+    String? user_has = await SecureStorageService().getData('user_has');
+    if (user_has != null) {
+      if (user_has == "log_out") {
+        setState(() {
+          _initialRoutes = RoutesConstant.signin;
+        });
+      } else {
+        setState(() {
+          _initialRoutes = RoutesConstant.home;
+        });
+      }
+    } else {
+      setState(() {
+        _initialRoutes = RoutesConstant.splash;
+      });
+    }
   }
 
   // void startBrightnessCheck() {
@@ -90,8 +105,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     return Obx(() => GetMaterialApp(
         title: 'DavyKing',
         debugShowCheckedModeBanner: false,
-        // initialRoute: RoutesConstant.splash,
-        initialRoute: RoutesConstant.home,
+        initialRoute: _initialRoutes,
+        // initialRoute: RoutesConstant.home,
         theme: controller.currentMode.value.mode == 'dark'
             ? darkTheme()
             : lightTheme(),

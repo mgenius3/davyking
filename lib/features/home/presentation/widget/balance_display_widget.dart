@@ -1,6 +1,8 @@
 import 'package:davyking/core/constants/routes.dart';
 import 'package:davyking/core/constants/symbols.dart';
+import 'package:davyking/core/controllers/currency_rate_controller.dart';
 import 'package:davyking/core/controllers/user_auth_details_controller.dart';
+import 'package:davyking/core/models/currency_rate_model.dart';
 import 'package:davyking/features/home/controllers/balance_display_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +16,8 @@ class BalanceDisplayWidget extends StatelessWidget {
     final BalanceDisplayController controller =
         Get.put(BalanceDisplayController());
     final userAuthController = Get.find<UserAuthDetailsController>();
+    final currencyRateController = Get.find<CurrencyRateController>();
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
       height: 126,
@@ -71,10 +75,12 @@ class BalanceDisplayWidget extends StatelessWidget {
                 ],
               ),
               GestureDetector(
-                onTap: () {},
-                child: Row(
+                onTap: () {
+                  Get.toNamed(RoutesConstant.recent_transaction);
+                },
+                child: const Row(
                   children: [
-                    const Text(
+                    Text(
                       'Transaction History',
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -90,27 +96,61 @@ class BalanceDisplayWidget extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 15),
-          Obx(() => Text(
-                controller.showBalance.value
-                    ? '${Symbols.currency}${userAuthController.user.value?.walletBalance}'
-                    : "******",
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 25,
-                    fontWeight: FontWeight.w500),
+          Obx(() => GestureDetector(
+                onTap: () {
+                  controller.toggleBalanceVisibility();
+                },
+                child: Text(
+                  controller.showBalance.value
+                      ? '${Symbols.currency}${userAuthController.user.value?.walletBalance ?? 0}'
+                      : "******",
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 25,
+                      fontWeight: FontWeight.w500),
+                ),
               )),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                '0.0839 BTC',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
-                    fontWeight: FontWeight.w400),
-              ),
+              Obx(() {
+                if (currencyRateController.currencyRates.isNotEmpty) {
+                  final walletBalance = double.tryParse(
+                          userAuthController.user.value?.walletBalance ??
+                              '0') ??
+                      0;
+                  final ngnRate =
+                      currencyRateController.currencyRates.firstWhere(
+                    (rate) => rate.currencyCode == 'NGN',
+                    orElse: () => CurrencyRateModel(
+                        currencyCode: 'NGN', rate: '0', id: 0),
+                  );
+
+                  final rateValue = ngnRate.rate.isEmpty
+                      ? 1
+                      : num.tryParse(ngnRate.rate) ?? 1;
+
+                  final dollarValue =
+                      (walletBalance / rateValue).toStringAsFixed(2);
+
+                  return Text(
+                    "\$${dollarValue}",
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600),
+                  );
+                }
+
+                return const Text("\$0",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600));
+              }),
               GestureDetector(
                 onTap: () {
                   Get.toNamed(RoutesConstant.deposit);

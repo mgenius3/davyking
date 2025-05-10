@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
 class BalanceDisplayController extends GetxController {
-  final showBalance = false.obs;
+  final showBalance = true.obs;
 
   void toggleBalanceVisibility() {
     showBalance.value = !showBalance.value;

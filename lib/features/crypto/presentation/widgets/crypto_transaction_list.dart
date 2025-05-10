@@ -22,9 +22,7 @@ class CryptoTransactionListWidget extends StatelessWidget {
                 height: 60,
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: NetworkImage(ApiUrl.domain +
-                            "storage/" +
-                            data.cryptoCurrency.image))),
+                        image: NetworkImage(data.cryptoCurrency.image))),
               ),
               const SizedBox(width: 20),
               Expanded(
