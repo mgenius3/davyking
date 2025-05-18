@@ -6,10 +6,12 @@ import 'package:davyking/core/models/primary_button_model.dart';
 import 'package:davyking/core/models/top_header_model.dart';
 import 'package:davyking/core/widgets/primary_button_widget.dart';
 import 'package:davyking/core/widgets/top_header_widget.dart';
+import 'package:davyking/features/airtime/controllers/index_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../widget/network_card_widget.dart';
+import 'package:davyking/core/controllers/transaction_auth_controller.dart';
 
 class AirtimeDetailsScreen extends StatelessWidget {
   const AirtimeDetailsScreen({super.key});
@@ -21,6 +23,11 @@ class AirtimeDetailsScreen extends StatelessWidget {
     final network = data['network'];
     final amount = data['amount'];
     final phoneNumber = data['phone'];
+
+    final AirtimeIndexController airtimeIndexController =
+        Get.find<AirtimeIndexController>();
+    final TransactionAuthController transactionAuthController =
+        Get.find<TransactionAuthController>();
 
     return Scaffold(
       body: SafeArea(
@@ -168,10 +175,27 @@ class AirtimeDetailsScreen extends StatelessWidget {
                 )
               ],
             ),
-            CustomPrimaryButton(
-                controller: CustomPrimaryButtonController(
-                    model: CustomPrimaryButtonModel(text: 'Proceed'),
-                    onPressed: () {}))
+            Obx(() => airtimeIndexController.isLoading.value
+                ? CustomPrimaryButton(
+                    controller: CustomPrimaryButtonController(
+                        model: const CustomPrimaryButtonModel(
+                            child: SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                    color: Colors.white))),
+                        onPressed: () {}),
+                  )
+                : CustomPrimaryButton(
+                    controller: CustomPrimaryButtonController(
+                        model: CustomPrimaryButtonModel(text: 'Proceed'),
+                        onPressed: () async {
+                          bool isAuthenticated = await transactionAuthController
+                              .authenticate(context, 'Buy Airtme');
+                          if (isAuthenticated) {
+                            airtimeIndexController.buyAirtime();
+                          }
+                        })))
           ],
         ),
       )),

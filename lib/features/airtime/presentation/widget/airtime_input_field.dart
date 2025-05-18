@@ -33,11 +33,12 @@ Widget airtimeInputField(AirtimeInputFieldModel params) {
                       filled: true,
                       fillColor: const Color(0xFFF5FFF6),
                       hintText: params.hintText,
-                      prefixIcon: params.prefixIcon,
-                      prefixIconConstraints:
-                          const BoxConstraints(minWidth: 40, minHeight: 50),
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 10.0, horizontal: 1),
+                      hintStyle: TextStyle(color: Colors.transparent),
+                      // prefixIcon: params.prefixIcon,
+                      // prefixIconConstraints:
+                      //     const BoxConstraints(minWidth: 40, minHeight: 50),
+                      // contentPadding: const EdgeInsets.symmetric(
+                      //     vertical: 10.0, horizontal: 1),
                       border: OutlineInputBorder(
                           borderSide: BorderSide.none,
                           borderRadius: BorderRadius.circular(11.48))))),

@@ -1,8 +1,4 @@
-import 'dart:convert';
-import 'dart:ffi';
-
 import 'package:davyking/api/api_client.dart';
-import 'package:davyking/core/constants/api_url.dart';
 import 'package:davyking/core/errors/app_exception.dart';
 import 'package:davyking/core/errors/dio_error_handler.dart';
 import 'package:davyking/core/models/paystack_bank_model.dart';

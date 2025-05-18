@@ -1,3 +1,3 @@
 class Symbols {
-  static const String currency = '\u20A6';
+  static const String currency_naira = '\u20A6';
 }

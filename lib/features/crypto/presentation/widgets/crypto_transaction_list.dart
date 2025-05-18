@@ -32,21 +32,19 @@ class CryptoTransactionListWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "${data.amount} ${data.cryptoCurrency.name}",
+                        "${data.amount} ${data.cryptoCurrency.symbol}",
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: DarkThemeColors.primaryColor),
                       ),
-                      Text(
-                        "${data.status}",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: data.status == "pending"
-                                ? Colors.orange
-                                : data.status == "completed"
-                                    ? DarkThemeColors.primaryColor
-                                    : Colors.red),
-                      )
+                      Text("${data.status}",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: data.status == "pending"
+                                  ? Colors.orange
+                                  : data.status == "completed"
+                                      ? DarkThemeColors.primaryColor
+                                      : Colors.red))
                     ],
                   ),
                   const SizedBox(height: 10),

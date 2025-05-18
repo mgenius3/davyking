@@ -1,6 +1,7 @@
 // recent_transactions_screen.dart
 import 'package:davyking/core/constants/routes.dart';
 import 'package:davyking/core/controllers/transaction_log_controller.dart';
+import 'package:davyking/core/utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -58,11 +59,9 @@ class RecentTransactionsWidget extends StatelessWidget {
                                             .capitalizeFirst ??
                                         '',
                                   ),
-                                  Text(
-                                    '\$${log.details['total_amount']}',
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold),
-                                  ),
+                                  Text('\$${log.details['total_amount']}',
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold)),
                                 ],
                               ),
                               subtitle: Column(
@@ -73,7 +72,8 @@ class RecentTransactionsWidget extends StatelessWidget {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text('${log.details['message']}'),
+                                      Text(shortenString(
+                                          log.details['message'], 20)),
                                       Text(
                                         '${log.details['type']}'
                                                 .capitalizeFirst ??

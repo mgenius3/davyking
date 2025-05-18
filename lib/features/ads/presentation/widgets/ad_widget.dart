@@ -1,5 +1,7 @@
+import 'package:davyking/core/utils/helper.dart';
 import 'package:flutter/material.dart';
 import '../../data/models/ad_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AdWidget extends StatelessWidget {
   final Ad ad;
@@ -9,18 +11,17 @@ class AdWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(ad.title);
     return GestureDetector(
       onTap: onTap ??
           () {
             if (ad.targetUrl != null) {
               // Handle navigation (e.g., open URL in browser)
-              // You can use url_launcher package: launch(ad.targetUrl!)
+              launch(ad.targetUrl!);
             }
           },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-        height: 110, // Fixed height for consistency
+        height: 130, // Fixed height for consistency
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           gradient: _getGradient(ad.type),
@@ -110,8 +111,8 @@ class AdWidget extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 4.0),
               child: Text(
-                ad.description!,
-                style: TextStyle(color: Colors.white70, fontSize: 11),
+                shortenString(ad.description!, 20),
+                style: const TextStyle(color: Colors.white70, fontSize: 11),
               ),
             ),
           // const Spacer(),

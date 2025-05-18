@@ -102,7 +102,7 @@ class BalanceDisplayWidget extends StatelessWidget {
                 },
                 child: Text(
                   controller.showBalance.value
-                      ? '${Symbols.currency}${userAuthController.user.value?.walletBalance ?? 0}'
+                      ? '${Symbols.currency_naira}${userAuthController.user.value?.walletBalance ?? 0}'
                       : "******",
                   textAlign: TextAlign.center,
                   style: const TextStyle(
