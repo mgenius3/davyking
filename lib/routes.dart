@@ -12,6 +12,8 @@ import 'package:davyking/features/crypto/presentation/screens/buy_crypto/index_s
 import 'package:davyking/features/crypto/presentation/screens/crypto_transaction_details_screen.dart';
 import 'package:davyking/features/crypto/presentation/screens/sell_crypto/field_screen.dart';
 import 'package:davyking/features/crypto/presentation/screens/sell_crypto/index_screen.dart';
+import 'package:davyking/features/data/presentation/screens/data_details_screen.dart';
+import 'package:davyking/features/data/presentation/screens/index_screen.dart';
 import 'package:davyking/features/deposit/presentation/screen/index_screen.dart';
 import 'package:davyking/features/giftcards/presentation/screens/buy_giftcards/field_details_screen.dart';
 import 'package:davyking/features/giftcards/presentation/screens/buy_giftcards/field_screen.dart';
@@ -82,6 +84,12 @@ class AppRoutes {
     GetPage(
         name: RoutesConstant.airtime_details,
         page: () => AirtimeDetailsScreen()),
+
+    GetPage(
+        name: RoutesConstant.data,
+        page: () => DataScreen(),
+        transition: Transition.zoom),
+    GetPage(name: RoutesConstant.data_details, page: () => DataDetailsScreen()),
 
     //Crypto
     GetPage(name: RoutesConstant.buy_crypto, page: () => BuyCryptoScreen()),

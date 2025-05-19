@@ -72,9 +72,7 @@ class OtherServicesWidget extends StatelessWidget {
                   color: Color(0x1950C2D6),
                   icon: Icons.signal_cellular_alt, // Represents mobile data
                   name: "Data",
-                  route: RoutesConstant
-                      .airtime // Note: Should this route be different?
-                  ),
+                  route: RoutesConstant.data),
             ),
           ],
         ),

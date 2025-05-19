@@ -15,6 +15,8 @@ class RoutesConstant {
   static const String notification = '/notifications';
   static const String airtime = '/airtime';
   static const String airtime_details = '/airtime/details';
+  static const String data = '/data';
+  static const String data_details = '/data/details';
   static const String recent_transaction = '/recent_transactions';
 
   //profile

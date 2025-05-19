@@ -10,7 +10,7 @@ import 'package:davyking/features/airtime/controllers/index_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import '../widget/network_card_widget.dart';
+import '../../../../core/widgets/network_card_widget.dart';
 import 'package:davyking/core/controllers/transaction_auth_controller.dart';
 
 class AirtimeDetailsScreen extends StatelessWidget {

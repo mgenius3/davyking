@@ -11,19 +11,28 @@ class CustomPrimaryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = controller.model;
 
-    return Container(
-      width: model.width != 0.0 ? model.width : double.infinity,
-      height: 54,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
-      decoration: controller.getButtonDecoration(),
-      child: MaterialButton(
-        onPressed: controller.onPressed,
-        child: model.child ??
-            Text(model.text ?? '',
-                style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    color: model.textColor ?? Colors.white)),
+    return GestureDetector(
+      onTap: controller.onPressed,
+      child: Container(
+        width: model.width != 0.0 ? model.width : double.infinity,
+        height: 54,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+        decoration: controller.getButtonDecoration(),
+        child:
+
+            // MaterialButton(
+            //   onPressed: controller.onPressed,
+            //   child:
+
+            Center(
+          child: model.child ??
+              Text(model.text ?? '',
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color: model.textColor ?? Colors.white)),
+        ),
+        // ),
       ),
     );
   }

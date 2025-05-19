@@ -16,6 +16,8 @@ class ImagesConstant {
   static const String giftcard_macy = 'assets/images/macy.png';
   static const String giftcard_vanilla = 'assets/images/vanilla.png';
   static const String giftcard_sephora = 'assets/images/sephora.png';
+
+  static const String smileIcon = 'assets/images/smile.png';
 }
 
 class SvgConstant {

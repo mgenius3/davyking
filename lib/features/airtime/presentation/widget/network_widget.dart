@@ -74,7 +74,7 @@ import 'package:davyking/core/constants/images.dart';
 import 'package:davyking/features/airtime/controllers/index_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import './network_card_widget.dart';
+import '../../../../core/widgets/network_card_widget.dart';
 
 class AirtimeNetworkWidget extends StatelessWidget {
   const AirtimeNetworkWidget({super.key});

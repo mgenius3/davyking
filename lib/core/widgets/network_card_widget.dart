@@ -7,6 +7,7 @@ class NetworkCard extends StatelessWidget {
   final Color innerColor;
   final Color iconColor;
   final String iconPath;
+  final bool isIconPathImg;
   final String label;
   final bool isSelected;
 
@@ -17,6 +18,7 @@ class NetworkCard extends StatelessWidget {
       required this.iconColor,
       required this.iconPath,
       required this.label,
+      this.isIconPathImg = false,
       this.isSelected = false});
 
   @override
@@ -67,7 +69,9 @@ class NetworkCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(22),
                 ),
               ),
-              child: SvgPicture.asset(iconPath, fit: BoxFit.contain),
+              child: isIconPathImg
+                  ? Image.asset(iconPath, fit: BoxFit.contain)
+                  : SvgPicture.asset(iconPath, fit: BoxFit.contain),
             ),
           ),
           const SizedBox(height: 3),
