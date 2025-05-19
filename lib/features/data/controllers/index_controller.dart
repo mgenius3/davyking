@@ -1,20 +1,27 @@
 import 'package:davyking/core/constants/routes.dart';
+import 'package:davyking/core/errors/error_mapper.dart';
+import 'package:davyking/core/errors/failure.dart';
+import 'package:davyking/core/utils/snackbar.dart';
 import 'package:davyking/features/data/data/repositories/data_repository.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
+import 'package:davyking/core/controllers/user_auth_details_controller.dart';
 
 class DataIndexController extends GetxController {
   final RxInt selectedNetwork = 0.obs;
   final RxString selectedVariationId = ''.obs;
   final RxString selectedPlan = ''.obs;
+  final RxString selectedAmount = ''.obs;
   final RxString phoneNumber = ''.obs;
   final RxBool isInformationComplete = false.obs;
   final RxBool isLoading = false.obs;
   final RxList<dynamic> variations = <dynamic>[].obs;
   final phoneController = TextEditingController();
   final DataRepository dataRepository = DataRepository();
-  final Uuid uuid = Uuid();
+  final UserAuthDetailsController userAuthDetailsController =
+      Get.find<UserAuthDetailsController>();
+  final Uuid uuid = const Uuid();
 
   // Map network index to eBills Africa service_id
   final List<String> networkMapping = [
@@ -47,9 +54,11 @@ class DataIndexController extends GetxController {
     checkInformation();
   }
 
-  void setVariation(String variationId, String variationPlan) {
+  void setVariation(
+      String variationId, String variationPlan, String variationAmount) {
     selectedVariationId.value = variationId;
     selectedPlan.value = variationPlan;
+    selectedAmount.value = variationAmount;
     checkInformation();
   }
 
@@ -70,6 +79,49 @@ class DataIndexController extends GetxController {
     }
 
     print(isInformationComplete.value);
+  }
+
+  bool validateInputs() {
+    final phone = phoneNumber.value.trim();
+    final variation = selectedVariationId.value;
+    final serviceId = networkMapping[selectedNetwork.value];
+    final double? amount = double.tryParse(selectedAmount.value);
+
+    final wallet_balance = double.parse(
+        userAuthDetailsController.user.value?.walletBalance ?? "0");
+
+    if (phone.isEmpty) {
+      Get.snackbar('Input Error', 'Phone number is required',
+          backgroundColor: Colors.red, colorText: Colors.white);
+      return false;
+    }
+
+    if (!RegExp(r'^(\+234[0-9]{10}|0[0-9]{10})$').hasMatch(phone)) {
+      Get.snackbar('Input Error', 'Enter a valid Nigerian phone number',
+          backgroundColor: Colors.red, colorText: Colors.white);
+      return false;
+    }
+
+    if (!_isValidNetwork(phone, serviceId)) {
+      Get.snackbar(
+          'Input Error', 'Phone number does not match selected network',
+          backgroundColor: Colors.red, colorText: Colors.white);
+      return false;
+    }
+
+    if (variation.isEmpty) {
+      Get.snackbar('Input Error', 'Please select a data plan',
+          backgroundColor: Colors.red, colorText: Colors.white);
+      return false;
+    }
+
+    if (amount! > wallet_balance) {
+      Get.snackbar('Wallet Error', 'Amount exceeds your wallet balance',
+          backgroundColor: Colors.red, colorText: Colors.white);
+      return false;
+    }
+
+    return true;
   }
 
   // Validate that the phone number matches the selected network
@@ -116,8 +168,8 @@ class DataIndexController extends GetxController {
             networkMapping.indexOf(variations[0]['service_id']);
       }
     } catch (e) {
-      Get.snackbar('Error', 'Failed to fetch data plans: $e',
-          backgroundColor: Colors.red, colorText: Colors.white);
+      Failure failure = ErrorMapper.map(e as Exception);
+      showSnackbar('Error', failure.message);
     } finally {
       isLoading.value = false;
     }
@@ -130,12 +182,19 @@ class DataIndexController extends GetxController {
     try {
       final serviceId = networkMapping[selectedNetwork.value];
       final requestId = uuid.v4();
-      final response = await dataRepository.buyData(
-          phoneNumber.value, serviceId, selectedVariationId.value, requestId);
+      final amount = double.parse(selectedAmount.value);
+
+      await dataRepository.buyData(
+          user_id: userAuthDetailsController.user.value!.id.toString(),
+          amount: amount,
+          phone: phoneNumber.value,
+          serviceId: serviceId,
+          variationId: selectedVariationId.value,
+          requestId: requestId);
       Get.toNamed(RoutesConstant.home);
     } catch (e) {
-      Get.snackbar('Error', 'Failed to buy data: $e',
-          backgroundColor: Colors.red, colorText: Colors.white);
+      Failure failure = ErrorMapper.map(e as Exception);
+      showSnackbar('Error', failure.message);
     } finally {
       isLoading.value = false;
     }

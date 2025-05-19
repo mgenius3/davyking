@@ -148,6 +148,11 @@ class DataDetailsScreen extends StatelessWidget {
                                   dataIndexController.selectedPlan.value
                                       .toString()),
                               const SizedBox(height: 5),
+                              details(
+                                  'Amount',
+                                  '₦${dataIndexController.selectedAmount.value
+                                      .toString()}'),
+                              const SizedBox(height: 5),
                               details('Network',
                                   dataIndexController.networkMapping[network]),
                               const SizedBox(height: 5),
@@ -248,11 +253,9 @@ class DataDetailsScreen extends StatelessWidget {
           style: Theme.of(Get.context!).textTheme.displayMedium?.copyWith(
               fontSize: 12, fontWeight: FontWeight.w500, height: 1.38),
         ),
-        Text(
-          value,
-          style: Theme.of(Get.context!).textTheme.displayMedium?.copyWith(
-              fontSize: 12, fontWeight: FontWeight.w500, height: 1.38),
-        ),
+        Text(value,
+            style: Theme.of(Get.context!).textTheme.displayMedium?.copyWith(
+                fontSize: 12, fontWeight: FontWeight.w500, height: 1.38)),
       ],
     );
   }

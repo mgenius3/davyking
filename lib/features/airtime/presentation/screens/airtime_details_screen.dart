@@ -120,7 +120,8 @@ class AirtimeDetailsScreen extends StatelessWidget {
                         ),
                         child: Column(
                           children: [
-                            details('Transaction Date', '12/12/2021'),
+                            details('Transaction Date',
+                                _formatDate(DateTime.now())),
                             const SizedBox(height: 5),
                             details('Transaction Type', 'Airtime'),
                             const SizedBox(height: 5),
@@ -200,6 +201,10 @@ class AirtimeDetailsScreen extends StatelessWidget {
         ),
       )),
     );
+  }
+
+  String _formatDate(DateTime date) {
+    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
   }
 }
 

@@ -13,12 +13,19 @@ class DataRepository {
 
   DataRepository() : apiClient = DioClient();
 
-  Future<void> buyData(String phone, String serviceId, String variationId,
-      String requestId) async {
+  Future<void> buyData(
+      {required String user_id,
+      required double amount,
+      required String phone,
+      required String serviceId,
+      required String variationId,
+      required String requestId}) async {
     try {
       final response = await apiClient.post(
         '${ApiUrl.vtu_transaction}/buy-data',
         data: jsonEncode({
+          'user_id': user_id,
+          'amount': amount,
           'phone': phone,
           'service_id': serviceId,
           'variation_id': variationId,
@@ -36,6 +43,9 @@ class DataRepository {
         );
       }
     } on DioException catch (e) {
+      if (e.response?.data['message'] != null) {
+        throw AppException(e.response?.data['message']);
+      }
       throw AppException(DioErrorHandler.handleDioError(e));
     } catch (e) {
       throw AppException(e.toString());

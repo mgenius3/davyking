@@ -14,11 +14,16 @@ class AirtimeRepository {
   AirtimeRepository() : apiClient = DioClient();
 
   Future<void> buyAirtime(
-      String phone, String serviceId, double amount, String requestId) async {
+      {required String user_id,
+      required String phone,
+      required String serviceId,
+      required double amount,
+      required String requestId}) async {
     try {
       final response = await apiClient.post(
         '${ApiUrl.vtu_transaction}/buy-airtime',
         data: jsonEncode({
+          'user_id': user_id,
           'phone': phone,
           'service_id': serviceId,
           'amount': amount,
@@ -36,6 +41,9 @@ class AirtimeRepository {
         );
       }
     } on DioException catch (e) {
+      if (e.response?.data['message'] != null) {
+        throw AppException(e.response?.data['message']);
+      }
       throw AppException(DioErrorHandler.handleDioError(e));
     } catch (e) {
       throw AppException(e.toString());

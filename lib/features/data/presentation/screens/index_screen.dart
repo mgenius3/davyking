@@ -79,13 +79,16 @@ class _DataScreenState extends State<DataScreen> {
                                     ? DarkThemeColors.primaryColor
                                     : DarkThemeColors.disabledButtonColor),
                             onPressed: () {
-                              Get.toNamed(RoutesConstant.data_details,
-                                  arguments: {
-                                    'network': controller.selectedNetwork.value,
-                                    'varation_id':
-                                        controller.selectedVariationId.value,
-                                    'phone': controller.phoneNumber.value
-                                  });
+                              if (controller.validateInputs()) {
+                                Get.toNamed(RoutesConstant.data_details,
+                                    arguments: {
+                                      'network':
+                                          controller.selectedNetwork.value,
+                                      'varation_id':
+                                          controller.selectedVariationId.value,
+                                      'phone': controller.phoneNumber.value
+                                    });
+                              }
                             }),
                       ))
                 ],

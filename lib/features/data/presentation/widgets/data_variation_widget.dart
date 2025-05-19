@@ -44,7 +44,7 @@ class DataVariationWidget extends StatelessWidget {
                     variation['variation_id'].toString(),
                 onTap: () {
                   controller.setVariation(variation['variation_id'].toString(),
-                      variation['data_plan']);
+                      variation['data_plan'], variation['price']);
                 },
               ));
         },

@@ -1,7 +1,11 @@
 import 'package:davyking/core/constants/routes.dart';
+import 'package:davyking/core/errors/error_mapper.dart';
+import 'package:davyking/core/errors/failure.dart';
+import 'package:davyking/core/utils/snackbar.dart';
 import 'package:davyking/features/airtime/data/repositories/airtime_repository.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:davyking/core/controllers/user_auth_details_controller.dart';
 import 'package:uuid/uuid.dart';
 
 class AirtimeIndexController extends GetxController {
@@ -13,7 +17,9 @@ class AirtimeIndexController extends GetxController {
   final amountController = TextEditingController();
   final phoneController = TextEditingController(); // Re-enable phoneController
   final AirtimeRepository airtimeRepository = AirtimeRepository();
-  final Uuid uuid = Uuid();
+  final UserAuthDetailsController userAuthDetailsController =
+      Get.find<UserAuthDetailsController>();
+  final Uuid uuid = const Uuid();
 
   // Map network index to eBills Africa service_id
   final List<String> networkMapping = ['MTN', 'Glo', 'Airtel', '9mobile'];
@@ -70,6 +76,8 @@ class AirtimeIndexController extends GetxController {
 
     final String serviceId = networkMapping[selectedNetwork.value];
     final minAmount = serviceId == 'MTN' ? 10 : 50;
+    final wallet_balance = double.parse(
+        userAuthDetailsController.user.value?.walletBalance ?? "0");
 
     if (phoneNumber.value.isEmpty) {
       return "Phone number is required.";
@@ -83,6 +91,9 @@ class AirtimeIndexController extends GetxController {
     if (amount == null || amount < minAmount || amount > 50000) {
       return "Amount must be between $minAmount and 50000.";
     }
+    if (amount > wallet_balance) {
+      return "Amount exceeds your wallet balance";
+    }
 
     return null; // All inputs valid
   }
@@ -95,13 +106,17 @@ class AirtimeIndexController extends GetxController {
 
       final requestId = uuid.v4();
 
-      final response = await airtimeRepository.buyAirtime(
-          phoneNumber.value, serviceId, amount, requestId);
+      await airtimeRepository.buyAirtime(
+          user_id: userAuthDetailsController.user.value!.id.toString(),
+          phone: phoneNumber.value,
+          serviceId: serviceId,
+          amount: amount,
+          requestId: requestId);
 
       Get.toNamed(RoutesConstant.home);
     } catch (e) {
-      Get.snackbar('Error', 'Failed to buy airtime: $e',
-          backgroundColor: Colors.red, colorText: Colors.white);
+      Failure failure = ErrorMapper.map(e as Exception);
+      showSnackbar('Error', failure.message);
     } finally {
       isLoading.value = false;
     }
