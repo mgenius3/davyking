@@ -17,6 +17,18 @@ class RoutesConstant {
   static const String airtime_details = '/airtime/details';
   static const String data = '/data';
   static const String data_details = '/data/details';
+  static const String electricity = '/electricity';
+  static const String electricity_details = '/electricity/details';
+  static const String electricity_receipt = '/electricity/receipt';
+
+  static const String betting = '/betting';
+  static const String betting_details = '/betting/details';
+  static const String betting_receipt = '/betting/receipt';
+
+  static const String tv = '/tv';
+  static const String tv_details = '/tv/details';
+  static const String tv_receipt = '/tv/receipt';
+
   static const String recent_transaction = '/recent_transactions';
 
   //profile

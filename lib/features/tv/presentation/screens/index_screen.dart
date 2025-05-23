@@ -2,27 +2,27 @@ import 'package:davyking/core/constants/routes.dart';
 import 'package:davyking/core/theme/colors.dart';
 import 'package:davyking/core/utils/spacing.dart';
 import 'package:davyking/core/widgets/vtu_input_field.dart';
-import 'package:davyking/features/data/controllers/index_controller.dart';
 import 'package:davyking/features/airtime/data/model/input_field_model.dart';
 import 'package:davyking/core/controllers/primary_button_controller.dart';
 import 'package:davyking/core/models/primary_button_model.dart';
 import 'package:davyking/core/models/top_header_model.dart';
 import 'package:davyking/core/widgets/primary_button_widget.dart';
 import 'package:davyking/core/widgets/top_header_widget.dart';
-import 'package:davyking/features/data/presentation/widgets/data_network_widget.dart';
-import 'package:davyking/features/data/presentation/widgets/data_variation_widget.dart';
+import 'package:davyking/features/tv/controllers/index_controller.dart';
+import 'package:davyking/features/tv/presentation/widgets/tv_network_widget.dart';
+import 'package:davyking/features/tv/presentation/widgets/tv_variation_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class DataScreen extends StatefulWidget {
-  const DataScreen({super.key});
+class TvScreen extends StatefulWidget {
+  const TvScreen({super.key});
 
   @override
-  State<DataScreen> createState() => _DataScreenState();
+  State<TvScreen> createState() => _TvScreenState();
 }
 
-class _DataScreenState extends State<DataScreen> {
-  final DataIndexController controller = Get.put(DataIndexController());
+class _TvScreenState extends State<TvScreen> {
+  final TvIndexController controller = Get.put(TvIndexController());
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class _DataScreenState extends State<DataScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const TopHeaderWidget(data: TopHeaderModel(title: "Data")),
+                  const TopHeaderWidget(data: TopHeaderModel(title: "Tv")),
                   const SizedBox(height: 37.82),
                   Text(
                     'Select Network',
@@ -51,42 +51,40 @@ class _DataScreenState extends State<DataScreen> {
                         height: 1.83),
                   ),
                   const SizedBox(height: 10),
-                  const DataNetworkWidget(),
+                  const TvNetworkWidget(),
                   const SizedBox(height: 20),
                   Text(
-                    'Select Data Plan',
+                    'Select Tv Plan',
                     style: Theme.of(context).textTheme.displayMedium?.copyWith(
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
                         height: 1.83),
                   ),
                   const SizedBox(height: 10),
-                  const DataVariationWidget(),
+                  const TvVariationWidget(),
                   const SizedBox(height: 20),
                   vtuInputField(AirtimeInputFieldModel(
-                    onChanged: controller.setPhoneNumber,
-                    inputcontroller: controller.phoneController,
-                    hintText: '08134460259',
-                    name: 'Phone Number',
+                    onChanged: controller.setCustomerId,
+                    inputcontroller: controller.customerIdController,
+                    hintText: '1111111111',
+                    name: 'Smart card or IUC Number',
                     // keyboardType: TextInputType.phone,
                   )),
                   const SizedBox(height: 40),
                   Obx(() => CustomPrimaryButton(
                         controller: CustomPrimaryButtonController(
                             model: CustomPrimaryButtonModel(
-                                text: 'Buy Data',
+                                text: 'Buy Tv',
                                 color: controller.isInformationComplete.value
                                     ? DarkThemeColors.primaryColor
                                     : DarkThemeColors.disabledButtonColor),
                             onPressed: () {
                               if (controller.validateInputs()) {
-                                Get.toNamed(RoutesConstant.data_details,
+                                Get.toNamed(RoutesConstant.tv_details,
                                     arguments: {
-                                      'network':
-                                          controller.selectedNetwork.value,
                                       'varation_id':
                                           controller.selectedVariationId.value,
-                                      'phone': controller.phoneNumber.value
+                                      'customer_id': controller.customerId.value
                                     });
                               }
                             }),

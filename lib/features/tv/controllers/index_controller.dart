@@ -1,53 +1,69 @@
+import 'package:davyking/core/constants/images.dart';
 import 'package:davyking/core/constants/routes.dart';
 import 'package:davyking/core/errors/error_mapper.dart';
 import 'package:davyking/core/errors/failure.dart';
 import 'package:davyking/core/utils/snackbar.dart';
 import 'package:davyking/features/data/data/repositories/data_repository.dart';
+import 'package:davyking/features/tv/data/repositories/tv_repository.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'package:davyking/core/controllers/user_auth_details_controller.dart';
 
-class DataIndexController extends GetxController {
-  final RxInt selectedNetwork = 0.obs;
+class TvIndexController extends GetxController {
+  final RxInt selectedTv = 0.obs;
   final RxString selectedVariationId = ''.obs;
   final RxString selectedPlan = ''.obs;
   final RxString selectedAmount = ''.obs;
-  final RxString phoneNumber = ''.obs;
+  final RxString customerId = ''.obs;
   final RxBool isInformationComplete = false.obs;
   final RxBool isLoading = false.obs;
   final RxList<dynamic> variations = <dynamic>[].obs;
-  final phoneController = TextEditingController();
-  final DataRepository dataRepository = DataRepository();
+  final customerIdController = TextEditingController();
+  final TvRepository tvRepository = TvRepository();
   final UserAuthDetailsController userAuthDetailsController =
       Get.find<UserAuthDetailsController>();
   final Uuid uuid = const Uuid();
 
   // Map network index to eBills Africa service_id
-  final List<String> networkMapping = [
-    'MTN',
-    'Glo',
-    'Airtel',
-    '9mobile',
-    'Smile'
+  final List<Map<String, dynamic>> tvMapping = [
+    {
+      'name': 'DSTV',
+      'service_id': 'dstv',
+      'icon': ImagesConstant.dstv,
+    },
+    {
+      'name': 'GOTV',
+      'service_id': 'gotv',
+      'icon': ImagesConstant.gotv,
+    },
+    {
+      'name': 'Startimes',
+      'service_id': 'startimes',
+      'icon': ImagesConstant.startimes,
+    },
+    {
+      'name': 'Showmax',
+      'service_id': 'showmax',
+      'icon': ImagesConstant.showmax
+    },
   ];
 
   @override
   void onInit() {
     super.onInit();
     fetchVariations();
-    phoneController.addListener(() {
-      phoneNumber.value = phoneController.text;
+    customerIdController.addListener(() {
+      customerId.value = customerIdController.text;
       checkInformation();
     });
   }
 
-  void setNetwork(int index) {
-    selectedNetwork.value = index;
+  void setTv(int index) {
+    selectedTv.value = index;
     // Reset variation when network changes
-    final filteredVariations = variations
-        .where((v) => v['service_id'] == networkMapping[index])
-        .toList();
+    final filteredVariations =
+        variations.where((v) => v['service_id'] == tvMapping[index]).toList();
     selectedVariationId.value = filteredVariations.isNotEmpty
         ? filteredVariations[0]['variation_id'].toString()
         : '';
@@ -59,58 +75,45 @@ class DataIndexController extends GetxController {
     selectedVariationId.value = variationId;
     selectedPlan.value = variationPlan;
     selectedAmount.value = variationAmount;
+
+    print(variationId);
     checkInformation();
   }
 
-  void setPhoneNumber(String phone) {
-    phoneNumber.value = phone;
-    phoneController.text = phone;
+  void setCustomerId(String phone) {
+    customerId.value = phone;
+    customerIdController.text = phone;
     checkInformation();
   }
 
   void checkInformation() {
-    final serviceId = networkMapping[selectedNetwork.value];
-    if (selectedVariationId.value.isNotEmpty &&
-        RegExp(r'^(\+234[0-9]{10}|[0-9]{11})$').hasMatch(phoneNumber.value) &&
-        _isValidNetwork(phoneNumber.value, serviceId)) {
+    final serviceId = tvMapping[selectedTv.value];
+    if (selectedVariationId.value.isNotEmpty && customerId.value.isNotEmpty) {
       isInformationComplete.value = true;
     } else {
       isInformationComplete.value = false;
     }
-
-    print(isInformationComplete.value);
   }
 
   bool validateInputs() {
-    final phone = phoneNumber.value.trim();
+    final customer_id = customerId.value.trim();
     final variation = selectedVariationId.value;
-    final serviceId = networkMapping[selectedNetwork.value];
+    print(variation);
+    final serviceId = tvMapping[selectedTv.value];
     final double? amount = double.tryParse(selectedAmount.value);
+
+    print(amount);
 
     final wallet_balance = double.parse(
         userAuthDetailsController.user.value?.walletBalance ?? "0");
 
-    if (phone.isEmpty) {
-      Get.snackbar('Input Error', 'Phone number is required',
+    if (customer_id.isEmpty) {
+      Get.snackbar('Input Error', 'Smart Card or IUC number is required',
           backgroundColor: Colors.red, colorText: Colors.white);
       return false;
     }
-
-    if (!RegExp(r'^(\+234[0-9]{10}|0[0-9]{10})$').hasMatch(phone)) {
-      Get.snackbar('Input Error', 'Enter a valid Nigerian phone number',
-          backgroundColor: Colors.red, colorText: Colors.white);
-      return false;
-    }
-
-    if (!_isValidNetwork(phone, serviceId)) {
-      Get.snackbar(
-          'Input Error', 'Phone number does not match selected network',
-          backgroundColor: Colors.red, colorText: Colors.white);
-      return false;
-    }
-
     if (variation.isEmpty) {
-      Get.snackbar('Input Error', 'Please select a data plan',
+      Get.snackbar('Input Error', 'Please select a tv plan',
           backgroundColor: Colors.red, colorText: Colors.white);
       return false;
     }
@@ -124,39 +127,10 @@ class DataIndexController extends GetxController {
     return true;
   }
 
-  // Validate that the phone number matches the selected network
-  bool _isValidNetwork(String phone, String serviceId) {
-    final normalizedPhone =
-        phone.startsWith('+234') ? '0${phone.substring(4)}' : phone;
-    final prefixes = {
-      'MTN': [
-        '0803',
-        '0806',
-        '0703',
-        '0706',
-        '0810',
-        '0813',
-        '0814',
-        '0816',
-        '0903',
-        '0906',
-        '0913',
-        '0916'
-      ],
-      'Glo': ['0805', '0807', '0811', '0815', '0705', '0905'],
-      'Airtel': ['0802', '0808', '0812', '0701', '0708', '0902', '0907'],
-      '9mobile': ['0809', '0817', '0818', '0908', '0909'],
-      'Smile': ['0702'],
-    };
-
-    final networkPrefixes = prefixes[serviceId] ?? [];
-    return networkPrefixes.any((prefix) => normalizedPhone.startsWith(prefix));
-  }
-
   Future<void> fetchVariations() async {
     isLoading.value = true;
     try {
-      final response = await dataRepository.getDataVariations();
+      final response = await tvRepository.getDataVariations();
 
       variations.value = response['data']
           .where((v) => v['availability'] == 'Available')
@@ -164,8 +138,12 @@ class DataIndexController extends GetxController {
 
       if (variations.isNotEmpty) {
         selectedVariationId.value = variations[0]['variation_id'].toString();
-        selectedNetwork.value =
-            networkMapping.indexOf(variations[0]['service_id']);
+        selectedAmount.value = variations[0]['price'].toString();
+        selectedPlan.value = variations[0]['package_bouquet'].toString();
+
+        // print(variations[0]);
+        // print(tvMapping.indexOf(variations[0]));
+        // selectedTv.value = tvMapping.indexOf(variations[0]);
       }
     } catch (e) {
       Failure failure = ErrorMapper.map(e as Exception);
@@ -175,22 +153,29 @@ class DataIndexController extends GetxController {
     }
   }
 
-  Future<void> buyData() async {
+  Future<void> buyTv() async {
     if (!isInformationComplete.value) return;
+
     isLoading.value = true;
     try {
-      final serviceId = networkMapping[selectedNetwork.value];
+      final serviceId = tvMapping[selectedTv.value]['service_id'];
       final requestId = uuid.v4();
       final amount = double.parse(selectedAmount.value);
 
-      await dataRepository.buyData(
+      final response = await tvRepository.buyTv(
           user_id: userAuthDetailsController.user.value!.id.toString(),
           amount: amount,
-          phone: phoneNumber.value,
-          serviceId: serviceId,
+          customerId: customerId.value,
+          serviceId: serviceId!,
           variationId: selectedVariationId.value,
           requestId: requestId);
-      Get.toNamed(RoutesConstant.home);
+
+      Get.offNamed(RoutesConstant.tv_receipt, arguments: {
+        'disco': serviceId,
+        'customer_id': customerId.value,
+        'amount': amount,
+        'response': response
+      });
     } catch (e) {
       Failure failure = ErrorMapper.map(e as Exception);
       showSnackbar('Error', failure.message);
@@ -201,7 +186,7 @@ class DataIndexController extends GetxController {
 
   @override
   void onClose() {
-    phoneController.dispose();
+    customerIdController.dispose();
     super.onClose();
   }
 }

@@ -1,0 +1,41 @@
+import 'package:davyking/features/betting/controllers/index_controller.dart';
+import 'package:davyking/features/electricity/presentation/widgets/disco_card_widget.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+class BettingDiscoWidget extends StatelessWidget {
+  const BettingDiscoWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final BettingIndexController controller =
+        Get.find<BettingIndexController>();
+
+    return Wrap(
+      spacing: 10,
+      runSpacing: 10,
+      children: List.generate(
+        controller.bettingMapping.length,
+        (index) => GestureDetector(
+          onTap: () => controller.setDisco(index),
+          child: Obx(() =>
+              //  NetworkCard(
+              //     color: const Color(0x3F00A1D6), // Generic color, adjust as needed
+              //     innerColor: const Color(0x3F00A1D6),
+              //     iconColor: Colors.transparent,
+              //     iconPath: controller.bettingMapping[index]
+              //         ['icon']!, // Replace with Disco-specific icons
+              //     label: controller.bettingMapping[index]['name']!,
+              //     isIconPathImg: true,
+              //     isSelected: controller.selectedDisco.value == index)
+              DiscoCard(
+                  iconPath: controller.bettingMapping[index]['icon']!,
+                  label: controller.bettingMapping[index]['name']!,
+                  isSelected: controller.selectedDisco.value == index,
+                  isIconPathImg: true // Set to true if using PNG/JPG icons
+                  )),
+        ),
+      ),
+    );
+  }
+}

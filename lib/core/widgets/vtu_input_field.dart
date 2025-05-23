@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:davyking/core/states/mode.dart';
 
-Widget airtimeInputField(AirtimeInputFieldModel params) {
+Widget vtuInputField(AirtimeInputFieldModel params) {
   final LightningModeController lightningModeController =
       Get.find<LightningModeController>();
   // final AirtimeIndexController airtimeIndexController =

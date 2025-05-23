@@ -74,6 +74,27 @@ class OtherServicesWidget extends StatelessWidget {
                   name: "Data",
                   route: RoutesConstant.data),
             ),
+            servicesContainer(
+              data: const OtherServicesModel(
+                  color: Color(0x1950C2D6),
+                  icon: Icons.electric_meter, // Represents mobile data
+                  name: "Electricity",
+                  route: RoutesConstant.electricity),
+            ),
+            servicesContainer(
+              data: const OtherServicesModel(
+                  color: Color(0x1950C2D6),
+                  icon: Icons.sports_soccer, // Represents mobile data
+                  name: "Betting",
+                  route: RoutesConstant.betting),
+            ),
+            servicesContainer(
+              data: const OtherServicesModel(
+                  color: Color(0x1950C2D6),
+                  icon: Icons.tv, // Represents mobile data
+                  name: "TV",
+                  route: RoutesConstant.tv),
+            ),
           ],
         ),
       ],

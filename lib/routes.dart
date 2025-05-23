@@ -7,6 +7,9 @@ import 'package:davyking/features/auth/presentation/screens/otp_verify_screen.da
 import 'package:davyking/features/auth/presentation/screens/reset_password/forgot_password.dart';
 import 'package:davyking/features/auth/presentation/screens/reset_password/set_a_new_password.dart';
 import 'package:davyking/features/auth/presentation/screens/signup_screen.dart';
+import 'package:davyking/features/betting/presentation/screens/details_screen.dart';
+import 'package:davyking/features/betting/presentation/screens/index_screen.dart';
+import 'package:davyking/features/betting/presentation/screens/receipt_screen.dart';
 import 'package:davyking/features/crypto/presentation/screens/buy_crypto/field_screen.dart';
 import 'package:davyking/features/crypto/presentation/screens/buy_crypto/index_screen.dart';
 import 'package:davyking/features/crypto/presentation/screens/crypto_transaction_details_screen.dart';
@@ -15,6 +18,9 @@ import 'package:davyking/features/crypto/presentation/screens/sell_crypto/index_
 import 'package:davyking/features/data/presentation/screens/data_details_screen.dart';
 import 'package:davyking/features/data/presentation/screens/index_screen.dart';
 import 'package:davyking/features/deposit/presentation/screen/index_screen.dart';
+import 'package:davyking/features/electricity/presentation/screens/details_screen.dart';
+import 'package:davyking/features/electricity/presentation/screens/index_screen.dart';
+import 'package:davyking/features/electricity/presentation/screens/receipt_screen.dart';
 import 'package:davyking/features/giftcards/presentation/screens/buy_giftcards/field_details_screen.dart';
 import 'package:davyking/features/giftcards/presentation/screens/buy_giftcards/field_screen.dart';
 import 'package:davyking/features/giftcards/presentation/screens/buy_giftcards/index_screen.dart';
@@ -35,6 +41,9 @@ import 'package:davyking/features/profile/presentation/screen/withdrawal_bank/in
 import 'package:davyking/features/recent_transaction/presentation/screens/index_screen.dart';
 import 'package:davyking/features/splash/presentation/screens/splash1_screen.dart';
 import 'package:davyking/features/splash/presentation/screens/splash_screen.dart';
+import 'package:davyking/features/tv/presentation/screens/index_screen.dart';
+import 'package:davyking/features/tv/presentation/screens/receipt_screen.dart';
+import 'package:davyking/features/tv/presentation/screens/tv_details_screen.dart';
 import 'package:davyking/features/wallet/presentation/screens/details_screen.dart';
 import 'package:davyking/features/wallet/presentation/screens/withdraw.dart';
 import 'package:get/get.dart';
@@ -64,6 +73,7 @@ class AppRoutes {
     GetPage(
         name: RoutesConstant.setnewpassword,
         page: () => SetANewPasswordScreen()),
+
     //home
     GetPage(
         name: RoutesConstant.home,
@@ -90,6 +100,38 @@ class AppRoutes {
         page: () => DataScreen(),
         transition: Transition.zoom),
     GetPage(name: RoutesConstant.data_details, page: () => DataDetailsScreen()),
+    GetPage(
+        name: RoutesConstant.electricity,
+        page: () => ElectricityScreen(),
+        transition: Transition.zoom),
+    GetPage(
+        name: RoutesConstant.electricity_details,
+        page: () => ElectricityDetailsScreen()),
+    GetPage(
+        name: RoutesConstant.electricity_receipt,
+        page: () => ElectricityReceiptScreen()),
+
+    GetPage(
+        name: RoutesConstant.betting,
+        page: () => BettingScreen(),
+        transition: Transition.zoom),
+    GetPage(
+        name: RoutesConstant.betting_details,
+        page: () => BettingDetailsScreen()),
+    GetPage(
+        name: RoutesConstant.betting_receipt,
+        page: () => BettingReceiptScreen()),
+
+        GetPage(
+        name: RoutesConstant.tv,
+        page: () => TvScreen(),
+        transition: Transition.zoom),
+    GetPage(
+        name: RoutesConstant.tv_details,
+        page: () => TvDetailsScreen()),
+    GetPage(
+        name: RoutesConstant.tv_receipt,
+        page: () => TvReceiptScreen()),
 
     //Crypto
     GetPage(name: RoutesConstant.buy_crypto, page: () => BuyCryptoScreen()),
