@@ -1,9 +1,10 @@
-import 'package:davyking/core/constants/images.dart';
 import 'package:davyking/core/constants/routes.dart';
 import 'package:davyking/core/controllers/user_auth_details_controller.dart';
 import 'package:davyking/core/errors/error_mapper.dart';
 import 'package:davyking/core/errors/failure.dart';
+import 'package:davyking/core/repository/vtu_repository.dart';
 import 'package:davyking/core/utils/snackbar.dart';
+import 'package:davyking/features/betting/data/local/index_local_data.dart';
 import 'package:davyking/features/betting/data/repositories/betting_repository.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -18,78 +19,16 @@ class BettingIndexController extends GetxController {
   final customerIdController = TextEditingController();
   final amountController = TextEditingController();
   final BettingRepository electricityRepository = BettingRepository();
+  final VtuRepository verifyCustomerRepository =
+      VtuRepository();
   final UserAuthDetailsController userAuthDetailsController =
       Get.find<UserAuthDetailsController>();
   final Uuid uuid = Uuid();
+  final RxBool isVerifying = false.obs;
+  final RxMap<String, dynamic> customerDetails = <String, dynamic>{}.obs;
+  final RxString error_customer_details = ''.obs;
 
-  // Map Disco index to eBills Africa service_id
-  final List<Map<String, String>> bettingMapping = [
-    {
-      'service_id': '1xbet',
-      'name': '1xBet',
-      'icon': ImagesConstant.oneXbet,
-    },
-    {
-      'service_id': 'bangbet',
-      'name': 'BangBet',
-      'icon': ImagesConstant.bangbet,
-    },
-    {
-      'service_id': 'bet9ja',
-      'name': 'Bet9ja',
-      'icon': ImagesConstant.bet9ja,
-    },
-    {
-      'service_id': 'betking',
-      'name': 'BetKing',
-      'icon': ImagesConstant.betking,
-    },
-    {
-      'service_id': 'betland',
-      'name': 'BetLand',
-      'icon': ImagesConstant.betland,
-    },
-    {
-      'service_id': 'betlion',
-      'name': 'BetLion',
-      'icon': ImagesConstant.betlion,
-    },
-    {
-      'service_id': 'betway',
-      'name': 'BetWay',
-      'icon': ImagesConstant.betway,
-    },
-    {
-      'service_id': 'cloudbet',
-      'name': 'CloudBet',
-      'icon': ImagesConstant.cloudbet,
-    },
-    {
-      'service_id': 'livescorebet',
-      'name': 'LiveScoreBet',
-      'icon': ImagesConstant.livescorebet,
-    },
-    {
-      'service_id': 'merrybet',
-      'name': 'MerryBet',
-      'icon': ImagesConstant.merrybet,
-    },
-    {
-      'service_id': 'naijabet',
-      'name': 'NaijaBet',
-      'icon': ImagesConstant.naijabet,
-    },
-    {
-      'service_id': 'nairabet',
-      'name': 'NairaBet',
-      'icon': ImagesConstant.nairabet,
-    },
-    {
-      'service_id': 'supabet',
-      'name': 'SupaBet',
-      'icon': ImagesConstant.supabets,
-    },
-  ];
+  final List<Map<String, String>> bettingMapping = bettingList;
 
   @override
   void onInit() {
@@ -130,6 +69,26 @@ class BettingIndexController extends GetxController {
       isInformationComplete.value = true;
     } else {
       isInformationComplete.value = false;
+    }
+  }
+
+  Future<void> verifyCustomer() async {
+    if (customerId.value.isEmpty) {
+      showSnackbar('Error', 'Please enter a betting ID.');
+      return;
+    }
+    isVerifying.value = true;
+    try {
+      final serviceId = bettingMapping[selectedDisco.value]['service_id']!;
+      final response = await verifyCustomerRepository.verifyCustomer(
+          customerId: customerId.value, serviceId: serviceId);
+      print(response);
+      customerDetails.value = response!;
+    } catch (e) {
+      Failure failure = ErrorMapper.map(e as Exception);
+      error_customer_details.value = "invalid betting id";
+    } finally {
+      isVerifying.value = false;
     }
   }
 

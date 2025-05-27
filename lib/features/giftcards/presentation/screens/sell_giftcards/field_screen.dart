@@ -1,4 +1,5 @@
 import 'package:davyking/core/constants/routes.dart';
+import 'package:davyking/core/constants/symbols.dart';
 import 'package:davyking/core/controllers/primary_button_controller.dart';
 import 'package:davyking/core/models/primary_button_model.dart';
 import 'package:davyking/core/states/mode.dart';
@@ -236,7 +237,7 @@ class SellGiftCardInputField extends StatelessWidget {
                             borderRadius: BorderRadius.circular(5)),
                       ),
                       child: Text(
-                        'Sell Rate: ${(double.parse(data.sellRate)).toStringAsFixed(2)}',
+                        'Sell Rate: ${Symbols.currency_naira}${(double.parse(data.sellRate) * double.parse(data.denomination) * double.parse(currencyRateController.currencyRates[0].rate)).toStringAsFixed(2)}',
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                             color: Color(0xE5093030),
@@ -257,10 +258,9 @@ class SellGiftCardInputField extends StatelessWidget {
                       decoration: ShapeDecoration(
                         color: const Color(0xFFF7F7F7),
                         shape: RoundedRectangleBorder(
-                          side: const BorderSide(
-                              width: 1, color: Color(0xFF093030)),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
+                            side: const BorderSide(
+                                width: 1, color: Color(0xFF093030)),
+                            borderRadius: BorderRadius.circular(5)),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -32,10 +32,9 @@ class GiftCardTransactionDetailsScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: const [
                         BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 10,
-                          offset: Offset(0, 5),
-                        ),
+                            color: Colors.black12,
+                            blurRadius: 10,
+                            offset: Offset(0, 5)),
                       ],
                     ),
                     child: Column(

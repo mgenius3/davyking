@@ -1,5 +1,6 @@
 import 'package:davyking/core/constants/routes.dart';
 import 'package:davyking/core/controllers/user_auth_details_controller.dart';
+import 'package:davyking/core/theme/colors.dart';
 import 'package:davyking/features/crypto/controllers/index_controller.dart';
 import 'package:davyking/features/crypto/data/model/crypto_list_model.dart';
 import 'package:davyking/features/crypto/data/repositories/crypto_repository.dart';
@@ -276,8 +277,14 @@ class BuyCryptoController extends GetxController {
       };
       await cryptoRepository.transactCrypto(
           fields, paymentScreenshot.value?.path ?? "");
-      Get.snackbar('Success', 'Crypto purchase submitted successfully');
-      Get.toNamed(RoutesConstant.home);
+      Get.showSnackbar(
+        GetSnackBar(
+            title: 'Success',
+            message: 'Transaction created successfully',
+            duration: const Duration(seconds: 3),
+            backgroundColor: DarkThemeColors.primaryColor),
+      );
+      Get.offNamed(RoutesConstant.home);
     } catch (e) {
       Get.snackbar('Error', 'Failed to submit purchase: $e');
     } finally {

@@ -20,7 +20,8 @@ class DataDetailsScreen extends StatelessWidget {
     final data = Get.arguments as Map<String, dynamic>;
     final network = data['network'];
     final phoneNumber = data['phone'];
-    final variationId = data['variation_id'];
+    print(23);
+    print(network);
     // final response = data['response']
     //     as Map<String, dynamic>?; // Response might be null before purchase
     // final dataPlan = response?['data']['data_plan'] ?? variationId;
@@ -84,13 +85,13 @@ class DataDetailsScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  network == 'MTN'
+                                  network == 0
                                       ? 'MTN NG'
-                                      : network == 'Glo'
+                                      : network == 1
                                           ? 'GLO NG'
-                                          : network == 'Airtel'
+                                          : network == 2
                                               ? 'AIRTEL NG'
-                                              : network == '9mobile'
+                                              : network == 3
                                                   ? '9MOBILE'
                                                   : 'SMILE',
                                   style: Theme.of(context)
@@ -148,10 +149,8 @@ class DataDetailsScreen extends StatelessWidget {
                                   dataIndexController.selectedPlan.value
                                       .toString()),
                               const SizedBox(height: 5),
-                              details(
-                                  'Amount',
-                                  '₦${dataIndexController.selectedAmount.value
-                                      .toString()}'),
+                              details('Amount',
+                                  '₦${dataIndexController.selectedAmount.value.toString()}'),
                               const SizedBox(height: 5),
                               details('Network',
                                   dataIndexController.networkMapping[network]),

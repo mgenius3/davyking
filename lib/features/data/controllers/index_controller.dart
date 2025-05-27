@@ -183,14 +183,19 @@ class DataIndexController extends GetxController {
       final requestId = uuid.v4();
       final amount = double.parse(selectedAmount.value);
 
-      await dataRepository.buyData(
+      final response = await dataRepository.buyData(
           user_id: userAuthDetailsController.user.value!.id.toString(),
           amount: amount,
           phone: phoneNumber.value,
           serviceId: serviceId,
           variationId: selectedVariationId.value,
           requestId: requestId);
-      Get.toNamed(RoutesConstant.home);
+
+      // Use the receipt_data returned from the backend
+      final receiptData = response!['receipt_data'];
+
+      print(receiptData);
+      Get.offNamed(RoutesConstant.data_receipt, arguments: receiptData);
     } catch (e) {
       Failure failure = ErrorMapper.map(e as Exception);
       showSnackbar('Error', failure.message);

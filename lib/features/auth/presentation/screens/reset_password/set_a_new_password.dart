@@ -1,11 +1,6 @@
-import 'package:davyking/core/constants/images.dart';
-import 'package:davyking/core/constants/routes.dart';
-import 'package:davyking/core/theme/colors.dart';
 import 'package:davyking/core/utils/spacing.dart';
-import 'package:davyking/features/auth/controllers/reset_password_controller.dart';
+import 'package:davyking/features/auth/controllers/set_new_password_controller.dart';
 import 'package:davyking/features/auth/data/models/input_field_model.dart';
-import 'package:davyking/features/auth/presentation/widget/button_continue_with.dart';
-import 'package:davyking/features/auth/presentation/widget/horizontal_line_widget.dart';
 import 'package:davyking/features/auth/presentation/widget/input_field_widget.dart';
 import 'package:davyking/core/controllers/primary_button_controller.dart';
 import 'package:davyking/core/models/primary_button_model.dart';
@@ -21,8 +16,10 @@ class SetANewPasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ResetPasswordController controller =
-        Get.put(ResetPasswordController());
+    final args = Get.arguments; // Access the arguments
+    final email = args['email'];
+    final SetNewPasswordController controller =
+        Get.put(SetNewPasswordController());
 
     return Scaffold(
         body: SafeArea(
@@ -98,30 +95,26 @@ class SetANewPasswordScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 50),
-              CustomPrimaryButton(
-                  controller: CustomPrimaryButtonController(
-                      model: const CustomPrimaryButtonModel(
-                        text: "Continue",
-                      ),
-                      onPressed: () {
-                        Get.dialog(Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                  ImagesConstant.reset_password_successful),
-                              TextButton(
-                                  onPressed: () {},
-                                  child: Text(
-                                    'Go Home',
-                                    style: TextStyle(
-                                        color: LightThemeColors.primaryColor,
-                                        fontWeight: FontWeight.w700),
-                                  ))
-                            ],
+              Obx(() => controller.isLoading.value
+                  ? CustomPrimaryButton(
+                      controller: CustomPrimaryButtonController(
+                          model: const CustomPrimaryButtonModel(
+                              child: SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                      color: Colors.white))),
+                          onPressed: () {}),
+                    )
+                  : CustomPrimaryButton(
+                      controller: CustomPrimaryButtonController(
+                          model: const CustomPrimaryButtonModel(
+                            text: 'Set New Password',
+                            textColor: Colors.white,
                           ),
-                        ));
-                      })),
+                          onPressed: () {
+                            controller.setNewPassword(email);
+                          }))),
             ],
           )),
     ));

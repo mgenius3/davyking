@@ -1,9 +1,10 @@
-import 'package:davyking/core/constants/images.dart';
 import 'package:davyking/core/constants/routes.dart';
 import 'package:davyking/core/controllers/user_auth_details_controller.dart';
 import 'package:davyking/core/errors/error_mapper.dart';
 import 'package:davyking/core/errors/failure.dart';
+import 'package:davyking/core/repository/vtu_repository.dart';
 import 'package:davyking/core/utils/snackbar.dart';
+import 'package:davyking/features/electricity/data/local/index_local_data.dart';
 import 'package:davyking/features/electricity/data/repositories/electricity_repository.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -19,73 +20,17 @@ class ElectricityIndexController extends GetxController {
   final customerIdController = TextEditingController();
   final amountController = TextEditingController();
   final ElectricityRepository electricityRepository = ElectricityRepository();
+  final VtuRepository verifyCustomerRepository =
+      VtuRepository();
   final UserAuthDetailsController userAuthDetailsController =
       Get.find<UserAuthDetailsController>();
   final Uuid uuid = Uuid();
+  final RxBool isVerifying = false.obs;
+  final RxMap<String, dynamic> customerDetails = <String, dynamic>{}.obs;
+  final RxString error_customer_details = ''.obs;
 
   // Map Disco index to eBills Africa service_id
-  final List<Map<String, String>> discoMapping = [
-    {
-      'service_id': 'ikeja-electric',
-      'name': 'Ikeja Electric',
-      'icon': ImagesConstant.ikeja_electricity
-    },
-    {
-      'service_id': 'eko-electric',
-      'name': 'Eko Electric',
-      'icon': ImagesConstant.eko_electricity
-    },
-    {
-      'service_id': 'kano-electric',
-      'name': 'Kano Electric',
-      'icon': ImagesConstant.kano_electricity
-    },
-    {
-      'service_id': 'portharcourt-electric',
-      'name': 'Port Harcourt Electric',
-      'icon': ImagesConstant.port_electricity
-    },
-    {
-      'service_id': 'jos-electric',
-      'name': 'Jos Electric',
-      'icon': ImagesConstant.jos_electricity
-    },
-    {
-      'service_id': 'ibadan-electric',
-      'name': 'Ibadan Electric',
-      'icon': ImagesConstant.ibadan_electricity
-    },
-    {
-      'service_id': 'abuja-electric',
-      'name': 'Abuja Electric',
-      'icon': ImagesConstant.abuja_electricity
-    },
-    {
-      'service_id': 'kaduna-electric',
-      'name': 'Kaduna Electric',
-      'icon': ImagesConstant.kaduna_electricity
-    },
-    {
-      'service_id': 'enugu-electric',
-      'name': 'Enugu Electric',
-      'icon': ImagesConstant.enugu_electricity
-    },
-    {
-      'service_id': 'benin-electric',
-      'name': 'Benin Electric',
-      'icon': ImagesConstant.benin_electricity
-    },
-    {
-      'service_id': 'aba-electric',
-      'name': 'Aba Electric',
-      'icon': ImagesConstant.aba_electricity
-    },
-    {
-      'service_id': 'yola-electric',
-      'name': 'Yola Electric',
-      'icon': ImagesConstant.yola_electricity
-    },
-  ];
+  final List<Map<String, String>> discoMapping = electricityList;
 
   @override
   void onInit() {
@@ -135,6 +80,31 @@ class ElectricityIndexController extends GetxController {
     }
   }
 
+  Future<void> verifyCustomer() async {
+    if (customerId.value.isEmpty) {
+      showSnackbar(
+        'Error',
+        'Please enter a meter number.',
+      );
+      return;
+    }
+
+    isVerifying.value = true;
+    try {
+      final serviceId = discoMapping[selectedDisco.value]['service_id']!;
+      final response = await verifyCustomerRepository.verifyCustomer(
+          customerId: customerId.value,
+          serviceId: serviceId,
+          variationId: selectedVariationId.value);
+      customerDetails.value = response!;
+    } catch (e) {
+      Failure failure = ErrorMapper.map(e as Exception);
+      error_customer_details.value = "invalid meter no";
+    } finally {
+      isVerifying.value = false;
+    }
+  }
+
   Future<void> buyElectricity() async {
     if (!isInformationComplete.value) return;
 
@@ -152,6 +122,7 @@ class ElectricityIndexController extends GetxController {
         amount: amountValue,
         requestId: requestId,
       );
+
 
       Get.offNamed(RoutesConstant.electricity_receipt, arguments: {
         'disco': serviceId,

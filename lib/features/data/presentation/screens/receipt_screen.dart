@@ -1,26 +1,26 @@
+import 'package:davyking/core/constants/images.dart';
 import 'package:davyking/core/constants/routes.dart';
-import 'package:davyking/core/theme/colors.dart';
-import 'package:davyking/core/utils/spacing.dart';
 import 'package:davyking/core/controllers/primary_button_controller.dart';
 import 'package:davyking/core/models/primary_button_model.dart';
 import 'package:davyking/core/models/top_header_model.dart';
+import 'package:davyking/core/theme/colors.dart';
+import 'package:davyking/core/utils/spacing.dart';
 import 'package:davyking/core/widgets/primary_button_widget.dart';
 import 'package:davyking/core/widgets/top_header_widget.dart';
-import 'package:davyking/features/betting/controllers/index_controller.dart';
+import 'package:davyking/features/data/controllers/index_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
-class BettingReceiptScreen extends StatelessWidget {
-  const BettingReceiptScreen({super.key});
+class DataReceiptScreen extends StatelessWidget {
+  const DataReceiptScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final data = Get.arguments as Map<String, dynamic>;
-    final disco = data['disco'];
-    final customerId = data['customer_id'];
-
-    final BettingIndexController controller = Get.put(BettingIndexController());
+    final serviceId = data['disco'];
+    final phone = data['phone'];
+    final amount = data['amount'];
 
     return Scaffold(
       body: SafeArea(
@@ -30,7 +30,7 @@ class BettingReceiptScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const TopHeaderWidget(
-                  data: TopHeaderModel(title: 'Betting Receipt')),
+                  data: TopHeaderModel(title: 'Data Receipt')),
               Column(
                 children: [
                   Container(
@@ -55,19 +55,21 @@ class BettingReceiptScreen extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            SvgPicture.asset(
-                              controller.bettingMapping.firstWhere(
-                                  (d) => d['service_id'] == disco)['icon']!,
-                              width: 40,
-                              height: 40,
-                            ),
+                            serviceId == 'Smile'
+                                ? Image.asset(ImagesConstant.smileIcon)
+                                : SvgPicture.asset(serviceId == 'MTN'
+                                    ? SvgConstant.mtnIcon
+                                    : serviceId == 'Glo'
+                                        ? SvgConstant.gloIcon
+                                        : serviceId == 'Airtel'
+                                            ? SvgConstant.airtelIcon
+                                            : SvgConstant.etisalatIcon),
                             const SizedBox(width: 20),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  controller.bettingMapping.firstWhere(
-                                      (d) => d['service_id'] == disco)['name']!,
+                                  serviceId,
                                   style: Theme.of(context)
                                       .textTheme
                                       .displayMedium
@@ -78,7 +80,7 @@ class BettingReceiptScreen extends StatelessWidget {
                                       ),
                                 ),
                                 Text(
-                                  customerId,
+                                  phone,
                                   style: Theme.of(context)
                                       .textTheme
                                       .displayMedium
@@ -108,16 +110,6 @@ class BettingReceiptScreen extends StatelessWidget {
                           child: Column(
                             children: [
                               details(
-                                  'Customer Name',
-                                  data['response']['data']['customer_name'] ??
-                                      'N/A'),
-                              const SizedBox(height: 10),
-                              details(
-                                  'Service Name',
-                                  data['response']['data']['service_name'] ??
-                                      'N/A'),
-                              const SizedBox(height: 10),
-                              details(
                                   'Order ID',
                                   data['response']['data']['order_id']
                                       .toString()),
@@ -134,11 +126,17 @@ class BettingReceiptScreen extends StatelessWidget {
                                       .toString()
                                       .capitalizeFirst!),
                               const SizedBox(height: 10),
-                              details('Amount',
-                                  '₦${data['response']['data']['amount']}'),
+                              details('Data Plan',
+                                  data['response']['data']['data_plan']),
                               const SizedBox(height: 10),
-                              details('Transaction Date',
-                                  _formatDate(DateTime.now())),
+                              details('Amount Charged', '₦${amount}'),
+                              const SizedBox(height: 10),
+                              details('Phone', '$phone'),
+                              const SizedBox(height: 10),
+                              details(
+                                  'Transaction Date',
+                                  _formatDate(
+                                      DateTime.parse(data['timestamp']))),
                             ],
                           ),
                         ),
@@ -150,10 +148,11 @@ class BettingReceiptScreen extends StatelessWidget {
               CustomPrimaryButton(
                 controller: CustomPrimaryButtonController(
                   model: CustomPrimaryButtonModel(
-                      text: 'Done', color: DarkThemeColors.primaryColor),
+                    text: 'Done',
+                    color: DarkThemeColors.primaryColor,
+                  ),
                   onPressed: () {
-                    Get.offAllNamed(
-                        RoutesConstant.home); // Or navigate to home screen
+                    Get.offAllNamed(RoutesConstant.home);
                   },
                 ),
               ),
@@ -197,6 +196,6 @@ class BettingReceiptScreen extends StatelessWidget {
   }
 
   String _formatDate(DateTime date) {
-    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year} ${date.hour}:${date.minute.toString().padLeft(2, '0')}';
   }
 }

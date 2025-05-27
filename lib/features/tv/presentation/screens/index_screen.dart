@@ -9,6 +9,7 @@ import 'package:davyking/core/models/top_header_model.dart';
 import 'package:davyking/core/widgets/primary_button_widget.dart';
 import 'package:davyking/core/widgets/top_header_widget.dart';
 import 'package:davyking/features/tv/controllers/index_controller.dart';
+import 'package:davyking/features/tv/presentation/widgets/customer_details_widget.dart';
 import 'package:davyking/features/tv/presentation/widgets/tv_network_widget.dart';
 import 'package:davyking/features/tv/presentation/widgets/tv_variation_widget.dart';
 import 'package:flutter/material.dart';
@@ -63,13 +64,56 @@ class _TvScreenState extends State<TvScreen> {
                   const SizedBox(height: 10),
                   const TvVariationWidget(),
                   const SizedBox(height: 20),
-                  vtuInputField(AirtimeInputFieldModel(
-                    onChanged: controller.setCustomerId,
-                    inputcontroller: controller.customerIdController,
-                    hintText: '1111111111',
-                    name: 'Smart card or IUC Number',
-                    // keyboardType: TextInputType.phone,
-                  )),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Expanded(
+                          child: vtuInputField(AirtimeInputFieldModel(
+                        onChanged: controller.setCustomerId,
+                        inputcontroller: controller.customerIdController,
+                        hintText: '1111111111',
+                        name: 'Smart card or IUC Number',
+                      ))),
+                      const SizedBox(width: 10),
+                      Obx(() => SizedBox(
+                            height: 30,
+                            width: 100,
+                            child: GestureDetector(
+                              onTap: () {
+                                if (!controller.isVerifying.value) {
+                                  controller.verifyCustomer();
+                                }
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: DarkThemeColors.primaryColor),
+                                child: controller.isVerifying.value
+                                    ? const Center(
+                                        child: SizedBox(
+                                            width: 10,
+                                            height: 10,
+                                            child: CircularProgressIndicator(
+                                              color: Colors.white,
+                                            )))
+                                    : const Center(
+                                        child: Text('Verify',
+                                            style:
+                                                TextStyle(color: Colors.white)),
+                                      ),
+                              ),
+                            ),
+                          ))
+                    ],
+                  ),
+                  Obx(() => controller.customerDetails.isNotEmpty
+                      ? CustomerDetailsWidget(controller: controller)
+                      : controller.error_customer_details.isNotEmpty
+                          ? Text(
+                              controller.error_customer_details.value,
+                              style: const TextStyle(color: Colors.red),
+                            )
+                          : const SizedBox()),
                   const SizedBox(height: 40),
                   Obx(() => CustomPrimaryButton(
                         controller: CustomPrimaryButtonController(

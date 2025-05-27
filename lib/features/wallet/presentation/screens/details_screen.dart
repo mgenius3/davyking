@@ -1,3 +1,4 @@
+import 'package:davyking/core/utils/helper.dart';
 import 'package:davyking/core/utils/spacing.dart';
 import 'package:davyking/features/wallet/data/model/wallet_transaction.dart';
 import 'package:flutter/material.dart';
@@ -74,10 +75,9 @@ class WalletTransactionDetailsScreen extends StatelessWidget {
                             child: Text(
                               '${transaction.type.capitalizeFirst} via ${transaction.gateway.capitalizeFirst}',
                               style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
                             ),
                           ),
                         ],
@@ -132,9 +132,7 @@ class WalletTransactionDetailsScreen extends StatelessWidget {
                                       ? 'Failed'
                                       : 'Pending'),
                               style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                              ),
+                                  color: Colors.white, fontSize: 12),
                             ),
                           ),
                         ],
@@ -169,7 +167,8 @@ class WalletTransactionDetailsScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      _buildDetailRow('Reference', transaction.reference),
+                      _buildDetailRow('Reference',
+                          shortenString(transaction.reference, 20)),
                       _buildDetailRow(
                           'Transaction ID', transaction.id.toString()),
                       _buildDetailRow(
@@ -199,19 +198,14 @@ class WalletTransactionDetailsScreen extends StatelessWidget {
                 Center(
                   child: TextButton(
                     onPressed: () {
-                      Get.snackbar(
-                        'Report Issue',
-                        'Contact support for assistance with this transaction.',
-                      );
+                      Get.snackbar('Report Issue',
+                          'Contact support for assistance with this transaction.');
                     },
-                    child: const Text(
-                      'Report an Issue',
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+                    child: const Text('Report an Issue',
+                        style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500)),
                   ),
                 ),
               ],

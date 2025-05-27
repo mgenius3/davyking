@@ -10,7 +10,6 @@ import 'package:davyking/features/airtime/controllers/index_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import '../../../../core/widgets/network_card_widget.dart';
 import 'package:davyking/core/controllers/transaction_auth_controller.dart';
 
 class AirtimeDetailsScreen extends StatelessWidget {
@@ -63,9 +62,9 @@ class AirtimeDetailsScreen extends StatelessWidget {
                           SvgPicture.asset(network == 0
                               ? SvgConstant.mtnIcon
                               : network == 1
-                                  ? SvgConstant.airtelIcon
+                                  ? SvgConstant.gloIcon
                                   : network == 2
-                                      ? SvgConstant.gloIcon
+                                      ? SvgConstant.airtelIcon
                                       : SvgConstant.etisalatIcon),
                           const SizedBox(width: 20),
                           Column(
@@ -74,9 +73,9 @@ class AirtimeDetailsScreen extends StatelessWidget {
                                   network == 0
                                       ? 'MTN NG'
                                       : network == 1
-                                          ? 'AIRTEL NG'
+                                          ? 'GLO NG'
                                           : network == 2
-                                              ? 'GLO NG'
+                                              ? 'AIRTEL NG'
                                               : '9 mobile',
                                   textAlign: TextAlign.center,
                                   style: Theme.of(context)

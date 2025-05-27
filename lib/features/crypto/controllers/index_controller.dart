@@ -77,4 +77,10 @@ class CryptoController extends GetxController {
         .where((transaction) => transaction.type == buy_or_sell.value)
         .toList();
   }
+
+  CryptoTransactionModel singleTransaction(String id) {
+   
+    return all_cryptoTransaction
+        .firstWhere((transaction) => transaction.id.toString() == id);
+  }
 }

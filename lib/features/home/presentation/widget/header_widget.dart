@@ -33,12 +33,18 @@ class HomeHeaderWidget extends StatelessWidget {
       children: [
         Row(
           children: [
-            Container(
-              width: 32.22,
-              height: 33.37,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle, color: DarkThemeColors.primaryColor),
-              child: const Icon(Icons.person_2),
+            GestureDetector(
+              onTap: () {
+                Get.toNamed(RoutesConstant.profile);
+              },
+              child: Container(
+                width: 32.22,
+                height: 33.37,
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: DarkThemeColors.primaryColor),
+                child: const Icon(Icons.person_2),
+              ),
             ),
             const SizedBox(width: 12),
             Column(
@@ -55,13 +61,11 @@ class HomeHeaderWidget extends StatelessWidget {
                               height: 1.17),
                     )),
                 const SizedBox(height: 5),
-                Text(
-                  getGreeting(),
-                  style: Theme.of(context)
-                      .textTheme
-                      .displayMedium
-                      ?.copyWith(fontSize: 12, fontWeight: FontWeight.w400),
-                )
+                Text(getGreeting(),
+                    style: Theme.of(context)
+                        .textTheme
+                        .displayMedium
+                        ?.copyWith(fontSize: 12, fontWeight: FontWeight.w400))
               ],
             )
           ],
@@ -69,37 +73,41 @@ class HomeHeaderWidget extends StatelessWidget {
         Obx(
           () => Row(
             children: [
+              // GestureDetector(
+              //   onTap: () {
+              //     Get.toNamed(RoutesConstant.notification);
+              //   },
+              //   child: Container(
+              //     padding: const EdgeInsets.all(2),
+              //     decoration: ShapeDecoration(
+              //       color: lightningModeController.currentMode.value.mode ==
+              //               "light"
+              //           ? const Color(0xFFDFF7E2)
+              //           : DarkThemeColors.primaryColor,
+              //       shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.circular(20),
+              //       ),
+              //     ),
+              //     child: const Icon(Icons.notification_important),
+              //   ),
+              // ),
+              // const SizedBox(width: 12),
               GestureDetector(
                 onTap: () {
-                  Get.toNamed(RoutesConstant.notification);
+                  Get.toNamed(RoutesConstant.profileSecurity);
                 },
                 child: Container(
-                  padding: const EdgeInsets.all(2),
-                  decoration: ShapeDecoration(
-                    color: lightningModeController.currentMode.value.mode ==
-                            "light"
-                        ? const Color(0xFFDFF7E2)
-                        : DarkThemeColors.primaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                  child: const Icon(Icons.notification_important),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Container(
-                padding: const EdgeInsets.all(2),
-                decoration: ShapeDecoration(
-                  color:
-                      lightningModeController.currentMode.value.mode == "light"
+                    padding: const EdgeInsets.all(2),
+                    decoration: ShapeDecoration(
+                      color: lightningModeController.currentMode.value.mode ==
+                              "light"
                           ? const Color(0xFFDFF7E2)
                           : DarkThemeColors.primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                child: const Icon(Icons.settings),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    child: const Icon(Icons.settings)),
               )
             ],
           ),

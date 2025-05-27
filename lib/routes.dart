@@ -2,6 +2,7 @@
 import 'package:davyking/core/constants/routes.dart';
 import 'package:davyking/features/airtime/presentation/screens/airtime_details_screen.dart';
 import 'package:davyking/features/airtime/presentation/screens/index_screen.dart';
+import 'package:davyking/features/airtime/presentation/screens/receipt_screen.dart';
 import 'package:davyking/features/auth/presentation/screens/signin_screen.dart';
 import 'package:davyking/features/auth/presentation/screens/otp_verify_screen.dart';
 import 'package:davyking/features/auth/presentation/screens/reset_password/forgot_password.dart';
@@ -17,6 +18,7 @@ import 'package:davyking/features/crypto/presentation/screens/sell_crypto/field_
 import 'package:davyking/features/crypto/presentation/screens/sell_crypto/index_screen.dart';
 import 'package:davyking/features/data/presentation/screens/data_details_screen.dart';
 import 'package:davyking/features/data/presentation/screens/index_screen.dart';
+import 'package:davyking/features/data/presentation/screens/receipt_screen.dart';
 import 'package:davyking/features/deposit/presentation/screen/index_screen.dart';
 import 'package:davyking/features/electricity/presentation/screens/details_screen.dart';
 import 'package:davyking/features/electricity/presentation/screens/index_screen.dart';
@@ -94,12 +96,16 @@ class AppRoutes {
     GetPage(
         name: RoutesConstant.airtime_details,
         page: () => AirtimeDetailsScreen()),
+    GetPage(
+        name: RoutesConstant.airtime_receipt,
+        page: () => AirtimeReceiptScreen()),
 
     GetPage(
         name: RoutesConstant.data,
         page: () => DataScreen(),
         transition: Transition.zoom),
     GetPage(name: RoutesConstant.data_details, page: () => DataDetailsScreen()),
+    GetPage(name: RoutesConstant.data_receipt, page: () => DataReceiptScreen()),
     GetPage(
         name: RoutesConstant.electricity,
         page: () => ElectricityScreen(),
@@ -110,7 +116,6 @@ class AppRoutes {
     GetPage(
         name: RoutesConstant.electricity_receipt,
         page: () => ElectricityReceiptScreen()),
-
     GetPage(
         name: RoutesConstant.betting,
         page: () => BettingScreen(),
@@ -122,16 +127,12 @@ class AppRoutes {
         name: RoutesConstant.betting_receipt,
         page: () => BettingReceiptScreen()),
 
-        GetPage(
+    GetPage(
         name: RoutesConstant.tv,
         page: () => TvScreen(),
         transition: Transition.zoom),
-    GetPage(
-        name: RoutesConstant.tv_details,
-        page: () => TvDetailsScreen()),
-    GetPage(
-        name: RoutesConstant.tv_receipt,
-        page: () => TvReceiptScreen()),
+    GetPage(name: RoutesConstant.tv_details, page: () => TvDetailsScreen()),
+    GetPage(name: RoutesConstant.tv_receipt, page: () => TvReceiptScreen()),
 
     //Crypto
     GetPage(name: RoutesConstant.buy_crypto, page: () => BuyCryptoScreen()),

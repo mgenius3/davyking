@@ -1,4 +1,3 @@
-import 'package:davyking/core/constants/images.dart';
 import 'package:davyking/core/constants/routes.dart';
 import 'package:davyking/core/theme/colors.dart';
 import 'package:davyking/core/utils/spacing.dart';
@@ -8,6 +7,7 @@ import 'package:davyking/core/models/top_header_model.dart';
 import 'package:davyking/core/widgets/primary_button_widget.dart';
 import 'package:davyking/core/widgets/top_header_widget.dart';
 import 'package:davyking/features/electricity/controllers/index_controller.dart';
+import 'package:davyking/features/giftcards/controllers/index_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -20,13 +20,11 @@ class ElectricityReceiptScreen extends StatelessWidget {
     final data = Get.arguments as Map<String, dynamic>;
     final disco = data['disco'];
     final customerId = data['customer_id'];
-    final variationId = data['variation_id'];
-    final amount = data['amount'];
-    final response = data['response'] as Map<String, dynamic>;
-    final responseData = response['data'];
 
     final ElectricityIndexController controller =
-        Get.find<ElectricityIndexController>();
+        Get.put(ElectricityIndexController());
+    final GiftCardController giftCardController =
+        Get.find<GiftCardController>();
 
     return Scaffold(
       body: SafeArea(
@@ -50,11 +48,10 @@ class ElectricityReceiptScreen extends StatelessWidget {
                       ),
                       shadows: [
                         BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
-                          blurRadius: 4,
-                          offset: const Offset(0, 2),
-                          spreadRadius: 0,
-                        ),
+                            color: Colors.grey.withOpacity(0.2),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                            spreadRadius: 0),
                       ],
                     ),
                     child: Column(
@@ -78,10 +75,9 @@ class ElectricityReceiptScreen extends StatelessWidget {
                                       .textTheme
                                       .displayMedium
                                       ?.copyWith(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        height: 1.38,
-                                      ),
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          height: 1.38),
                                 ),
                                 Text(
                                   customerId,
@@ -89,11 +85,10 @@ class ElectricityReceiptScreen extends StatelessWidget {
                                       .textTheme
                                       .displayMedium
                                       ?.copyWith(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400,
-                                        height: 1.57,
-                                        color: Colors.grey[600],
-                                      ),
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400,
+                                          height: 1.57,
+                                          color: Colors.grey[600]),
                                 ),
                               ],
                             ),
@@ -113,30 +108,43 @@ class ElectricityReceiptScreen extends StatelessWidget {
                           ),
                           child: Column(
                             children: [
-                              if (responseData['token'] != null)
-                                details('Token', responseData['token'],
+                              if (data['response']['data']['token'] != null)
+                                details(
+                                    'Token', data['response']['data']['token'],
                                     isHighlighted: true),
-                              if (responseData['token'] != null)
-                                const SizedBox(height: 10),
-                              details('Customer Name',
-                                  responseData['customer_name'] ?? 'N/A'),
                               const SizedBox(height: 10),
-                              details('Units', responseData['units'] ?? 'N/A'),
+                              details(
+                                  'Customer Name',
+                                  data['response']['data']['customer_name'] ??
+                                      'N/A'),
                               const SizedBox(height: 10),
-                              details('Order ID',
-                                  responseData['order_id'].toString()),
+                              details(
+                                  'Service Name',
+                                  data['response']['data']['service_name'] ??
+                                      'N/A'),
+                              const SizedBox(height: 10),
+                              details('Units',
+                                  data['response']['data']['units'] ?? 'N/A'),
+                              const SizedBox(height: 10),
+                              details(
+                                  'Order ID',
+                                  data['response']['data']['order_id']
+                                      .toString()),
+                              const SizedBox(height: 10),
+                              details(
+                                  'Request ID',
+                                  data['response']['data']['request_id']
+                                      .toString()),
                               const SizedBox(height: 10),
                               details(
                                   'Status',
-                                  responseData['status']
+                                  data['response']['data']['status']
                                       .replaceAll('-api', '')
+                                      .toString()
                                       .capitalizeFirst!),
                               const SizedBox(height: 10),
-                              details(
-                                  'Variation', variationId.capitalizeFirst!),
-                              const SizedBox(height: 10),
-                              details('Amount Charged',
-                                  '₦${responseData['amount_charged']}'),
+                              details('Amount ',
+                                  '₦${data['response']['data']['amount']}'),
                               const SizedBox(height: 10),
                               details('Transaction Date',
                                   _formatDate(DateTime.now())),

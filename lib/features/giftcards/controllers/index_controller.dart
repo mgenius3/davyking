@@ -74,4 +74,11 @@ class GiftCardController extends GetxController {
         .where((transaction) => transaction.type == buy_or_sell.value)
         .toList();
   }
+
+  GiftCardTransactionModel singleTransaction(String id) {
+    print(id);
+    print(all_giftCardTransaction.map((a) => a.id));
+    return all_giftCardTransaction
+        .firstWhere((transaction) => transaction.id.toString() == id);
+  }
 }

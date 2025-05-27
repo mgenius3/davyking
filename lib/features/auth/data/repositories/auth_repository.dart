@@ -1,4 +1,5 @@
 import 'package:davyking/core/errors/dio_error_handler.dart';
+import 'package:davyking/core/utils/snackbar.dart';
 import 'package:dio/dio.dart';
 import 'package:davyking/api/api_client.dart';
 import 'package:davyking/core/constants/api_url.dart';
@@ -54,70 +55,54 @@ class AuthRepository {
       }
       throw AppException(DioErrorHandler.handleDioError(e));
     } catch (e) {
-      print(e);
       throw AppException("An unexpected error occurred during Sign-Up.");
     }
   }
 
-  // Future<VerifyOtpResponse> verifyOtp(Map otp) async {
-  //   try {
-  //     final storageService = SecureStorageService();
-  //     final user_reg_details = await storageService.getData('user_reg_details');
-  //     final userId = jsonDecode(user_reg_details!)['id'];
-  //     final response = await apiClient
-  //         .patch('${ApiUrl.auth_signup}/$userId/verify_otp/', data: otp);
+  Future<void> forgotPassword(String email) async {
+    try {
+      await apiClient.post(ApiUrl.auth_reset_password, data: {'email': email});
+      showSnackbar('Success', 'Check you email for otp code ', isError: false);
+    } on DioException catch (e) {
+      final responseData = e.response?.data;
 
-  //     return VerifyOtpResponse.fromJson(response.data);
-  //   } on DioException catch (e) {
-  //     final responseData = e.response?.data;
+      if (responseData['message'].toString().isNotEmpty) {
+        throw AppException("email sent failed. ${responseData['message']}");
+      }
+      throw AppException(DioErrorHandler.handleDioError(e));
+    } catch (e) {
+      throw AppException("An unexpected error occurred during sending email");
+    }
+  }
 
-  //     if (responseData is Map && responseData['success'] == false) {
-  //       throw AppException(responseData['message']);
-  //     }
-  //     throw AppException("OTP verification failed, please check your email");
-  //   } catch (e) {
-  //     throw AppException(
-  //         "An unexpected error occurred during OTP verification");
-  //   }
-  // }
+  Future<void> sendOtp(Map data) async {
+    try {
+      await apiClient.post(ApiUrl.auth_verify_reset_password, data: data);
+    } on DioException catch (e) {
+      final responseData = e.response?.data;
 
-  // Future<void> resendOtp() async {
-  //   try {
-  //     final storageService = SecureStorageService();
-  //     final user_reg_details = await storageService.getData('user_reg_details');
-  //     final userId = jsonDecode(user_reg_details!)['id'];
-  //     await apiClient
-  //         .patch('${ApiUrl.auth_signup}/$userId/resend_otp/', data: {});
-  //   } on DioException catch (e) {
-  //     final responseData = e.response?.data;
+      if (responseData['message'].toString().isNotEmpty) {
+        throw AppException("OTP sent failed. ${responseData['message']}");
+      }
+      throw AppException(DioErrorHandler.handleDioError(e));
+    } catch (e) {
+      throw AppException("An unexpected error occurred during sending OTP");
+    }
+  }
 
-  //     if (responseData is Map && responseData['non_field_errors'] != null) {
-  //       throw AppException(responseData['non_field_errors'].join(', '));
-  //     }
-  //     throw AppException("Sign-In failed. Please check your credentials.");
-  //   } catch (e) {
-  //     throw AppException("An unexpected error occurred during Sign-In.");
-  //   }
-  // }
+  Future<void> setNewPassword(String email, String password) async {
+    try {
+      await apiClient.post(ApiUrl.auth_set_new_password,
+          data: {'email': email, 'password': password});
+    } on DioException catch (e) {
+      final responseData = e.response?.data;
 
-  // Future<SignInResponse> resetPassword(ResetPasswordRequest request) async {
-  //   try {
-  //     final response = await apiClient.post(
-  //       '${ApiUrl.auth_reset_password}:id/password_reset/',
-  //       data: request.toJson(),
-  //     );
-
-  //     print(response.data);
-  //     return SignInResponse.fromJson(response.data);
-  //   } on DioException catch (e) {
-  //     final responseData = e.response?.data;
-
-  //     if (responseData is Map && responseData['non_field_errors'] != null) {
-  //       throw AppException(responseData['non_field_errors'].join(', '));
-  //     }
-  //     throw AppException("Sign-In failed. Please check your credentials.");
-  //   } catch (e) {
-  //     throw AppException("An unexpected error occurred during Sign-In.");
-  //   }
-  // }
+      if (responseData['message'].toString().isNotEmpty) {
+        throw AppException("email sent failed. ${responseData['message']}");
+      }
+      throw AppException(DioErrorHandler.handleDioError(e));
+    } catch (e) {
+      throw AppException("An unexpected error occurred during sending email");
+    }
+  }
 }

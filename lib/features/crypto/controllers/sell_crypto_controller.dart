@@ -1,5 +1,6 @@
 import 'package:davyking/core/constants/routes.dart';
 import 'package:davyking/core/controllers/user_auth_details_controller.dart';
+import 'package:davyking/core/theme/colors.dart';
 import 'package:davyking/features/crypto/controllers/index_controller.dart';
 import 'package:davyking/features/crypto/data/model/crypto_list_model.dart';
 import 'package:davyking/features/crypto/data/repositories/crypto_repository.dart';
@@ -122,7 +123,6 @@ class SellCryptoController extends GetxController {
       fiatAmount.value = inputAmount;
       cryptoAmount.value = inputAmount / (rate * currentPrice);
     }
-
   }
 
   // Real-time validation for amount (ensure it doesn't exceed user's balance)
@@ -201,8 +201,14 @@ class SellCryptoController extends GetxController {
       await cryptoRepository.transactCrypto(
           fields, proofScreenshot.value?.path ?? "");
 
-      Get.snackbar('Success', 'Crypto sell request submitted successfully');
-      Get.toNamed(RoutesConstant.home);
+      Get.showSnackbar(
+        GetSnackBar(
+            title: 'Success',
+            message: 'Transaction created successfully',
+            duration: const Duration(seconds: 3),
+            backgroundColor: DarkThemeColors.primaryColor),
+      );
+      Get.offNamed(RoutesConstant.home);
     } catch (e) {
       Get.snackbar('Error', 'Failed to submit sell request: $e');
     } finally {

@@ -6,10 +6,8 @@ import 'package:davyking/core/models/primary_button_model.dart';
 import 'package:davyking/core/models/top_header_model.dart';
 import 'package:davyking/core/widgets/primary_button_widget.dart';
 import 'package:davyking/core/widgets/top_header_widget.dart';
-import 'package:davyking/features/betting/controllers/index_controller.dart';
 import 'package:davyking/features/tv/controllers/index_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 class TvReceiptScreen extends StatelessWidget {
@@ -20,13 +18,8 @@ class TvReceiptScreen extends StatelessWidget {
     final data = Get.arguments as Map<String, dynamic>;
     final disco = data['disco'];
     final customerId = data['customer_id'];
-    final variationId = data['variation_id'];
-    final amount = data['amount'];
-    final response = data['response'] as Map<String, dynamic>;
-    final responseData = response['data'];
 
-    final TvIndexController controller =
-        Get.find<TvIndexController>();
+    final TvIndexController controller = Get.put(TvIndexController());
 
     return Scaffold(
       body: SafeArea(
@@ -35,8 +28,7 @@ class TvReceiptScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const TopHeaderWidget(
-                  data: TopHeaderModel(title: 'Tv Receipt')),
+              const TopHeaderWidget(data: TopHeaderModel(title: 'Tv Receipt')),
               Column(
                 children: [
                   Container(
@@ -61,7 +53,7 @@ class TvReceiptScreen extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                           Image.asset(
+                            Image.asset(
                               controller.tvMapping.firstWhere(
                                   (d) => d['service_id'] == disco)['icon']!,
                               width: 40,
@@ -113,27 +105,34 @@ class TvReceiptScreen extends StatelessWidget {
                           ),
                           child: Column(
                             children: [
-                              if (responseData['token'] != null)
-                                details('Token', responseData['token'],
-                                    isHighlighted: true),
-                              if (responseData['token'] != null)
-                                const SizedBox(height: 10),
-                              details('Customer Name',
-                                  responseData['customer_name'] ?? 'N/A'),
+                              details(
+                                  'Customer Name',
+                                  data['response']['data']['customer_name'] ??
+                                      'N/A'),
                               const SizedBox(height: 10),
-                              details('Units', responseData['units'] ?? 'N/A'),
+                              details(
+                                  'Service Name',
+                                  data['response']['data']['service_name'] ??
+                                      'N/A'),
                               const SizedBox(height: 10),
-                              details('Order ID',
-                                  responseData['order_id'].toString()),
+                              details(
+                                  'Order ID',
+                                  data['response']['data']['order_id']
+                                      .toString()),
+                              const SizedBox(height: 10),
+                              details(
+                                  'Request ID',
+                                  data['response']['data']['request_id']
+                                      .toString()),
                               const SizedBox(height: 10),
                               details(
                                   'Status',
-                                  responseData['status']
+                                  data['response']['data']['status']
                                       .replaceAll('-api', '')
                                       .capitalizeFirst!),
                               const SizedBox(height: 10),
                               details('Amount Charged',
-                                  '₦${responseData['amount_charged']}'),
+                                  '₦${data['response']['data']['amount']}'),
                               const SizedBox(height: 10),
                               details('Transaction Date',
                                   _formatDate(DateTime.now())),

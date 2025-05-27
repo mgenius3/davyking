@@ -6,9 +6,8 @@ import 'package:davyking/features/auth/data/repositories/auth_repository.dart';
 
 final isLoading = false.obs;
 
-class ResetPasswordController extends GetxController {
+class SetNewPasswordController extends GetxController {
   final formKey = GlobalKey<FormState>();
-  final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   var obscurePassword = true.obs;
@@ -21,15 +20,16 @@ class ResetPasswordController extends GetxController {
     obscurePassword.value = !obscurePassword.value;
   }
 
-  Future<void> resetPassword() async {
+
+  Future<void> setNewPassword(String email) async {
     isLoading.value = true;
     try {
-      if (emailController.text.isNotEmpty) {
-        await authRepository.forgotPassword(emailController.text);
-        Get.toNamed(RoutesConstant.otpverify,
-            arguments: {"email": emailController.text});
+      if (passwordController.text == confirmPasswordController.text &&
+          passwordController.text.length >= 6) {
+        await authRepository.setNewPassword(email, passwordController.text);
+        Get.toNamed(RoutesConstant.signin);
       } else {
-        showSnackbar("Error", "please enter your email to proceed");
+        showSnackbar("Error", "your password must be minimum of 6 characters");
       }
     } catch (err) {
       isLoading.value = false;
@@ -40,7 +40,6 @@ class ResetPasswordController extends GetxController {
 
   @override
   void onClose() {
-    emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
     super.onClose();

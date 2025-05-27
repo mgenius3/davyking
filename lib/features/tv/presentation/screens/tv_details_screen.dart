@@ -144,15 +144,15 @@ class TvDetailsScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  Text(
-                    'By tapping the trade button, you have agreed to our',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w300,
-                          height: 2.20,
-                        ),
-                  ),
+                  Text('By tapping the trade button, you have agreed to our',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context)
+                          .textTheme
+                          .displayMedium
+                          ?.copyWith(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w300,
+                              height: 2.20)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

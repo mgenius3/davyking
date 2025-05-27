@@ -1,9 +1,10 @@
-import 'package:davyking/core/constants/images.dart';
 import 'package:davyking/core/constants/routes.dart';
 import 'package:davyking/core/errors/error_mapper.dart';
 import 'package:davyking/core/errors/failure.dart';
+import 'package:davyking/core/repository/vtu_repository.dart';
 import 'package:davyking/core/utils/snackbar.dart';
 import 'package:davyking/features/data/data/repositories/data_repository.dart';
+import 'package:davyking/features/tv/data/local/index_local_data.dart';
 import 'package:davyking/features/tv/data/repositories/tv_repository.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -21,33 +22,17 @@ class TvIndexController extends GetxController {
   final RxList<dynamic> variations = <dynamic>[].obs;
   final customerIdController = TextEditingController();
   final TvRepository tvRepository = TvRepository();
+  final VtuRepository verifyCustomerRepository =
+      VtuRepository();
   final UserAuthDetailsController userAuthDetailsController =
       Get.find<UserAuthDetailsController>();
   final Uuid uuid = const Uuid();
+  final RxBool isVerifying = false.obs;
+  final RxMap<String, dynamic> customerDetails = <String, dynamic>{}.obs;
+  final RxString error_customer_details = ''.obs;
 
   // Map network index to eBills Africa service_id
-  final List<Map<String, dynamic>> tvMapping = [
-    {
-      'name': 'DSTV',
-      'service_id': 'dstv',
-      'icon': ImagesConstant.dstv,
-    },
-    {
-      'name': 'GOTV',
-      'service_id': 'gotv',
-      'icon': ImagesConstant.gotv,
-    },
-    {
-      'name': 'Startimes',
-      'service_id': 'startimes',
-      'icon': ImagesConstant.startimes,
-    },
-    {
-      'name': 'Showmax',
-      'service_id': 'showmax',
-      'icon': ImagesConstant.showmax
-    },
-  ];
+  final List<Map<String, dynamic>> tvMapping = tvList;
 
   @override
   void onInit() {
@@ -125,6 +110,25 @@ class TvIndexController extends GetxController {
     }
 
     return true;
+  }
+
+  Future<void> verifyCustomer() async {
+    if (customerId.value.isEmpty) {
+      showSnackbar('Error', 'Please enter a smart card or IUC number.');
+      return;
+    }
+    isVerifying.value = true;
+    try {
+      final serviceId = tvMapping[selectedTv.value]['service_id']!;
+      final response = await verifyCustomerRepository.verifyCustomer(
+          customerId: customerId.value, serviceId: serviceId);
+      customerDetails.value = response!;
+    } catch (e) {
+      Failure failure = ErrorMapper.map(e as Exception);
+      error_customer_details.value = "invalid smart card or IUC";
+    } finally {
+      isVerifying.value = false;
+    }
   }
 
   Future<void> fetchVariations() async {

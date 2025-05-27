@@ -106,14 +106,18 @@ class AirtimeIndexController extends GetxController {
 
       final requestId = uuid.v4();
 
-      await airtimeRepository.buyAirtime(
+      final response = await airtimeRepository.buyAirtime(
           user_id: userAuthDetailsController.user.value!.id.toString(),
           phone: phoneNumber.value,
           serviceId: serviceId,
           amount: amount,
           requestId: requestId);
 
-      Get.toNamed(RoutesConstant.home);
+      print(response);
+      // Use the receipt_data returned from the backend
+      final receiptData = response!['receipt_data'];
+      print(receiptData);
+      Get.offNamed(RoutesConstant.airtime_receipt, arguments: receiptData);
     } catch (e) {
       Failure failure = ErrorMapper.map(e as Exception);
       showSnackbar('Error', failure.message);

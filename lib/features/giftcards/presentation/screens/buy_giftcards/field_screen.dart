@@ -1,4 +1,5 @@
 import 'package:davyking/core/constants/routes.dart';
+import 'package:davyking/core/constants/symbols.dart';
 import 'package:davyking/core/controllers/primary_button_controller.dart';
 import 'package:davyking/core/models/primary_button_model.dart';
 import 'package:davyking/core/states/mode.dart';
@@ -216,7 +217,7 @@ class BuyGiftCardInputField extends StatelessWidget {
                             borderRadius: BorderRadius.circular(5)),
                       ),
                       child: Text(
-                        'Buy Rate: ${(double.parse(data.buyRate)).toStringAsFixed(2)}',
+                        'Buy Rate: ${Symbols.currency_naira}${(double.parse(data.buyRate) * double.parse(data.denomination) * double.parse(currencyRateController.currencyRates[0].rate)).toStringAsFixed(2)}',
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                             color: Color(0xE5093030),

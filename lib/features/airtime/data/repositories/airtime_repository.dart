@@ -13,7 +13,7 @@ class AirtimeRepository {
 
   AirtimeRepository() : apiClient = DioClient();
 
-  Future<void> buyAirtime(
+  Future<Map?> buyAirtime(
       {required String user_id,
       required String phone,
       required String serviceId,
@@ -32,13 +32,14 @@ class AirtimeRepository {
       );
 
       if (response.data['status'] == "success") {
-        Get.showSnackbar(
-          GetSnackBar(
-              title: 'Success',
-              message: response.data['message'],
-              duration: const Duration(seconds: 3),
-              backgroundColor: DarkThemeColors.primaryColor),
-        );
+        return response.data['data'];
+        // Get.showSnackbar(
+        //   GetSnackBar(
+        //       title: 'Success',
+        //       message: response.data['message'],
+        //       duration: const Duration(seconds: 3),
+        //       backgroundColor: DarkThemeColors.primaryColor),
+        // );
       }
     } on DioException catch (e) {
       if (e.response?.data['message'] != null) {

@@ -150,7 +150,7 @@ class BuyGiftcardController extends GetxController {
           : null;
       var response =
           await giftCardRepository.transactGiftCard(fields, screenshotPath!);
-      Get.toNamed(RoutesConstant.home);
+      Get.offNamed(RoutesConstant.home);
     } catch (e) {
       Get.snackbar('Error', 'Failed to submit purchase: $e');
     } finally {

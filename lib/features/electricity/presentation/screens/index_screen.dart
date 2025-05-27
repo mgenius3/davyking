@@ -9,6 +9,7 @@ import 'package:davyking/core/models/primary_button_model.dart';
 import 'package:davyking/core/models/top_header_model.dart';
 import 'package:davyking/core/widgets/primary_button_widget.dart';
 import 'package:davyking/core/widgets/top_header_widget.dart';
+import 'package:davyking/features/electricity/presentation/widgets/customer_details_widget.dart';
 import 'package:davyking/features/electricity/presentation/widgets/electricity_disco_widget.dart';
 import 'package:davyking/features/electricity/presentation/widgets/electricity_variation_widget.dart';
 import 'package:flutter/material.dart';
@@ -60,19 +61,61 @@ class _ElectricityScreenState extends State<ElectricityScreen> {
                 const SizedBox(height: 10),
                 const ElectricityVariationWidget(),
                 const SizedBox(height: 20),
-                vtuInputField(AirtimeInputFieldModel(
-                  onChanged: controller.setCustomerId,
-                  inputcontroller: controller.customerIdController,
-                  hintText: '12345678901',
-                  name: 'Meter Number',
-                )),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Expanded(
+                        child: vtuInputField(AirtimeInputFieldModel(
+                            onChanged: controller.setCustomerId,
+                            inputcontroller: controller.customerIdController,
+                            hintText: '12345678901',
+                            name: 'Meter Number'))),
+                    const SizedBox(width: 10),
+                    Obx(() => SizedBox(
+                          height: 30,
+                          width: 100,
+                          child: GestureDetector(
+                            onTap: () {
+                              if (!controller.isVerifying.value) {
+                                controller.verifyCustomer();
+                              }
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: DarkThemeColors.primaryColor),
+                              child: controller.isVerifying.value
+                                  ? const Center(
+                                      child: SizedBox(
+                                          width: 10,
+                                          height: 10,
+                                          child: CircularProgressIndicator(
+                                            color: Colors.white,
+                                          )))
+                                  : const Center(
+                                      child: Text('Verify',
+                                          style:
+                                              TextStyle(color: Colors.white)),
+                                    ),
+                            ),
+                          ),
+                        ))
+                  ],
+                ),
+                Obx(() => controller.customerDetails.isNotEmpty
+                    ? CustomerDetailsWidget(controller: controller)
+                    : controller.error_customer_details.isNotEmpty
+                        ? Text(
+                            controller.error_customer_details.value,
+                            style: const TextStyle(color: Colors.red),
+                          )
+                        : const SizedBox()),
                 const SizedBox(height: 20),
                 vtuInputField(AirtimeInputFieldModel(
                   onChanged: controller.setAmount,
                   inputcontroller: controller.amountController,
                   hintText: '1000',
                   name: 'Amount',
-                  // keyboardType: TextInputType.number,
                   prefixIcon: const Text('₦'),
                 )),
                 const SizedBox(height: 40),

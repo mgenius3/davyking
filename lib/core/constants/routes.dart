@@ -15,8 +15,12 @@ class RoutesConstant {
   static const String notification = '/notifications';
   static const String airtime = '/airtime';
   static const String airtime_details = '/airtime/details';
+  static const String airtime_receipt = '/airtime/receipt';
+
   static const String data = '/data';
   static const String data_details = '/data/details';
+  static const String data_receipt = '/data/receipt';
+
   static const String electricity = '/electricity';
   static const String electricity_details = '/electricity/details';
   static const String electricity_receipt = '/electricity/receipt';

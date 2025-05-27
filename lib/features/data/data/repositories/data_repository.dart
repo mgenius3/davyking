@@ -13,7 +13,7 @@ class DataRepository {
 
   DataRepository() : apiClient = DioClient();
 
-  Future<void> buyData(
+  Future<Map?> buyData(
       {required String user_id,
       required double amount,
       required String phone,
@@ -34,13 +34,14 @@ class DataRepository {
       );
 
       if (response.data['status'] == "success") {
-        Get.showSnackbar(
-          GetSnackBar(
-              title: 'Success',
-              message: response.data['message'],
-              duration: const Duration(seconds: 3),
-              backgroundColor: DarkThemeColors.primaryColor),
-        );
+        return response.data['data'];
+        // Get.showSnackbar(
+        //   GetSnackBar(
+        //       title: 'Success',
+        //       message: response.data['message'],
+        //       duration: const Duration(seconds: 3),
+        //       backgroundColor: DarkThemeColors.primaryColor),
+        // );
       }
     } on DioException catch (e) {
       if (e.response?.data['message'] != null) {

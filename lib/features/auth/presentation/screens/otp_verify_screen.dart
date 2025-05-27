@@ -48,7 +48,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
           }
         },
         child: SizedBox(
-            width: width * 0.15,
+            width: width * 0.1,
             height: 65.64,
             child: Center(
               child: TextFormField(
@@ -76,8 +76,8 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                 onChanged: (value) {
                   businessController.updatePinValue(focusnumber, value);
                   businessController.isPinComplete();
-                  if (focusnumber == 3 && value.isNotEmpty) {
-                    businessController.submit();
+                  if (focusnumber == 5 && value.isNotEmpty) {
+                    businessController.submit(email);
                   }
                 },
               ),
@@ -90,7 +90,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
             child: Container(
       margin: Spacing.defaultMarginSpacing,
       height: height - 90,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -126,7 +126,8 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                   color: Colors.black,
                                   fontSize: 15.55,
                                   fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w400,
+                                  fontStyle: FontStyle.italic,
+                                  fontWeight: FontWeight.w700,
                                   height: 1.43),
                             ),
                           ],
@@ -159,19 +160,27 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                       fontWeight: FontWeight.w500,
                                       height: 1.43),
                                 )),
-                            TextButton(
-                                onPressed: () {},
-                                child: const Text(
+                            Obx(() => TextButton(
+                                onPressed: () {
+                                  if (businessController.secondsRemaining <=
+                                      0) {
+                                    businessController.resendOtp(email);
+                                  }
+                                },
+                                child: Text(
                                   'Resend Code',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    color: Color(0xFF3AD29F),
-                                    fontSize: 15.67,
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w600,
-                                    height: 1.50,
-                                  ),
-                                ))
+                                      color: businessController
+                                                  .secondsRemaining <=
+                                              0
+                                          ? DarkThemeColors.primaryColor
+                                          : DarkThemeColors.disabledButtonColor,
+                                      fontSize: 15.67,
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.w600,
+                                      height: 1.50),
+                                )))
                           ],
                         ),
                       )
@@ -181,31 +190,26 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
               ),
             ),
             const SizedBox(height: 10),
-            CustomPrimaryButton(
-                controller: CustomPrimaryButtonController(
-                    model: const CustomPrimaryButtonModel(
-                      text: "Verify",
-                    ),
-                    onPressed: () {
-                      Get.dialog(Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(ImagesConstant.email_verify_successful),
-                            TextButton(
-                                onPressed: () {
-                                  Get.toNamed(RoutesConstant.home);
-                                },
-                                child: Text(
-                                  'Go Home',
-                                  style: TextStyle(
-                                      color: LightThemeColors.primaryColor,
-                                      fontWeight: FontWeight.w700),
-                                ))
-                          ],
+            Obx(() => businessController.isLoading.value
+                ? CustomPrimaryButton(
+                    controller: CustomPrimaryButtonController(
+                        model: const CustomPrimaryButtonModel(
+                            child: SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                    color: Colors.white))),
+                        onPressed: () {}),
+                  )
+                : CustomPrimaryButton(
+                    controller: CustomPrimaryButtonController(
+                        model: const CustomPrimaryButtonModel(
+                          text: 'Sign In',
+                          textColor: Colors.white,
                         ),
-                      ));
-                    }))
+                        onPressed: () {
+                          businessController.submit(email);
+                        }))),
           ]),
     )));
   }
