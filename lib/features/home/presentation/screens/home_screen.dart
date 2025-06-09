@@ -6,7 +6,10 @@ import 'package:davyking/core/models/persistent_tab_item_model.dart';
 import 'package:davyking/core/widgets/persistent_bottom_nav_bar.dart';
 import 'package:davyking/core/widgets/transaction_logs_widget.dart';
 import 'package:davyking/features/ads/presentation/screens/ad_screen.dart';
+import 'package:davyking/features/airtime/controllers/index_controller.dart';
+import 'package:davyking/features/crypto/controllers/index_controller.dart';
 import 'package:davyking/features/crypto/presentation/screens/index_screen.dart';
+import 'package:davyking/features/giftcards/controllers/index_controller.dart';
 import 'package:davyking/features/giftcards/presentation/screens/index_screen.dart';
 import 'package:davyking/features/home/presentation/widget/header_widget.dart';
 import 'package:davyking/features/home/presentation/widget/other_services_widget.dart';
@@ -57,6 +60,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           .getUserDetail();
                       await Get.find<TransactionLogController>()
                           .fetchTransactionLogs();
+                      await Get.find<GiftCardController>()
+                          .fetchAllGiftCardsTransaction();
+                      await Get.find<CryptoController>()
+                          .fetchAllCryptosTransaction();
                     },
                     child: SingleChildScrollView(
                       child: Container(
@@ -75,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             const SizedBox(height: 20),
                             SizedBox(
                                 width: Get.width,
-                                height: 450,
+                                // height: 500,
                                 child: RecentTransactionsWidget()),
                           ],
                         ),

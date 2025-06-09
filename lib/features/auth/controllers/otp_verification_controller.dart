@@ -18,7 +18,7 @@ class OtpVerifyController extends GetxController {
 
   var isLoading = false.obs;
   var focus = 1.obs;
-  var secondsRemaining = 890.obs;
+  var secondsRemaining = 100.obs;
   Timer? _timer;
   var checkIfInputFieldIsComplete = false.obs;
   var codeVerified = false.obs;

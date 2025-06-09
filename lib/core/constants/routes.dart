@@ -9,6 +9,7 @@ class RoutesConstant {
   static const String otpverify = '/auth_verify_otp';
   static const String forgotpassword = '/auth_resetpassword_forgot';
   static const String setnewpassword = '/auth_resetpassword_setnew';
+  static const String emailVerification = '/email-verification';
 
   //home
   static const String home = '/';

@@ -1,4 +1,4 @@
-import 'package:clipboard/clipboard.dart'; // Add this import
+import 'package:clipboard/clipboard.dart';
 import 'package:davyking/core/controllers/admin_bank_details_controller.dart';
 import 'package:davyking/core/controllers/currency_rate_controller.dart';
 import 'package:davyking/core/controllers/primary_button_controller.dart';
@@ -33,6 +33,9 @@ class BuyCryptoInputField extends StatelessWidget {
         Get.find<TransactionAuthController>();
 
     return Scaffold(
+      backgroundColor: lightningModeController.currentMode.value.mode == "light" 
+          ? const Color(0xFFF8FAFC) 
+          : const Color(0xFF0F172A),
       body: SafeArea(
         child: Container(
           margin: Spacing.defaultMarginSpacing,
@@ -46,24 +49,26 @@ class BuyCryptoInputField extends StatelessWidget {
                               ? 'Buy ${controller.selectedCrypto.value?.symbol}'
                               : 'Buy Crypto'),
                     )),
-                const SizedBox(height: 20),
+                const SizedBox(height: 24),
+                
+                // Crypto Image with enhanced styling
                 Obx(
                   () => Center(
                     child: Container(
-                      width: 229.09,
-                      height: 148.38,
+                      width: 240,
+                      height: 160,
                       decoration: ShapeDecoration(
                         image: DecorationImage(
                             image: NetworkImage(
                                 controller.selectedCrypto.value!.image),
                             fit: BoxFit.fill),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.79)),
-                        shadows: const [
+                            borderRadius: BorderRadius.circular(20)),
+                        shadows: [
                           BoxShadow(
-                              color: Color(0x1E000000),
-                              blurRadius: 5.42,
-                              offset: Offset(0, 5.42),
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 20,
+                              offset: const Offset(0, 8),
                               spreadRadius: 0)
                         ],
                       ),
@@ -71,182 +76,257 @@ class BuyCryptoInputField extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 32),
 
-                // Select Asset Dropdown
-                Obx(() => DropdownButtonFormField<CryptoListModel>(
-                      dropdownColor:
-                          lightningModeController.currentMode.value.mode ==
-                                  "light"
-                              ? Colors.white
-                              : Colors.black,
-                      style: Theme.of(context).textTheme.displayMedium,
-                      icon: const Icon(Icons.keyboard_arrow_down),
-                      value: controller.selectedCrypto.value,
-                      items: controller.availableCryptos
-                          .map((crypto) => DropdownMenuItem(
-                                value: crypto,
-                                child: Text(
-                                  crypto.symbol,
-                                  style: const TextStyle(color: Colors.black),
+                // Select Asset Dropdown with enhanced styling
+                _buildSectionTitle('Select Asset'),
+                const SizedBox(height: 8),
+                Obx(() => Container(
+                  decoration: _getCardDecoration(lightningModeController),
+                  child: DropdownButtonFormField<CryptoListModel>(
+                    dropdownColor:
+                        lightningModeController.currentMode.value.mode == "light"
+                            ? Colors.white
+                            : const Color(0xFF1E293B),
+                    style: TextStyle(
+                      color: lightningModeController.currentMode.value.mode == "light"
+                          ? const Color(0xFF1E293B)
+                          : Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    icon: Icon(Icons.keyboard_arrow_down, 
+                        color: lightningModeController.currentMode.value.mode == "light"
+                            ? const Color(0xFF64748B)
+                            : Colors.white70),
+                    value: controller.selectedCrypto.value,
+                    items: controller.availableCryptos
+                        .map((crypto) => DropdownMenuItem(
+                              value: crypto,
+                              child: Text(
+                                crypto.symbol,
+                                style: TextStyle(
+                                  color: lightningModeController.currentMode.value.mode == "light"
+                                      ? const Color(0xFF1E293B)
+                                      : Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
                                 ),
-                              ))
-                          .toList(),
-                      onChanged: controller.updateSelectedCrypto,
-                      decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          filled: true,
-                          fillColor: Color(0xFFF7F7F7),
-                          labelText: 'Select Asset',
-                          labelStyle: TextStyle(color: Colors.black)),
-                    )),
-                const SizedBox(height: 20),
+                              ),
+                            ))
+                        .toList(),
+                    onChanged: controller.updateSelectedCrypto,
+                    decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        hintText: 'Select Asset',
+                        hintStyle: TextStyle(color: Color(0xFF64748B))),
+                  ),
+                )),
+                
+                const SizedBox(height: 24),
 
+                // Network Display with enhanced styling
+                _buildSectionTitle('Network'),
+                const SizedBox(height: 8),
                 Container(
                   width: Get.width,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                  decoration: ShapeDecoration(
-                    color: const Color(0xFFF7F7F7),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  decoration: _getCardDecoration(lightningModeController),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
+                      Text(
                         'Network',
-                        style: TextStyle(color: Colors.black, fontSize: 15),
+                        style: TextStyle(
+                          color: lightningModeController.currentMode.value.mode == "light"
+                              ? const Color(0xFF64748B)
+                              : Colors.white70,
+                          fontSize: 16,
+                        ),
                       ),
-                      Obx(() => Text(
-                            controller.selectedCrypto.value!.network,
-                            style: const TextStyle(
-                                color: Colors.black, fontSize: 15),
-                          )),
+                      Obx(() => Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF3B82F6).withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: const Color(0xFF3B82F6).withOpacity(0.2),
+                          ),
+                        ),
+                        child: Text(
+                          controller.selectedCrypto.value!.network,
+                          style: const TextStyle(
+                              color: Color(0xFF3B82F6), 
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      )),
                     ],
                   ),
                 ),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 24),
 
-                // Enter Wallet Address
+                // Wallet Address Input with enhanced styling
+                _buildSectionTitle('Wallet Address'),
+                const SizedBox(height: 8),
                 Container(
-                  width: Get.width,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                  decoration: ShapeDecoration(
-                    color: const Color(0xFFF7F7F7),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                  ),
+                  decoration: _getCardDecoration(lightningModeController),
                   child: Row(
                     children: [
                       Expanded(
                         child: TextField(
                           controller: controller.walletAddressController,
+                          style: TextStyle(
+                            color: lightningModeController.currentMode.value.mode == "light"
+                                ? const Color(0xFF1E293B)
+                                : Colors.white,
+                            fontSize: 16,
+                          ),
                           decoration: const InputDecoration(
                             border: InputBorder.none,
-                            hintText: 'Enter Address',
-                            hintStyle: TextStyle(color: Colors.grey),
+                            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                            hintText: 'Enter wallet address',
+                            hintStyle: TextStyle(color: Color(0xFF94A3B8)),
                           ),
                         ),
                       ),
-                      TextButton(
-                        onPressed: controller.pasteWalletAddress,
-                        child: const Text(
-                          'Paste',
-                          style: TextStyle(color: Colors.black),
+                      Container(
+                        margin: const EdgeInsets.only(right: 8),
+                        child: TextButton.icon(
+                          onPressed: controller.pasteWalletAddress,
+                          icon: const Icon(Icons.content_paste, size: 18),
+                          label: const Text('Paste'),
+                          style: TextButton.styleFrom(
+                            foregroundColor: const Color(0xFF3B82F6),
+                            backgroundColor: const Color(0xFF3B82F6).withOpacity(0.1),
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
+                
+                const SizedBox(height: 24),
 
-                // Payment Method Dropdown
-                Obx(() => DropdownButtonFormField<String>(
-                      dropdownColor:
-                          lightningModeController.currentMode.value.mode ==
-                                  "light"
-                              ? Colors.white
-                              : Colors.black,
-                      style: Theme.of(context).textTheme.displayMedium,
-                      icon: const Icon(Icons.keyboard_arrow_down),
-                      value: controller.paymentMethod.value,
-                      items: controller.availablePaymentMethods
-                          .map((method) => DropdownMenuItem(
-                                value: method,
-                                child: Text(
-                                  method,
-                                  style: const TextStyle(color: Colors.black),
-                                ),
-                              ))
-                          .toList(),
-                      onChanged: controller.updatePaymentMethod,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Color(0xFFF7F7F7),
-                        labelText: 'Select Payment Method',
-                        labelStyle: TextStyle(color: Colors.black),
-                      ),
-                    )),
-                const SizedBox(height: 20),
-
-                // Crypto/Fiat Toggle
+                // Payment Method Dropdown with enhanced styling
+                _buildSectionTitle('Payment Method'),
+                const SizedBox(height: 8),
                 Obx(() => Container(
-                      width: Get.width,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 5),
-                      decoration: ShapeDecoration(
-                        color: const Color(0xFFF7F7F7),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                      ),
+                  decoration: _getCardDecoration(lightningModeController),
+                  child: DropdownButtonFormField<String>(
+                    dropdownColor:
+                        lightningModeController.currentMode.value.mode == "light"
+                            ? Colors.white
+                            : const Color(0xFF1E293B),
+                    style: TextStyle(
+                      color: lightningModeController.currentMode.value.mode == "light"
+                          ? const Color(0xFF1E293B)
+                          : Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    icon: Icon(Icons.keyboard_arrow_down,
+                        color: lightningModeController.currentMode.value.mode == "light"
+                            ? const Color(0xFF64748B)
+                            : Colors.white70),
+                    value: controller.paymentMethod.value,
+                    items: controller.availablePaymentMethods
+                        .map((method) => DropdownMenuItem(
+                              value: method,
+                              child: Text(
+                                method,
+                                style: TextStyle(
+                                  color: lightningModeController.currentMode.value.mode == "light"
+                                      ? const Color(0xFF1E293B)
+                                      : Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ))
+                        .toList(),
+                    onChanged: controller.updatePaymentMethod,
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      hintText: 'Select Payment Method',
+                      hintStyle: TextStyle(color: Color(0xFF64748B)),
+                    ),
+                  ),
+                )),
+                
+                const SizedBox(height: 24),
+
+                // Enhanced Crypto/Fiat Toggle
+                _buildSectionTitle('Amount Type'),
+                const SizedBox(height: 8),
+                Obx(() => Container(
+                      decoration: _getCardDecoration(lightningModeController),
+                      padding: const EdgeInsets.all(6),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          GestureDetector(
-                            onTap: () => controller.toggleAmountType(true),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 10),
-                              decoration: BoxDecoration(
-                                color: controller.isCryptoAmount.value
-                                    ? Colors.black
-                                    : Colors.grey[300],
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Text(
-                                'Crypto',
-                                style: TextStyle(
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () => controller.toggleAmountType(true),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                decoration: BoxDecoration(
                                   color: controller.isCryptoAmount.value
-                                      ? Colors.white
-                                      : Colors.black,
+                                      ? const Color(0xFF3B82F6)
+                                      : Colors.transparent,
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: controller.isCryptoAmount.value
+                                      ? null
+                                      : Border.all(color: Colors.transparent),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Crypto',
+                                    style: TextStyle(
+                                      color: controller.isCryptoAmount.value
+                                          ? Colors.white
+                                          : lightningModeController.currentMode.value.mode == "light"
+                                              ? const Color(0xFF64748B)
+                                              : Colors.white70,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                          GestureDetector(
-                            onTap: () => controller.toggleAmountType(false),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 10),
-                              decoration: BoxDecoration(
-                                color: !controller.isCryptoAmount.value
-                                    ? Colors.black
-                                    : Colors.grey[300],
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Text(
-                                'Fiat',
-                                style: TextStyle(
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () => controller.toggleAmountType(false),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                decoration: BoxDecoration(
                                   color: !controller.isCryptoAmount.value
-                                      ? Colors.white
-                                      : Colors.black,
+                                      ? const Color(0xFF3B82F6)
+                                      : Colors.transparent,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Fiat',
+                                    style: TextStyle(
+                                      color: !controller.isCryptoAmount.value
+                                          ? Colors.white
+                                          : lightningModeController.currentMode.value.mode == "light"
+                                              ? const Color(0xFF64748B)
+                                              : Colors.white70,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
@@ -254,284 +334,388 @@ class BuyCryptoInputField extends StatelessWidget {
                         ],
                       ),
                     )),
-                const SizedBox(height: 20),
+                
+                const SizedBox(height: 24),
 
-                // Amount Input
+                // Enhanced Amount Input
+                _buildSectionTitle('Amount'),
+                const SizedBox(height: 8),
                 Obx(() => Container(
-                      width: Get.width,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 10),
-                      decoration: ShapeDecoration(
-                        color: const Color(0xFFF7F7F7),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
+                      decoration: _getCardDecoration(lightningModeController),
+                      child: TextFormField(
+                        controller: controller.amountController,
+                        keyboardType: TextInputType.number,
+                        style: TextStyle(
+                          color: lightningModeController.currentMode.value.mode == "light"
+                              ? const Color(0xFF1E293B)
+                              : Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
                         ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextFormField(
-                            controller: controller.amountController,
-                            keyboardType: TextInputType.number,
-                            style: const TextStyle(color: Colors.black87),
-                            decoration: InputDecoration(
-                              label: Text(
-                                  "Amount to buy (${controller.isCryptoAmount.value ? controller.selectedCrypto.value!.name : '\$'})",
-                                  style: const TextStyle(color: Colors.black)),
-                              border: InputBorder.none,
-                              hintText: controller.isCryptoAmount.value
-                                  ? '0.0'
-                                  : '\$0.00',
-                              hintStyle: const TextStyle(color: Colors.grey),
-                            ),
-                            onChanged: (value) =>
-                                controller.calculateEquivalentAmount(),
-                          ),
-                          // const SizedBox(height: 5),
-                          // Text(
-                          //   'Min (0.00358BTC = \$50)',
-                          //   style: const TextStyle(
-                          //       color: Colors.grey, fontSize: 12),
-                          // ),
-                        ],
+                        decoration: InputDecoration(
+                          label: Text(
+                              "Amount to buy (${controller.isCryptoAmount.value ? controller.selectedCrypto.value!.name : '\$'})",
+                              style: TextStyle(
+                                color: lightningModeController.currentMode.value.mode == "light"
+                                    ? const Color(0xFF64748B)
+                                    : Colors.white70,
+                                fontSize: 14,
+                              )),
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                          hintText: controller.isCryptoAmount.value
+                              ? '0.0'
+                              : '\$0.00',
+                          hintStyle: const TextStyle(color: Color(0xFF94A3B8)),
+                        ),
+                        onChanged: (value) =>
+                            controller.calculateEquivalentAmount(),
                       ),
                     )),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 24),
 
-                // Current Rate
+                // Enhanced Current Rate Display
                 Container(
-                  width: Get.width,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                  decoration: ShapeDecoration(
-                    color: const Color(0xFFF7F7F7),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5)),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Current Rate',
-                        style: TextStyle(color: Colors.black, fontSize: 15),
-                      ),
-                      Obx(() => Text(
-                            '${controller.currentRate.value.toStringAsFixed(2)}/${controller.selectedCrypto.value?.symbol}',
-                            style: const TextStyle(
-                                color: Colors.black, fontSize: 15),
-                          )),
-                    ],
+                  decoration: _getCardDecoration(lightningModeController),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF10B981).withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Icon(
+                                Icons.trending_up,
+                                color: Color(0xFF10B981),
+                                size: 20,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              'Current Rate',
+                              style: TextStyle(
+                                color: lightningModeController.currentMode.value.mode == "light"
+                                    ? const Color(0xFF64748B)
+                                    : Colors.white70,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Obx(() => Text(
+                              '\$${controller.currentRate.value.toStringAsFixed(2)}/${controller.selectedCrypto.value?.symbol}',
+                              style: TextStyle(
+                                color: lightningModeController.currentMode.value.mode == "light"
+                                    ? const Color(0xFF1E293B)
+                                    : Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            )),
+                      ],
+                    ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                
+                const SizedBox(height: 16),
 
-                // Amount in Naira
+                // Enhanced Total Amount Display
                 Container(
-                  width: Get.width,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                  decoration: ShapeDecoration(
-                    color: const Color(0xFFF7F7F7),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5)),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Total Amount',
-                        style: TextStyle(color: Colors.black, fontSize: 15),
-                      ),
-                      Column(
-                        children: currencyRateController.currencyRates
-                            .map((exchange) => Obx(() => Text(
-                                '${exchange.currencyCode} ${controller.fiatAmount.value * double.parse(exchange.rate) * num.parse(controller.isCryptoAmount.value ? controller.selectedCrypto.value!.currentPrice : "1")}',
-                                style: const TextStyle(
-                                    color: Colors.black, fontSize: 15))))
-                            .toList(),
-                      )
-                    ],
+                  decoration: _getCardDecoration(lightningModeController),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF8B5CF6).withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Icon(
+                                Icons.calculate,
+                                color: Color(0xFF8B5CF6),
+                                size: 20,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              'Total Amount',
+                              style: TextStyle(
+                                color: lightningModeController.currentMode.value.mode == "light"
+                                    ? const Color(0xFF64748B)
+                                    : Colors.white70,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: currencyRateController.currencyRates
+                              .map((exchange) => Obx(() => Text(
+                                  '${exchange.currencyCode} ${(controller.fiatAmount.value * double.parse(exchange.rate) * num.parse(controller.isCryptoAmount.value ? controller.selectedCrypto.value!.currentPrice : "1")).toStringAsFixed(2)}',
+                                  style: TextStyle(
+                                    color: lightningModeController.currentMode.value.mode == "light"
+                                        ? const Color(0xFF1E293B)
+                                        : Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ))))
+                              .toList(),
+                        )
+                      ],
+                    ),
                   ),
                 ),
 
-                const SizedBox(height: 20),
-                // Conditionally Display Admin Bank Details and Image Upload for Bank Transfer
+                const SizedBox(height: 24),
+                
+                // Enhanced Bank Transfer Section
                 Obx(() => controller.paymentMethod.value == 'Bank Transfer'
                     ? Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          _buildSectionTitle('Payment Details'),
+                          const SizedBox(height: 16),
+                          
                           // Admin Bank Details Section
                           adminBankDetailsController.isLoading.value
-                              ? const Center(child: CircularProgressIndicator())
-                              : adminBankDetailsController
-                                      .errorMessage.value.isNotEmpty
-                                  ? Text(
-                                      'Error: ${adminBankDetailsController.errorMessage.value}',
-                                      style: const TextStyle(color: Colors.red),
+                              ? Center(
+                                  child: Container(
+                                    padding: const EdgeInsets.all(24),
+                                    decoration: _getCardDecoration(lightningModeController),
+                                    child: const CircularProgressIndicator(),
+                                  ),
+                                )
+                              : adminBankDetailsController.errorMessage.value.isNotEmpty
+                                  ? Container(
+                                      padding: const EdgeInsets.all(16),
+                                      decoration: BoxDecoration(
+                                        color: Colors.red.withOpacity(0.1),
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(color: Colors.red.withOpacity(0.3)),
+                                      ),
+                                      child: Text(
+                                        'Error: ${adminBankDetailsController.errorMessage.value}',
+                                        style: const TextStyle(color: Colors.red),
+                                      ),
                                     )
-                                  : adminBankDetailsController
-                                          .bank_details.isEmpty
-                                      ? const Text('No bank details available.')
+                                  : adminBankDetailsController.bank_details.isEmpty
+                                      ? Container(
+                                          padding: const EdgeInsets.all(16),
+                                          decoration: _getCardDecoration(lightningModeController),
+                                          child: const Text('No bank details available.'),
+                                        )
                                       : Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            const Text(
-                                              'Admin Bank Details for Payment',
+                                            Text(
+                                              'Send payment to:',
                                               style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold),
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600,
+                                                color: lightningModeController.currentMode.value.mode == "light"
+                                                    ? const Color(0xFF1E293B)
+                                                    : Colors.white,
+                                              ),
                                             ),
-                                            const SizedBox(height: 10),
-                                            ...adminBankDetailsController
-                                                .bank_details
+                                            const SizedBox(height: 12),
+                                            ...adminBankDetailsController.bank_details
                                                 .map((bank) => Container(
-                                                      margin:
-                                                          const EdgeInsets.only(
-                                                              bottom: 10),
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              10),
-                                                      decoration: BoxDecoration(
-                                                        color: const Color(
-                                                            0xFFF7F7F7),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(5),
-                                                      ),
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                              'Bank Name: ${bank.bankName}'),
-                                                          Text(
-                                                              'Account Name: ${bank.accountName}'),
-                                                          Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              Text(
-                                                                  'Account Number: ${bank.accountNumber}'),
-                                                              IconButton(
-                                                                icon: const Icon(
-                                                                    Icons.copy,
-                                                                    size: 20),
-                                                                onPressed: () {
-                                                                  FlutterClipboard
-                                                                      .copy(bank
-                                                                          .accountNumber);
-                                                                  Get.snackbar(
-                                                                      'Success',
-                                                                      'Account number copied to clipboard',
-                                                                      snackPosition:
-                                                                          SnackPosition
-                                                                              .TOP,
-                                                                      backgroundColor:
-                                                                          Colors
-                                                                              .green,
-                                                                      colorText:
-                                                                          Colors
-                                                                              .white);
-                                                                },
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          if (bank.ifscCode !=
-                                                              null)
-                                                            Text(
-                                                                'IFSC Code: ${bank.ifscCode}'),
-                                                          if (bank.swiftCode !=
-                                                              null)
-                                                            Text(
-                                                                'SWIFT Code: ${bank.swiftCode}'),
-                                                        ],
+                                                      margin: const EdgeInsets.only(bottom: 16),
+                                                      decoration: _getCardDecoration(lightningModeController),
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.all(16),
+                                                        child: Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            _buildBankDetailRow('Bank Name', bank.bankName),
+                                                            _buildBankDetailRow('Account Name', bank.accountName),
+                                                            Row(
+                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                              children: [
+                                                                Expanded(
+                                                                  child: _buildBankDetailRow('Account Number', bank.accountNumber),
+                                                                ),
+                                                                Container(
+                                                                  decoration: BoxDecoration(
+                                                                    color: const Color(0xFF3B82F6).withOpacity(0.1),
+                                                                    borderRadius: BorderRadius.circular(8),
+                                                                  ),
+                                                                  child: IconButton(
+                                                                    icon: const Icon(Icons.copy, size: 20),
+                                                                    color: const Color(0xFF3B82F6),
+                                                                    onPressed: () {
+                                                                      FlutterClipboard.copy(bank.accountNumber);
+                                                                      Get.snackbar(
+                                                                          'Success',
+                                                                          'Account number copied to clipboard',
+                                                                          snackPosition: SnackPosition.TOP,
+                                                                          backgroundColor: const Color(0xFF10B981),
+                                                                          colorText: Colors.white,
+                                                                          borderRadius: 12,
+                                                                          margin: const EdgeInsets.all(16));
+                                                                    },
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            if (bank.ifscCode != null)
+                                                              _buildBankDetailRow('IFSC Code', bank.ifscCode!),
+                                                            if (bank.swiftCode != null)
+                                                              _buildBankDetailRow('SWIFT Code', bank.swiftCode!),
+                                                          ],
+                                                        ),
                                                       ),
                                                     )),
                                           ],
                                         ),
-                          const SizedBox(height: 20),
-                          // Payment Screenshot Upload Section
+                          
+                          const SizedBox(height: 24),
+                          
+                          // Enhanced Payment Screenshot Upload Section
                           Container(
-                            width: Get.width,
-                            padding: const EdgeInsets.all(12),
-                            decoration: ShapeDecoration(
-                              color: const Color(0xFFF7F7F7),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  "Upload Payment Screenshot",
-                                  style: TextStyle(
-                                    color: Color(0xFF093030),
-                                    fontSize: 15,
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                                Obx(() => controller.paymentScreenshot.value ==
-                                        null
-                                    ? ElevatedButton.icon(
-                                        onPressed: () =>
-                                            controller.uploadScreenshot(),
-                                        icon: const Icon(Icons.upload),
-                                        label: const Text("Choose Image"),
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.white,
-                                          foregroundColor:
-                                              const Color(0xFF093030),
-                                          minimumSize:
-                                              const Size(double.infinity, 45),
+                            decoration: _getCardDecoration(lightningModeController),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFF59E0B).withOpacity(0.1),
+                                          borderRadius: BorderRadius.circular(8),
                                         ),
-                                      )
-                                    : Column(
-                                        children: [
-                                          Container(
-                                            height: 100,
-                                            width: double.infinity,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                              image: DecorationImage(
-                                                image: FileImage(controller
-                                                    .paymentScreenshot.value!),
-                                                fit: BoxFit.cover,
-                                              ),
+                                        child: const Icon(
+                                          Icons.upload_file,
+                                          color: Color(0xFFF59E0B),
+                                          size: 20,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Text(
+                                        "Upload Payment Screenshot",
+                                        style: TextStyle(
+                                          color: lightningModeController.currentMode.value.mode == "light"
+                                              ? const Color(0xFF1E293B)
+                                              : Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Obx(() => controller.paymentScreenshot.value == null
+                                      ? Container(
+                                          width: double.infinity,
+                                          padding: const EdgeInsets.symmetric(vertical: 32),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: const Color(0xFF3B82F6).withOpacity(0.3),
+                                              style: BorderStyle.solid,
                                             ),
+                                            borderRadius: BorderRadius.circular(12),
+                                            color: const Color(0xFF3B82F6).withOpacity(0.05),
                                           ),
-                                          const SizedBox(height: 10),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
+                                          child: Column(
                                             children: [
-                                              TextButton(
-                                                onPressed: () => controller
-                                                    .uploadScreenshot(),
-                                                child:
-                                                    const Text("Change Image"),
+                                              const Icon(
+                                                Icons.cloud_upload_outlined,
+                                                size: 48,
+                                                color: Color(0xFF3B82F6),
                                               ),
-                                              TextButton(
-                                                onPressed: () => controller
-                                                    .removeScreenshot(),
-                                                child: const Text(
-                                                  "Remove",
-                                                  style: TextStyle(
-                                                      color: Colors.red),
+                                              const SizedBox(height: 12),
+                                              ElevatedButton.icon(
+                                                onPressed: () => controller.uploadScreenshot(),
+                                                icon: const Icon(Icons.add_photo_alternate),
+                                                label: const Text("Choose Image"),
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: const Color(0xFF3B82F6),
+                                                  foregroundColor: Colors.white,
+                                                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(8),
+                                                  ),
                                                 ),
                                               ),
                                             ],
                                           ),
-                                        ],
-                                      )),
-                              ],
+                                        )
+                                      : Column(
+                                          children: [
+                                            Container(
+                                              height: 200,
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(12),
+                                                image: DecorationImage(
+                                                  image: FileImage(controller.paymentScreenshot.value!),
+                                                  fit: BoxFit.cover,
+                                                ),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black.withOpacity(0.1),
+                                                    blurRadius: 8,
+                                                    offset: const Offset(0, 2),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            const SizedBox(height: 16),
+                                            Row(
+                                              children: [
+                                                Expanded(
+                                                  child: OutlinedButton.icon(
+                                                    onPressed: () => controller.uploadScreenshot(),
+                                                    icon: const Icon(Icons.edit),
+                                                    label: const Text("Change Image"),
+                                                    style: OutlinedButton.styleFrom(
+                                                      foregroundColor: const Color(0xFF3B82F6),
+                                                      side: const BorderSide(color: Color(0xFF3B82F6)),
+                                                      padding: const EdgeInsets.symmetric(vertical: 12),
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.circular(8),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 12),
+                                                Expanded(
+                                                  child: OutlinedButton.icon(
+                                                    onPressed: () => controller.removeScreenshot(),
+                                                    icon: const Icon(Icons.delete),
+                                                    label: const Text("Remove"),
+                                                    style: OutlinedButton.styleFrom(
+                                                      foregroundColor: Colors.red,
+                                                      side: const BorderSide(color: Colors.red),
+                                                      padding: const EdgeInsets.symmetric(vertical: 12),
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.circular(8),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        )),
+                                ],
+                              ),
                             ),
                           ),
                         ],
@@ -540,39 +724,141 @@ class BuyCryptoInputField extends StatelessWidget {
 
                 const SizedBox(height: 40),
 
+                // Enhanced Buy Button
                 Obx(() => controller.isLoading.value
-                    ? CustomPrimaryButton(
-                        controller: CustomPrimaryButtonController(
-                            model: const CustomPrimaryButtonModel(
-                                child: SizedBox(
-                                    width: 20,
-                                    height: 20,
-                                    child: CircularProgressIndicator(
-                                        color: Colors.white))),
-                            onPressed: () {}),
+                    ? Container(
+                        width: double.infinity,
+                        height: 56,
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFF3B82F6), Color(0xFF1D4ED8)],
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Center(
+                          child: SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          ),
+                        ),
                       )
-                    : CustomPrimaryButton(
-                        controller: CustomPrimaryButtonController(
-                          model: const CustomPrimaryButtonModel(
-                              text: 'Buy Crypto'),
-                          onPressed: () async {
-                            // transactionAuthController.resetPin(context);
-                            if (controller.validateInputs()) {
-                              bool isAuthenticated =
-                                  await transactionAuthController.authenticate(
-                                      context, 'Buy Crypto');
+                    : Container(
+                        width: double.infinity,
+                        height: 56,
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFF3B82F6), Color(0xFF1D4ED8)],
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xFF3B82F6).withOpacity(0.3),
+                              blurRadius: 8,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(12),
+                            onTap: () async {
+                              if (controller.validateInputs()) {
+                                bool isAuthenticated =
+                                    await transactionAuthController.authenticate(
+                                        context, 'Buy Crypto');
 
-                              if (isAuthenticated) {
-                                controller.submitBuyCrypto();
+                                if (isAuthenticated) {
+                                  controller.submitBuyCrypto();
+                                }
                               }
-                            }
-                          },
+                            },
+                            child: const Center(
+                              child: Text(
+                                'Buy Crypto',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                       )),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Text(
+      title,
+      style: const TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w600,
+        color: Color(0xFF1E293B),
+      ),
+    );
+  }
+
+  BoxDecoration _getCardDecoration(LightningModeController lightningModeController) {
+    return BoxDecoration(
+      color: lightningModeController.currentMode.value.mode == "light"
+          ? Colors.white
+          : const Color(0xFF1E293B),
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(
+        color: lightningModeController.currentMode.value.mode == "light"
+            ? const Color(0xFFE2E8F0)
+            : const Color(0xFF334155),
+        width: 1,
+      ),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.05),
+          blurRadius: 4,
+          offset: const Offset(0, 2),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBankDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 120,
+            child: Text(
+              '$label:',
+              style: const TextStyle(
+                color: Color(0xFF64748B),
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(
+                color: Color(0xFF1E293B),
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

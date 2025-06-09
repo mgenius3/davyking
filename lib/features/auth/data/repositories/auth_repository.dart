@@ -105,4 +105,112 @@ class AuthRepository {
       throw AppException("An unexpected error occurred during sending email");
     }
   }
+
+
+  // ===== EMAIL VERIFICATION METHODS =====
+
+  /// Send email verification code to user
+  Future<void> sendEmailVerification(String email) async {
+    try {
+      final response = await apiClient.post(
+        ApiUrl.auth_email_verification_send,
+        data: {'email': email},
+      );
+
+      final responseData = response.data;
+      if (responseData['status'] != 'success') {
+        throw AppException(responseData['message'] ?? 'Failed to send verification code');
+      }
+    } on DioException catch (e) {
+      final responseData = e.response?.data;
+
+      if (responseData != null && responseData['message'].toString().isNotEmpty) {
+        throw AppException("Failed to send verification code. ${responseData['message']}");
+      }
+      throw AppException(DioErrorHandler.handleDioError(e));
+    } catch (e) {
+      if (e is AppException) rethrow;
+      throw AppException("An unexpected error occurred while sending verification code.");
+    }
+  }
+
+  /// Verify email with the provided code
+  Future<void> verifyEmail(String email, String code) async {
+    try {
+      final response = await apiClient.post(
+        ApiUrl.auth_email_verification_verify,
+        data: {
+          'email': email,
+          'code': code,
+        },
+      );
+
+      final responseData = response.data;
+      if (responseData['status'] != 'success') {
+        throw AppException(responseData['message'] ?? 'Email verification failed');
+      }
+    } on DioException catch (e) {
+      final responseData = e.response?.data;
+
+      if (responseData != null && responseData['message'].toString().isNotEmpty) {
+        throw AppException("Verification failed. ${responseData['message']}");
+      }
+      throw AppException(DioErrorHandler.handleDioError(e));
+    } catch (e) {
+      if (e is AppException) rethrow;
+      throw AppException("An unexpected error occurred during email verification.");
+    }
+  }
+
+  /// Resend email verification code
+  Future<void> resendEmailVerification(String email) async {
+    try {
+      final response = await apiClient.post(
+        ApiUrl.auth_email_verification_resend,
+        data: {'email': email},
+      );
+
+      final responseData = response.data;
+      if (responseData['status'] != 'success') {
+        throw AppException(responseData['message'] ?? 'Failed to resend verification code');
+      }
+    } on DioException catch (e) {
+      final responseData = e.response?.data;
+
+      if (responseData != null && responseData['message'].toString().isNotEmpty) {
+        throw AppException("Failed to resend code. ${responseData['message']}");
+      }
+      throw AppException(DioErrorHandler.handleDioError(e));
+    } catch (e) {
+      if (e is AppException) rethrow;
+      throw AppException("An unexpected error occurred while resending verification code.");
+    }
+  }
+
+  /// Check email verification status
+  Future<bool> checkEmailVerificationStatus(String email) async {
+    try {
+      final response = await apiClient.post(
+        ApiUrl.auth_email_verification_status,
+        data: {'email': email},
+      );
+
+      final responseData = response.data;
+      if (responseData['status'] != 'success') {
+        throw AppException(responseData['message'] ?? 'Failed to check verification status');
+      }
+
+      return responseData['is_verified'] ?? false;
+    } on DioException catch (e) {
+      final responseData = e.response?.data;
+
+      if (responseData != null && responseData['message'].toString().isNotEmpty) {
+        throw AppException("Status check failed. ${responseData['message']}");
+      }
+      throw AppException(DioErrorHandler.handleDioError(e));
+    } catch (e) {
+      if (e is AppException) rethrow;
+      throw AppException("An unexpected error occurred while checking verification status.");
+    }
+  }
 }

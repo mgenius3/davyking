@@ -341,7 +341,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      Icon(Icons.add, color: Colors.green),
+                     const Icon(Icons.add, color: Colors.green),
                     ],
                   ),
                 ),

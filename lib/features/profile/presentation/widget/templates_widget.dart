@@ -21,7 +21,7 @@ class ProfileTemplatesWidget extends StatelessWidget {
         Get.find<UserAuthDetailsController>();
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: Container(
           color: lightningModeController.currentMode.value.mode == "light"
@@ -40,23 +40,31 @@ class ProfileTemplatesWidget extends StatelessWidget {
               Stack(
                 clipBehavior: Clip.none, // Ensures no clipping of children
                 children: [
-                  Obx(() => Container(
-                      width: Get.width,
-                      height: Get.height - 300,
-                      padding: const EdgeInsets.only(
-                          left: Dimensions.defaultLeftSpacing,
-                          right: Dimensions.defaultRightSpacing),
-                      decoration: ShapeDecoration(
-                        color: lightningModeController.currentMode.value.mode ==
-                                "light"
-                            ? LightThemeColors.background
-                            : DarkThemeColors.background,
-                        shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(20),
-                                topRight: Radius.circular(20))),
-                      ),
-                      child: data.child)),
+                  Obx(
+                    () =>
+                        // SingleChildScrollView(
+                        //       child:
+                        Container(
+                            width: Get.width,
+                            height: Get.height - 300,
+                            padding: const EdgeInsets.only(
+                                left: Dimensions.defaultLeftSpacing,
+                                right: Dimensions.defaultRightSpacing),
+                            decoration: ShapeDecoration(
+                              color: lightningModeController
+                                          .currentMode.value.mode ==
+                                      "light"
+                                  ? LightThemeColors.background
+                                  : DarkThemeColors.background,
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(20),
+                                      topRight: Radius.circular(20))),
+                            ),
+                            child: data.child),
+                  )
+                  // )
+                  ,
                   if (data.showProfileDetails == true)
                     Positioned(
                       top:

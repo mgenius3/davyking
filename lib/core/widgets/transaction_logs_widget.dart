@@ -26,10 +26,9 @@ class RecentTransactionsWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 12,
+              offset: const Offset(0, 4)),
         ],
       ),
       padding: const EdgeInsets.all(20),
@@ -39,11 +38,7 @@ class RecentTransactionsWidget extends StatelessWidget {
           _buildHeader(),
           const SizedBox(height: 20),
           _buildTransactionsList(
-            controller,
-            vtuRepository,
-            giftCardController,
-            cryptoController,
-          ),
+              controller, vtuRepository, giftCardController, cryptoController),
         ],
       ),
     );
@@ -81,11 +76,8 @@ class RecentTransactionsWidget extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 4),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: 12,
-                  color: Colors.blue[700],
-                ),
+                Icon(Icons.arrow_forward_ios,
+                    size: 12, color: Colors.blue[700]),
               ],
             ),
           ),
@@ -103,23 +95,20 @@ class RecentTransactionsWidget extends StatelessWidget {
     return Obx(() {
       final logs = controller.transactionLogs;
       final displayLogs = logs.length > 5 ? logs.sublist(0, 5) : logs;
-      
+
       return logs.isEmpty
           ? _buildEmptyState()
           : SizedBox(
-              height: 400,
+              height: 350,
               child: ListView.separated(
                 physics: const BouncingScrollPhysics(),
                 itemCount: displayLogs.length,
-                separatorBuilder: (context, index) => const SizedBox(height: 12),
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 12),
                 itemBuilder: (context, index) {
                   final log = displayLogs[index];
                   return _buildTransactionCard(
-                    log,
-                    vtuRepository,
-                    giftCardController,
-                    cryptoController,
-                  );
+                      log, vtuRepository, giftCardController, cryptoController);
                 },
               ),
             );
@@ -136,9 +125,7 @@ class RecentTransactionsWidget extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.grey[100],
-                shape: BoxShape.circle,
-              ),
+                  color: Colors.grey[100], shape: BoxShape.circle),
               child: Icon(
                 Icons.receipt_long_outlined,
                 size: 32,
@@ -170,12 +157,12 @@ class RecentTransactionsWidget extends StatelessWidget {
   }
 
   Widget _buildTransactionCard(
-    TransactionLogModel log,
-    VtuRepository vtuRepository,
-    GiftCardController giftCardController,
-    CryptoController cryptoController,
-  ) {
-    final transactionType = log.transactionType.replaceAll('_', ' ').capitalizeFirst ?? '';
+      TransactionLogModel log,
+      VtuRepository vtuRepository,
+      GiftCardController giftCardController,
+      CryptoController cryptoController) {
+    final transactionType =
+        log.transactionType.replaceAll('_', ' ').capitalizeFirst ?? '';
     final amount = '${Symbols.currency_naira}${log.details['total_amount']}';
     final message = shortenString(log.details['message'], 20);
     final type = log.details['type']?.toString().capitalizeFirst ?? '';
@@ -203,11 +190,7 @@ class RecentTransactionsWidget extends StatelessWidget {
           child: InkWell(
             borderRadius: BorderRadius.circular(12),
             onTap: () => _handleTransactionTap(
-              log,
-              vtuRepository,
-              giftCardController,
-              cryptoController,
-            ),
+                log, vtuRepository, giftCardController, cryptoController),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -218,7 +201,8 @@ class RecentTransactionsWidget extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: _getTransactionColor(log.transactionType).withOpacity(0.15),
+                          color: _getTransactionColor(log.transactionType)
+                              .withOpacity(0.15),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Icon(
@@ -285,9 +269,9 @@ class RecentTransactionsWidget extends StatelessWidget {
                       ),
                     ],
                   ),
-                  
+
                   const SizedBox(height: 12),
-                  
+
                   // Footer Row
                   Row(
                     children: [

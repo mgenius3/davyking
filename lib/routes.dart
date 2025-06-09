@@ -3,6 +3,7 @@ import 'package:davyking/core/constants/routes.dart';
 import 'package:davyking/features/airtime/presentation/screens/airtime_details_screen.dart';
 import 'package:davyking/features/airtime/presentation/screens/index_screen.dart';
 import 'package:davyking/features/airtime/presentation/screens/receipt_screen.dart';
+import 'package:davyking/features/auth/presentation/screens/email_verification.dart';
 import 'package:davyking/features/auth/presentation/screens/signin_screen.dart';
 import 'package:davyking/features/auth/presentation/screens/otp_verify_screen.dart';
 import 'package:davyking/features/auth/presentation/screens/reset_password/forgot_password.dart';
@@ -74,6 +75,9 @@ class AppRoutes {
     GetPage(
         name: RoutesConstant.setnewpassword,
         page: () => SetANewPasswordScreen()),
+    GetPage(
+        name: RoutesConstant.emailVerification,
+        page: () => EmailVerificationScreen()),
     //home
     GetPage(
         name: RoutesConstant.home,

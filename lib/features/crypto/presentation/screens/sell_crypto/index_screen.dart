@@ -27,7 +27,7 @@ class SellCryptoScreen extends StatelessWidget {
             children: [
               const TopHeaderWidget(data: TopHeaderModel(title: 'Sell Crypto')),
               const SizedBox(height: 20),
-              const searchBoxWidget(),
+              // const searchBoxWidget(),
               const SizedBox(height: 20),
               Obx(() => Wrap(
                     crossAxisAlignment: WrapCrossAlignment.end,

@@ -1,12 +1,9 @@
 import 'package:davyking/core/constants/routes.dart';
 import 'package:davyking/core/utils/spacing.dart';
 import 'package:davyking/core/models/top_header_model.dart';
-import 'package:davyking/core/widgets/search_widget.dart';
 import 'package:davyking/core/widgets/top_header_widget.dart';
 import 'package:davyking/features/crypto/controllers/index_controller.dart';
 import 'package:davyking/features/crypto/presentation/widgets/crypto_list.dart';
-import 'package:davyking/features/giftcards/controllers/index_controller.dart';
-import 'package:davyking/features/giftcards/presentation/widgets/giftcards_list.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -27,7 +24,7 @@ class BuyCryptoScreen extends StatelessWidget {
             children: [
               const TopHeaderWidget(data: TopHeaderModel(title: 'Buy Crypto')),
               const SizedBox(height: 20),
-              const searchBoxWidget(),
+              // const searchBoxWidget(),
               const SizedBox(height: 20),
               Obx(() => Wrap(
                     crossAxisAlignment: WrapCrossAlignment.end,
