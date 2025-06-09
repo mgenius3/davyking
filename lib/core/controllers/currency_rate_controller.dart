@@ -23,7 +23,6 @@ class CurrencyRateController extends GetxController {
       );
     } catch (e) {
       errorMessage.value = e.toString();
-      Get.snackbar('Error', 'Failed to fetch currency rates: $e');
     } finally {
       isLoading.value = false;
     }

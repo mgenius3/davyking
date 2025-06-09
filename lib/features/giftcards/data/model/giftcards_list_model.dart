@@ -1,73 +1,59 @@
-import 'dart:convert'; // Import for JSON decoding
+import 'dart:convert';
 
 class GiftcardsListModel {
   final int id;
   final String name;
   final String category;
-  final String denomination;
-  final String buyRate;
-  final String sellRate;
   final int isEnabled;
   final int stock;
   final String image;
+  final String cloudinaryPublicId;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final List<RateModel> rates;
-  final List<String> ranges;
+  final List<CountryRateModel> countries;
 
   const GiftcardsListModel({
     required this.id,
     required this.name,
     required this.category,
-    required this.denomination,
-    required this.buyRate,
-    required this.sellRate,
     required this.isEnabled,
     required this.stock,
     required this.image,
+    required this.cloudinaryPublicId,
     required this.createdAt,
     required this.updatedAt,
-    required this.rates,
-    required this.ranges,
+    required this.countries,
   });
 
   factory GiftcardsListModel.fromJson(Map<String, dynamic> json) {
-    // Parse ranges as a JSON string
-    List<String> parsedRanges = [];
-    if (json['ranges'] != null) {
+    List<CountryRateModel> parsedCountries = [];
+    if (json['countries'] != null) {
       try {
-        if (json['ranges'] is String) {
-          // Decode the JSON string into a List<String>
-          parsedRanges =
-              List<String>.from(jsonDecode(json['ranges'] as String));
-        } else if (json['ranges'] is List) {
-          // If it's already a List, cast it directly
-          parsedRanges = (json['ranges'] as List<dynamic>)
-              .map((range) => range as String)
+        if (json['countries'] is String) {
+          parsedCountries = (jsonDecode(json['countries']) as List<dynamic>)
+              .map((item) => CountryRateModel.fromJson(item as Map<String, dynamic>))
+              .toList();
+        } else if (json['countries'] is List) {
+          parsedCountries = (json['countries'] as List<dynamic>)
+              .map((item) => CountryRateModel.fromJson(item as Map<String, dynamic>))
               .toList();
         }
       } catch (e) {
-        print('Error parsing ranges: $e');
+        print('Error parsing countries: $e');
       }
     }
 
     return GiftcardsListModel(
-      id: json['id'] as int,
-      name: json['name'] as String,
-      category: json['category'] as String,
-      denomination: json['denomination'] as String,
-      buyRate: json['buy_rate'] as String,
-      sellRate: json['sell_rate'] as String,
-      isEnabled: json['is_enabled'] as int,
-      stock: json['stock'] as int,
-      image: json['image'] as String,
-      createdAt: DateTime.parse(json['created_at'] as String),
-      updatedAt: DateTime.parse(json['updated_at'] as String),
-      rates: (json['rates'] as List<dynamic>?)
-              ?.map((rate) => RateModel.fromJson(rate as Map<String, dynamic>))
-              .toList() ??
-          [],
-      ranges: parsedRanges, // Use the parsed ranges
+      id: json['id'] as int? ?? 0,
+      name: json['name'] as String? ?? '',
+      category: json['category'] as String? ?? '',
+      isEnabled: json['is_enabled'] as int? ?? 0,
+      stock: json['stock'] as int? ?? 0,
+      image: json['image'] as String? ?? '',
+      cloudinaryPublicId: json['cloudinary_public_id'] as String? ?? '',
+      createdAt: DateTime.parse(json['created_at'] as String? ?? '1970-01-01T00:00:00Z'),
+      updatedAt: DateTime.parse(json['updated_at'] as String? ?? '1970-01-01T00:00:00Z'),
+      countries: parsedCountries,
     );
   }
 
@@ -76,64 +62,41 @@ class GiftcardsListModel {
       'id': id,
       'name': name,
       'category': category,
-      'denomination': denomination,
-      'buy_rate': buyRate,
-      'sell_rate': sellRate,
       'is_enabled': isEnabled,
       'stock': stock,
       'image': image,
+      'cloudinary_public_id': cloudinaryPublicId,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
-      'rates': rates.map((rate) => rate.toJson()).toList(),
-      'ranges': ranges // Serialize as a List<String>
+      'countries': countries.map((c) => c.toJson()).toList(),
     };
   }
 }
 
-class RateModel {
-  final int id;
-  final int giftCardId;
-  final String currency;
+class CountryRateModel {
+  final String name;
   final String buyRate;
   final String sellRate;
-  final int updatedBy;
-  final DateTime createdAt;
-  final DateTime updatedAt;
 
-  const RateModel({
-    required this.id,
-    required this.giftCardId,
-    required this.currency,
+  const CountryRateModel({
+    required this.name,
     required this.buyRate,
     required this.sellRate,
-    required this.updatedBy,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
-  factory RateModel.fromJson(Map<String, dynamic> json) {
-    return RateModel(
-      id: json['id'] as int,
-      giftCardId: json['gift_card_id'] as int,
-      currency: json['currency'] as String,
-      buyRate: json['buy_rate'] as String,
-      sellRate: json['sell_rate'] as String,
-      updatedBy: json['updated_by'] as int,
-      createdAt: DateTime.parse(json['created_at'] as String),
-      updatedAt: DateTime.parse(json['updated_at'] as String),
+  factory CountryRateModel.fromJson(Map<String, dynamic> json) {
+    return CountryRateModel(
+      name: json['name'] as String? ?? '',
+      buyRate: json['buy_rate'] as String? ?? '0',
+      sellRate: json['sell_rate'] as String? ?? '0',
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'gift_card_id': giftCardId,
-      'currency': currency,
+      'name': name,
       'buy_rate': buyRate,
       'sell_rate': sellRate,
-      'updated_by': updatedBy,
-      'created_at': createdAt.toIso8601String(),
-      'updated_at': updatedAt.toIso8601String()
     };
   }
 }

@@ -23,106 +23,326 @@ class RecentTransactionScreen extends StatelessWidget {
     final CryptoController cryptoController = Get.put(CryptoController());
 
     return Scaffold(
-        body: SafeArea(
-            child: Scaffold(
-                body: SingleChildScrollView(
-                    child: Container(
-      margin: const EdgeInsets.only(
-          left: Dimensions.defaultLeftSpacing,
-          right: Dimensions.defaultRightSpacing,
-          top: Dimensions.defaultTopSpacing),
+      backgroundColor: Colors.grey[50],
+      body: SafeArea(
+        child: Container(
+          margin: const EdgeInsets.only(
+            left: Dimensions.defaultLeftSpacing,
+            right: Dimensions.defaultRightSpacing,
+            top: Dimensions.defaultTopSpacing,
+          ),
+          child: Column(
+            children: [
+              const TopHeaderWidget(
+                data: TopHeaderModel(
+                  title: "Recent Transactions", 
+                  child: SizedBox()
+                )
+              ),
+              const SizedBox(height: 24),
+              Expanded(
+                child: Obx(
+                  () => controller.transactionLogs.isEmpty
+                      ? _buildEmptyState()
+                      : _buildTransactionsList(
+                          controller,
+                          vtuRepository,
+                          giftCardController,
+                          cryptoController,
+                        ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const TopHeaderWidget(
-              data: TopHeaderModel(
-                  title: "Recent Transactions", child: SizedBox())),
-          const SizedBox(height: 20),
-          SingleChildScrollView(
-            child: Obx(
-              () => controller.transactionLogs.isEmpty
-                  ? const Center(child: Text('No activity yet'))
-                  : SizedBox(
-                      height: Get.height -
-                          100, // Specify the height for scrollable area
-                      child: ListView.builder(
-                        shrinkWrap: true, // Ensures it takes only needed space
-                        physics:
-                            const BouncingScrollPhysics(), // Smooth scrolling
-                        itemCount: controller.transactionLogs.length,
-                        itemBuilder: (context, index) {
-                          final log = controller.transactionLogs[index];
-                          return GestureDetector(
-                            onTap: () => _handleTransactionTap(
-                                log,
-                                vtuRepository,
-                                giftCardController,
-                                cryptoController),
-                            child: Card(
-                              margin: const EdgeInsets.symmetric(
-                                  vertical: 8, horizontal: 16),
-                              child: ListTile(
-                                title: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      log.transactionType
-                                              .replaceAll('_', ' ')
-                                              .capitalizeFirst ??
-                                          '',
-                                    ),
-                                    Text(
-                                      '${Symbols.currency_naira}${log.details['total_amount']}',
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    )
-                                  ],
-                                ),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(height: 10),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(shortenString(
-                                            log.details['message'], 20)),
-                                        Text(
-                                          '${log.details['type']}'
-                                                  .capitalizeFirst ??
-                                              '',
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          'Date: ${log.timestamp.toString().substring(0, 10)}',
-                                          style: const TextStyle(fontSize: 12),
-                                        ),
-                                        Text(
-                                          'Time: ${log.timestamp.toString().substring(11, 16)}',
-                                          style: const TextStyle(fontSize: 12),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
+          Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              shape: BoxShape.circle,
             ),
+            child: Icon(
+              Icons.receipt_long_outlined,
+              size: 48,
+              color: Colors.grey[400],
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'No transactions yet',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey[700],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Your transaction history will appear here',
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey[500],
+            ),
+            textAlign: TextAlign.center,
           ),
         ],
       ),
-    )))));
+    );
+  }
+
+  Widget _buildTransactionsList(
+    TransactionLogController controller,
+    VtuRepository vtuRepository,
+    GiftCardController giftCardController,
+    CryptoController cryptoController,
+  ) {
+    return RefreshIndicator(
+      onRefresh: () async {
+        // Add refresh functionality if needed
+        await Future.delayed(const Duration(milliseconds: 500));
+      },
+      child: ListView.separated(
+        physics: const BouncingScrollPhysics(),
+        itemCount: controller.transactionLogs.length,
+        separatorBuilder: (context, index) => const SizedBox(height: 12),
+        itemBuilder: (context, index) {
+          final log = controller.transactionLogs[index];
+          return _buildTransactionCard(
+            log,
+            vtuRepository,
+            giftCardController,
+            cryptoController,
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildTransactionCard(
+    TransactionLogModel log,
+    VtuRepository vtuRepository,
+    GiftCardController giftCardController,
+    CryptoController cryptoController,
+  ) {
+    final transactionType = log.transactionType.replaceAll('_', ' ').capitalizeFirst ?? '';
+    final amount = '${Symbols.currency_naira}${log.details['total_amount']}';
+    final message = shortenString(log.details['message'], 25);
+    final type = '${log.details['type']}'.capitalizeFirst ?? '';
+    final date = log.timestamp.toString().substring(0, 10);
+    final time = log.timestamp.toString().substring(11, 16);
+
+    return GestureDetector(
+      onTap: () => _handleTransactionTap(
+        log,
+        vtuRepository,
+        giftCardController,
+        cryptoController,
+      ),
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 4),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(16),
+            onTap: () => _handleTransactionTap(
+              log,
+              vtuRepository,
+              giftCardController,
+              cryptoController,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  // Header Row
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: _getTransactionColor(log.transactionType).withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(
+                          _getTransactionIcon(log.transactionType),
+                          color: _getTransactionColor(log.transactionType),
+                          size: 24,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              transactionType,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF1A1A1A),
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              message,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            amount,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF1A1A1A),
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: _getStatusColor(type).withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              type,
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: _getStatusColor(type),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  
+                  const SizedBox(height: 16),
+                  
+                  // Divider
+                  Container(
+                    height: 1,
+                    color: Colors.grey[100],
+                  ),
+                  
+                  const SizedBox(height: 16),
+                  
+                  // Footer Row
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.calendar_today_outlined,
+                        size: 16,
+                        color: Colors.grey[500],
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        date,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.grey[600],
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const Spacer(),
+                      Icon(
+                        Icons.access_time_outlined,
+                        size: 16,
+                        color: Colors.grey[500],
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        time,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.grey[600],
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        size: 14,
+                        color: Colors.grey[400],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  IconData _getTransactionIcon(String transactionType) {
+    final type = transactionType.toLowerCase();
+    if (type.contains('airtime')) return Icons.phone_android;
+    if (type.contains('data')) return Icons.wifi;
+    if (type.contains('electricity')) return Icons.flash_on;
+    if (type.contains('gift')) return Icons.card_giftcard;
+    if (type.contains('crypto')) return Icons.currency_bitcoin;
+    if (type.contains('betting')) return Icons.sports_esports;
+    if (type.contains('tv')) return Icons.tv;
+    return Icons.receipt;
+  }
+
+  Color _getTransactionColor(String transactionType) {
+    final type = transactionType.toLowerCase();
+    if (type.contains('airtime')) return const Color(0xFF4CAF50);
+    if (type.contains('data')) return const Color(0xFF2196F3);
+    if (type.contains('electricity')) return const Color(0xFFFF9800);
+    if (type.contains('gift')) return const Color(0xFFE91E63);
+    if (type.contains('crypto')) return const Color(0xFFFF5722);
+    if (type.contains('betting')) return const Color(0xFF9C27B0);
+    if (type.contains('tv')) return const Color(0xFF3F51B5);
+    return const Color(0xFF607D8B);
+  }
+
+  Color _getStatusColor(String status) {
+    final statusLower = status.toLowerCase();
+    if (statusLower.contains('success') || statusLower.contains('completed')) {
+      return const Color(0xFF4CAF50);
+    }
+    if (statusLower.contains('pending') || statusLower.contains('processing')) {
+      return const Color(0xFFFF9800);
+    }
+    if (statusLower.contains('failed') || statusLower.contains('error')) {
+      return const Color(0xFFF44336);
+    }
+    return const Color(0xFF607D8B);
   }
 
   Future<void> _handleTransactionTap(

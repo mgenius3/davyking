@@ -42,7 +42,7 @@ class GiftCardTransactionDetailsScreen extends StatelessWidget {
                         _buildStatusIcon(transaction.type, transaction.status),
                         const SizedBox(height: 16),
                         Text(
-                          '₦${double.parse(transaction.amount).toStringAsFixed(2)}',
+                          '₦${double.parse(transaction.fiatAmount!).toStringAsFixed(2)}',
                           style: const TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.bold,
@@ -58,8 +58,8 @@ class GiftCardTransactionDetailsScreen extends StatelessWidget {
                         const Divider(height: 32),
                         _buildDetailItem(
                             'Transaction ID', transaction.id.toString()),
-                        _buildDetailItem('Gift Card',
-                            '${transaction.giftCard.name} (${transaction.giftCard.denomination})'),
+                        // _buildDetailItem('Gift Card',
+                        //     '${transaction.giftCard.name} (${transaction.giftCard.denomination})'),
                         _buildDetailItem(
                           'Date',
                           DateFormat('dd MMM yyyy • hh:mm a')

@@ -1,16 +1,10 @@
-import 'dart:convert';
 import 'package:davyking/core/constants/routes.dart';
 import 'package:davyking/core/controllers/admin_bank_details_controller.dart';
 import 'package:davyking/core/controllers/currency_rate_controller.dart';
 import 'package:davyking/core/controllers/transaction_auth_controller.dart';
 import 'package:davyking/core/controllers/user_auth_details_controller.dart';
 import 'package:davyking/core/services/secure_storage_service.dart';
-import 'package:davyking/core/theme/dark_theme.dart';
-import 'package:davyking/core/theme/light_theme.dart';
-import 'package:davyking/core/controllers/mode_controller.dart';
 import 'package:davyking/core/states/mode.dart';
-import 'package:davyking/core/models/user_auth_response_model.dart';
-import 'package:davyking/features/crypto/controllers/index_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:async';
@@ -107,9 +101,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         debugShowCheckedModeBanner: false,
         initialRoute: _initialRoutes,
         // initialRoute: RoutesConstant.home,
-        theme: controller.currentMode.value.mode == 'dark'
-            ? darkTheme()
-            : lightTheme(),
+        theme: ThemeData(fontFamily: "Urbanist"),
         getPages: AppRoutes.routes));
   }
 }

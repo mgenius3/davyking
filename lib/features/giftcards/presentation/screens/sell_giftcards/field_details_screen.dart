@@ -89,6 +89,7 @@ class SellGiftCardDetailsScreen extends StatelessWidget {
                           ),
                           const SizedBox(width: 20),
                           Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(data['name'],
                                   textAlign: TextAlign.center,
@@ -96,7 +97,7 @@ class SellGiftCardDetailsScreen extends StatelessWidget {
                                       .textTheme
                                       .displayMedium
                                       ?.copyWith(
-                                          fontSize: 16,
+                                          fontSize: 12,
                                           fontWeight: FontWeight.w500,
                                           height: 1.38)),
                               Text('Giftcard ID: ${data['id'].toString()}',
@@ -105,8 +106,9 @@ class SellGiftCardDetailsScreen extends StatelessWidget {
                                       .textTheme
                                       .displayMedium
                                       ?.copyWith(
-                                          fontWeight: FontWeight.w300,
-                                          height: 1.57))
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w300,
+                                      ))
                             ],
                           ),
                         ],
@@ -114,7 +116,7 @@ class SellGiftCardDetailsScreen extends StatelessWidget {
                       const SizedBox(height: 20),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 5),
+                            vertical: 10, horizontal: 10),
                         decoration: ShapeDecoration(
                           color:
                               lightningModeController.currentMode.value.mode ==
@@ -137,34 +139,43 @@ class SellGiftCardDetailsScreen extends StatelessWidget {
                         child: Column(
                           children: [
                             const SizedBox(height: 5),
-                            details('No of Card', data['quantity'].toString()),
-                            const SizedBox(height: 5),
-                            details('Trade Amount', '₦${data['totalAmount']}'),
-                            const SizedBox(height: 5),
+                            details('Balance', controller.balance.value),
+                            const SizedBox(height: 10),
+                            details('Trade Amount',
+                                controller.totalAmount.value.toString()),
+                            const SizedBox(height: 10),
                             details('Status', 'pending'),
-                            const SizedBox(height: 5),
-                            Text('Giftcard Image',
-                                textAlign: TextAlign.center,
-                                style: Theme.of(Get.context!)
-                                    .textTheme
-                                    .displayMedium
-                                    ?.copyWith(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500,
-                                        height: 1.38)),
-                            const SizedBox(height: 5),
-                            Container(
-                              height: 100,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                image: DecorationImage(
-                                  image: FileImage(
-                                      controller.paymentScreenshot.value!),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            )
+                            const SizedBox(height: 10),
+                            controller.ecode.isEmpty
+                                ? Column(
+                                    children: [
+                                      Text('Giftcard Image',
+                                          textAlign: TextAlign.center,
+                                          style: Theme.of(Get.context!)
+                                              .textTheme
+                                              .displayMedium
+                                              ?.copyWith(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w500,
+                                                  height: 1.38)),
+                                      const SizedBox(height: 5),
+                                      Container(
+                                        height: 100,
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          image: DecorationImage(
+                                            image: FileImage(controller
+                                                .giftCardImage.value!),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                : details(
+                                    'Ecode', controller.ecode.value.toString()),
                           ],
                         ),
                       ),

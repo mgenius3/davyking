@@ -31,7 +31,7 @@ class GiftcardsTransactionListWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "${data.amount} ${data.giftCard.name}",
+                        "${data.fiatAmount} ${data.giftCard.name}",
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: DarkThemeColors.primaryColor),

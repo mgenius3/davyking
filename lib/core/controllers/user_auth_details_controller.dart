@@ -43,11 +43,8 @@ class UserAuthDetailsController extends GetxController {
       updateUser(user_response);
       await _storeAuthDetails(user_response);
     } on DioException catch (e) {
-      print(e.message);
       throw AppException(DioErrorHandler.handleDioError(e));
     } catch (e) {
-      print("error 49");
-      print(e);
       throw AppException("An unexpected error occurred.");
     }
   }
@@ -63,10 +60,7 @@ class UserAuthDetailsController extends GetxController {
       }
       //refech user details
       await getUserDetail();
-    } catch (e) {
-      print("66 error");
-      print(e);
-    }
+    } catch (e) {}
   }
 
   // Store authentication details

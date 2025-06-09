@@ -25,7 +25,7 @@ class SellGiftCardScreen extends StatelessWidget {
               const TopHeaderWidget(
                   data: TopHeaderModel(title: 'Sell Gift Card')),
               const SizedBox(height: 20),
-              const searchBoxWidget(),
+              // const searchBoxWidget(),
               const SizedBox(height: 20),
               Obx(() => Wrap(
                     crossAxisAlignment: WrapCrossAlignment.end,

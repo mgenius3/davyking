@@ -58,7 +58,6 @@ class AppRoutes {
         name: RoutesConstant.splash1,
         page: () => Splash1(),
         transition: Transition.zoom),
-
     //onboarding
     GetPage(
         name: RoutesConstant.onboarding,
@@ -75,7 +74,6 @@ class AppRoutes {
     GetPage(
         name: RoutesConstant.setnewpassword,
         page: () => SetANewPasswordScreen()),
-
     //home
     GetPage(
         name: RoutesConstant.home,
@@ -99,7 +97,6 @@ class AppRoutes {
     GetPage(
         name: RoutesConstant.airtime_receipt,
         page: () => AirtimeReceiptScreen()),
-
     GetPage(
         name: RoutesConstant.data,
         page: () => DataScreen(),

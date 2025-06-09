@@ -24,7 +24,6 @@ class AdminBankDetailsController extends GetxController {
       );
     } catch (e) {
       errorMessage.value = e.toString();
-      Get.snackbar('Error', 'Failed to fetch bank details: $e');
     }
   }
 

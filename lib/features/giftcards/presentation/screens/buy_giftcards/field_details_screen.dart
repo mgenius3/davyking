@@ -102,6 +102,7 @@ class BuyGiftCardDetailsScreen extends StatelessWidget {
                                       .textTheme
                                       .displayMedium
                                       ?.copyWith(
+                                          fontSize: 16,
                                           fontWeight: FontWeight.w300,
                                           height: 1.57))
                             ],
@@ -111,7 +112,7 @@ class BuyGiftCardDetailsScreen extends StatelessWidget {
                       const SizedBox(height: 20),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 5),
+                            vertical: 10, horizontal: 10),
                         decoration: ShapeDecoration(
                           color:
                               lightningModeController.currentMode.value.mode ==
@@ -134,12 +135,16 @@ class BuyGiftCardDetailsScreen extends StatelessWidget {
                         child: Column(
                           children: [
                             const SizedBox(height: 5),
-                            details('No of Card', data['quantity'].toString()),
-                            const SizedBox(height: 5),
-                            details('Trade Amount', '₦${data['totalAmount']}'),
-                            const SizedBox(height: 5),
+                            details('Balance', controller.balance.value),
+                            const SizedBox(height: 10),
+                            details('Trade Amount',
+                                controller.totalAmount.value.toString()),
+                            const SizedBox(height: 10),
                             details('Status', 'pending'),
-                            const SizedBox(height: 5),
+                            const SizedBox(height: 10),
+                            details('Payment Method',
+                                controller.selectedPaymentMethod.value),
+                            const SizedBox(height: 10),
                             if (controller.paymentScreenshot.value != null)
                               Text('Payment Screenshort',
                                   textAlign: TextAlign.center,

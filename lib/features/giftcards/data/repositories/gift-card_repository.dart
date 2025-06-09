@@ -30,25 +30,29 @@ class GiftCardRepository {
       final List<dynamic> giftCardsJson =
           response.data['data'] as List<dynamic>? ?? [];
 
+      print(giftCardsJson);
       // Map each item to GiftcardsListModel
       return giftCardsJson
           .map((json) =>
               GiftcardsListModel.fromJson(json as Map<String, dynamic>))
           .toList();
     } on DioException catch (e) {
+      print(e);
       throw AppException(DioErrorHandler.handleDioError(e));
     } catch (e) {
+      print(e);
       throw AppException(
           "An unexpected error occurred while fetching gift cards.");
     }
   }
 
   Future<void> transactGiftCard(
-      Map<String, dynamic> data, String filepath) async {
+      Map<String, dynamic> data, String? filepath) async {
     try {
-      String? file_url = await uploadImageToCloudinary(filepath);
-
-      data['proof_file'] = file_url;
+      if (filepath != null) {
+        String? file_url = await uploadImageToCloudinary(filepath);
+        data['proof_file'] = file_url;
+      }
 
       final response = await apiClient.post(
         ApiUrl.gift_card_transaction,
@@ -65,6 +69,9 @@ class GiftCardRepository {
         );
       }
     } on DioException catch (e) {
+      if (e.response?.data['message'] != null) {
+        throw AppException(e.response?.data['message']);
+      }
       throw AppException(DioErrorHandler.handleDioError(e));
     } catch (e) {
       throw AppException(
@@ -81,11 +88,8 @@ class GiftCardRepository {
             'Failed to fetch gift cards: ${response.data['message'] ?? 'Unknown error'}');
       }
 
-      print(response.data['data'].runtimeType);
       // Extract the 'data' field, default to empty list if null
       final List<dynamic> giftCardsJson = response.data['data'];
-
-      print(giftCardsJson);
 
       // Map each item to GiftcardsListModel
       return giftCardsJson
@@ -95,7 +99,6 @@ class GiftCardRepository {
     } on DioException catch (e) {
       throw AppException(DioErrorHandler.handleDioError(e));
     } catch (e) {
-      print(e);
       throw AppException(
           "An unexpected error occurred while fetching gift cards.");
     }
