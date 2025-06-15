@@ -504,7 +504,7 @@ class SellCryptoInputField extends StatelessWidget {
                                         "light"
                                     ? const Color(0xFF64748B)
                                     : Colors.white70,
-                                fontSize: 16,
+                                fontSize: 16
                               ),
                             ),
                           ],

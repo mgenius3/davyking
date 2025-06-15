@@ -13,7 +13,8 @@ class EmailVerificationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final EmailVerificationController controller = Get.put(EmailVerificationController());
+    final EmailVerificationController controller =
+        Get.put(EmailVerificationController());
 
     return Scaffold(
       backgroundColor: Colors.grey[50],
@@ -58,7 +59,8 @@ class EmailVerificationScreen extends StatelessWidget {
   Widget _buildHeader(EmailVerificationController controller) {
     return Column(
       children: [
-        const TopHeaderWidget(data: TopHeaderModel(title: "Email Verification")),
+        const TopHeaderWidget(
+            data: TopHeaderModel(title: "Email Verification")),
         const SizedBox(height: 20),
         Container(
           width: double.infinity,
@@ -260,7 +262,7 @@ class EmailVerificationScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 24),
-          
+
           // Code input fields
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -268,9 +270,9 @@ class EmailVerificationScreen extends StatelessWidget {
               return _buildCodeInputField(controller, index);
             }),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Error message
           Obx(() => controller.errorMessage.value.isNotEmpty
               ? Container(
@@ -311,7 +313,8 @@ class EmailVerificationScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCodeInputField(EmailVerificationController controller, int index) {
+  Widget _buildCodeInputField(
+      EmailVerificationController controller, int index) {
     return Container(
       width: 48,
       height: 56,
@@ -414,8 +417,8 @@ class EmailVerificationScreen extends StatelessWidget {
                     ),
                   ] else ...[
                     GestureDetector(
-                      onTap: controller.isResending.value 
-                          ? null 
+                      onTap: controller.isResending.value
+                          ? null
                           : controller.resendVerificationCode,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
@@ -452,8 +455,8 @@ class EmailVerificationScreen extends StatelessWidget {
                               const SizedBox(width: 8),
                             ],
                             Text(
-                              controller.isResending.value 
-                                  ? 'Sending...' 
+                              controller.isResending.value
+                                  ? 'Sending...'
                                   : 'Resend Code',
                               style: TextStyle(
                                 color: LightThemeColors.primaryColor,
@@ -507,10 +510,9 @@ class EmailVerificationScreen extends StatelessWidget {
               const Text(
                 'Complete Verification',
                 style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF1A1A1A),
-                ),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF1A1A1A)),
               ),
             ],
           ),
@@ -519,7 +521,8 @@ class EmailVerificationScreen extends StatelessWidget {
                 width: double.infinity,
                 height: 56,
                 decoration: BoxDecoration(
-                  gradient: controller.isCodeComplete.value && !controller.isLoading.value
+                  gradient: controller.isCodeComplete.value &&
+                          !controller.isLoading.value
                       ? LinearGradient(
                           colors: [
                             LightThemeColors.primaryColor,
@@ -527,14 +530,17 @@ class EmailVerificationScreen extends StatelessWidget {
                           ],
                         )
                       : null,
-                  color: !controller.isCodeComplete.value || controller.isLoading.value
+                  color: !controller.isCodeComplete.value ||
+                          controller.isLoading.value
                       ? Colors.grey[300]
                       : null,
                   borderRadius: BorderRadius.circular(16),
-                  boxShadow: controller.isCodeComplete.value && !controller.isLoading.value
+                  boxShadow: controller.isCodeComplete.value &&
+                          !controller.isLoading.value
                       ? [
                           BoxShadow(
-                            color: LightThemeColors.primaryColor.withOpacity(0.3),
+                            color:
+                                LightThemeColors.primaryColor.withOpacity(0.3),
                             blurRadius: 12,
                             offset: const Offset(0, 6),
                           ),
@@ -545,7 +551,8 @@ class EmailVerificationScreen extends StatelessWidget {
                   color: Colors.transparent,
                   child: InkWell(
                     borderRadius: BorderRadius.circular(16),
-                    onTap: controller.isCodeComplete.value && !controller.isLoading.value
+                    onTap: controller.isCodeComplete.value &&
+                            !controller.isLoading.value
                         ? () {
                             HapticFeedback.lightImpact();
                             controller.verifyEmail();

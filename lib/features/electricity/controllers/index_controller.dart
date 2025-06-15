@@ -70,7 +70,7 @@ class ElectricityIndexController extends GetxController {
   void checkInformation() {
     final double? parsedAmount = double.tryParse(amount.value);
     if (selectedVariationId.value.isNotEmpty &&
-        RegExp(r'^[0-9]{11,13}$').hasMatch(customerId.value) &&
+        // RegExp(r'^[0-9]{11,13}$').hasMatch(customerId.value) &&
         parsedAmount != null &&
         parsedAmount >= 100 &&
         parsedAmount <= 100000) {
@@ -161,11 +161,11 @@ class ElectricityIndexController extends GetxController {
     final wallet_balance = double.parse(
         userAuthDetailsController.user.value?.walletBalance ?? "0");
 
-    if (!isCustomerIdValid) {
-      showSnackbar(
-          'Invalid Customer ID', 'Customer ID must be 11 to 13 digits.');
-      return false;
-    }
+    // if (!isCustomerIdValid) {
+    //   showSnackbar(
+    //       'Invalid Customer ID', 'Customer ID must be 11 to 13 digits.');
+    //   return false;
+    // }
 
     if (!isAmountValid) {
       showSnackbar(

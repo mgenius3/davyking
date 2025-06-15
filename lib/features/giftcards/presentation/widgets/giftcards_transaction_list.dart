@@ -13,7 +13,7 @@ class GiftcardsTransactionListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+      // margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -231,7 +231,7 @@ class GiftcardsTransactionListWidget extends StatelessWidget {
             Text(
               'Date: ${data.createdAt.toString().substring(0, 10)}',
               style: TextStyle(
-                fontSize: 12,
+                fontSize: Get.width < 400 ? 9 : 12,
                 fontWeight: FontWeight.w500,
                 color: Colors.grey[600],
               ),
@@ -246,14 +246,11 @@ class GiftcardsTransactionListWidget extends StatelessWidget {
               color: Colors.grey[500],
             ),
             const SizedBox(width: 6),
-            Text(
-              'Time: ${data.createdAt.toString().substring(11, 16)}',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey[600],
-              ),
-            ),
+            Text('Time: ${data.createdAt.toString().substring(11, 16)}',
+                style: TextStyle(
+                    fontSize: Get.width < 400 ? 9 : 12,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey[600])),
           ],
         ),
       ],

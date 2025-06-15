@@ -19,7 +19,6 @@ class ApiUrl {
       '/user/email-verification/resend';
   static const auth_email_verification_status =
       '/user/email-verification/status';
-
   static const users = '/users';
 
   //get ADS

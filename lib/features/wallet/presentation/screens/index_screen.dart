@@ -44,7 +44,8 @@ class _WalletScreenState extends State<WalletScreen> {
                   child: Obx(() {
                     if (walletController.isLoading.value) {
                       return _buildLoadingState();
-                    } else if (walletController.all_wallet_transaction.isEmpty) {
+                    } else if (walletController
+                        .all_wallet_transaction.isEmpty) {
                       return _buildEmptyState();
                     }
 
@@ -62,7 +63,8 @@ class _WalletScreenState extends State<WalletScreen> {
                     return ListView.separated(
                       physics: const AlwaysScrollableScrollPhysics(),
                       itemCount: filteredTransactions.length,
-                      separatorBuilder: (context, index) => const SizedBox(height: 12),
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 12),
                       itemBuilder: (context, index) {
                         final transaction = filteredTransactions[index];
                         return _buildTransactionItem(transaction);
@@ -107,7 +109,8 @@ class _WalletScreenState extends State<WalletScreen> {
               ],
             ),
             child: IconButton(
-              icon: const Icon(Icons.notifications_outlined, color: Colors.black),
+              icon:
+                  const Icon(Icons.notifications_outlined, color: Colors.black),
               onPressed: () {},
             ),
           ),
@@ -185,7 +188,8 @@ class _WalletScreenState extends State<WalletScreen> {
                       ),
                       const SizedBox(height: 4),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(6),
@@ -222,7 +226,8 @@ class _WalletScreenState extends State<WalletScreen> {
                           Get.toNamed(RoutesConstant.withdraw);
                         },
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 12),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -350,7 +355,7 @@ class _WalletScreenState extends State<WalletScreen> {
             style: TextStyle(
               color: isSelected ? Colors.white : Colors.black,
               fontWeight: FontWeight.w600,
-              fontSize: 12,
+              fontSize: Get.width < 400 ? 7 : 9,
             ),
           ),
         ),
@@ -431,7 +436,8 @@ class _WalletScreenState extends State<WalletScreen> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: _getTransactionStatusColor(transaction.status).withOpacity(0.1),
+            color:
+                _getTransactionStatusColor(transaction.status).withOpacity(0.1),
             width: 1,
           ),
           boxShadow: [
@@ -441,7 +447,8 @@ class _WalletScreenState extends State<WalletScreen> {
               offset: const Offset(0, 2),
             ),
             BoxShadow(
-              color: _getTransactionStatusColor(transaction.status).withOpacity(0.05),
+              color: _getTransactionStatusColor(transaction.status)
+                  .withOpacity(0.05),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -455,11 +462,15 @@ class _WalletScreenState extends State<WalletScreen> {
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: transaction.type == 'deposit' ? Colors.green : Colors.orange,
+                    color: transaction.type == 'deposit'
+                        ? Colors.green
+                        : Colors.orange,
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: (transaction.type == 'deposit' ? Colors.green : Colors.orange)
+                        color: (transaction.type == 'deposit'
+                                ? Colors.green
+                                : Colors.orange)
                             .withOpacity(0.3),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
@@ -481,8 +492,8 @@ class _WalletScreenState extends State<WalletScreen> {
                     children: [
                       Text(
                         '${transaction.type.capitalizeFirst} via ${transaction.gateway.capitalizeFirst}',
-                        style: const TextStyle(
-                          fontSize: 16,
+                        style: TextStyle(
+                          fontSize: Get.width < 400 ? 10 : 16,
                           fontWeight: FontWeight.w700,
                           color: Color(0xFF1A1A1A),
                         ),
@@ -491,7 +502,7 @@ class _WalletScreenState extends State<WalletScreen> {
                       Text(
                         'Ref: ${transaction.reference}',
                         style: TextStyle(
-                          fontSize: 13,
+                          fontSize: Get.width < 400 ? 7 : 13,
                           color: Colors.grey[600],
                           fontWeight: FontWeight.w500,
                         ),
@@ -504,23 +515,25 @@ class _WalletScreenState extends State<WalletScreen> {
                   children: [
                     Text(
                       'NGN ${transaction.amount}',
-                      style: const TextStyle(
-                        fontSize: 16,
+                      style: TextStyle(
+                        fontSize: Get.width < 400 ? 10 : 16,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF1A1A1A),
+                        color: const Color(0xFF1A1A1A),
                       ),
                     ),
                     const SizedBox(height: 4),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: _getTransactionStatusColor(transaction.status).withOpacity(0.1),
+                        color: _getTransactionStatusColor(transaction.status)
+                            .withOpacity(0.1),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
                         transaction.status.capitalizeFirst ?? '',
                         style: TextStyle(
-                          fontSize: 11,
+                          fontSize: Get.width < 400 ? 6 : 11,
                           fontWeight: FontWeight.w600,
                           color: _getTransactionStatusColor(transaction.status),
                         ),
@@ -558,7 +571,7 @@ class _WalletScreenState extends State<WalletScreen> {
                     Text(
                       DateFormat('MMM d, yyyy').format(transaction.createdAt),
                       style: TextStyle(
-                        fontSize: 13,
+                        fontSize: Get.width < 400 ? 7 : 13,
                         color: Colors.grey[600],
                         fontWeight: FontWeight.w500,
                       ),
@@ -570,7 +583,7 @@ class _WalletScreenState extends State<WalletScreen> {
                     Text(
                       'View Details',
                       style: TextStyle(
-                        fontSize: 13,
+                        fontSize: Get.width < 400 ? 7 : 13,
                         color: Colors.blue[600],
                         fontWeight: FontWeight.w600,
                       ),

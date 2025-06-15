@@ -29,10 +29,9 @@ class OtherServicesWidget extends StatelessWidget {
             spreadRadius: 0,
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 6,
+              offset: const Offset(0, 2)),
         ],
       ),
       child: Padding(
@@ -42,7 +41,7 @@ class OtherServicesWidget extends StatelessWidget {
           children: [
             _buildHeader(),
             const SizedBox(height: 24),
-            _buildServicesGrid(),
+            _buildServicesGrid()
           ],
         ),
       ),
@@ -70,11 +69,8 @@ class OtherServicesWidget extends StatelessWidget {
               ),
             ],
           ),
-          child: const Icon(
-            Icons.grid_view_rounded,
-            size: 22,
-            color: Colors.white,
-          ),
+          child: const Icon(Icons.grid_view_rounded,
+              size: 22, color: Colors.white),
         ),
         const SizedBox(width: 16),
         Column(
@@ -92,10 +88,9 @@ class OtherServicesWidget extends StatelessWidget {
             Text(
               'Choose what you need',
               style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey[600],
-              ),
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey[600]),
             ),
           ],
         ),
@@ -109,12 +104,11 @@ class OtherServicesWidget extends StatelessWidget {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        childAspectRatio: 1.1,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-      ),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: Get.width < 400 ? 2 : 3,
+          childAspectRatio: 1.1,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12),
       itemCount: services.length,
       itemBuilder: (context, index) {
         return _buildServiceCard(services[index], index);
@@ -137,11 +131,10 @@ class OtherServicesWidget extends StatelessWidget {
         route: RoutesConstant.sell_crypto,
       ),
       const OtherServicesModel(
-        color: Color(0xFFAD1457),
-        icon: Icons.card_giftcard,
-        name: "Buy GiftCard",
-        route: RoutesConstant.buy_giftcard,
-      ),
+          color: Color(0xFFAD1457),
+          icon: Icons.card_giftcard,
+          name: "Buy GiftCard",
+          route: RoutesConstant.buy_giftcard),
       const OtherServicesModel(
         color: Color(0xFF7B1FA2),
         icon: Icons.redeem,
@@ -193,6 +186,7 @@ class OtherServicesWidget extends StatelessWidget {
             child: GestureDetector(
               onTap: () => Get.toNamed(service.route),
               child: Container(
+                height: 300,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
@@ -202,15 +196,13 @@ class OtherServicesWidget extends StatelessWidget {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: service.color.withOpacity(0.1),
-                      blurRadius: 12,
-                      offset: const Offset(0, 6),
-                    ),
+                        color: service.color.withOpacity(0.1),
+                        blurRadius: 12,
+                        offset: const Offset(0, 6)),
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.04),
-                      blurRadius: 6,
-                      offset: const Offset(0, 2),
-                    ),
+                        color: Colors.black.withOpacity(0.04),
+                        blurRadius: 6,
+                        offset: const Offset(0, 2)),
                   ],
                 ),
                 child: Material(
@@ -238,20 +230,16 @@ class OtherServicesWidget extends StatelessWidget {
                                 end: Alignment.bottomRight,
                                 colors: [
                                   service.color.withOpacity(0.2),
-                                  service.color.withOpacity(0.1),
+                                  service.color.withOpacity(0.1)
                                 ],
                               ),
                               borderRadius: BorderRadius.circular(14),
                               border: Border.all(
-                                color: service.color.withOpacity(0.2),
-                                width: 1,
-                              ),
+                                  color: service.color.withOpacity(0.2),
+                                  width: 1),
                             ),
-                            child: Icon(
-                              service.icon,
-                              color: service.color,
-                              size: 22,
-                            ),
+                            child: Icon(service.icon,
+                                color: service.color, size: 18),
                           ),
                           const SizedBox(height: 8),
                           Text(

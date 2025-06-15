@@ -75,7 +75,7 @@ class WalletTransactionDetailsScreen extends StatelessWidget {
   Widget _buildStatusCard(WalletTransactionModel transaction) {
     final statusColor = _getStatusColor(transaction.status);
     final isDeposit = transaction.type == 'deposit';
-    
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
@@ -122,7 +122,9 @@ class WalletTransactionDetailsScreen extends StatelessWidget {
                   ),
                 ),
                 child: Icon(
-                  isDeposit ? Icons.arrow_downward_rounded : Icons.arrow_upward_rounded,
+                  isDeposit
+                      ? Icons.arrow_downward_rounded
+                      : Icons.arrow_upward_rounded,
                   color: statusColor,
                   size: 28,
                 ),
@@ -135,7 +137,7 @@ class WalletTransactionDetailsScreen extends StatelessWidget {
                     Text(
                       '${transaction.type.capitalizeFirst}',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: Get.width < 400 ? 11 : 18,
                         fontWeight: FontWeight.w700,
                         color: statusColor,
                       ),
@@ -153,7 +155,7 @@ class WalletTransactionDetailsScreen extends StatelessWidget {
                       child: Text(
                         'via ${transaction.gateway.capitalizeFirst}',
                         style: TextStyle(
-                          fontSize: 13,
+                          fontSize: Get.width < 400 ? 7 : 13,
                           fontWeight: FontWeight.w600,
                           color: Colors.grey[700],
                         ),
@@ -163,7 +165,8 @@ class WalletTransactionDetailsScreen extends StatelessWidget {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                   color: statusColor.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(12),
@@ -187,7 +190,7 @@ class WalletTransactionDetailsScreen extends StatelessWidget {
                     Text(
                       _getStatusText(transaction.status),
                       style: TextStyle(
-                        fontSize: 13,
+                        fontSize: Get.width < 400 ? 7 : 13,
                         fontWeight: FontWeight.w600,
                         color: statusColor,
                       ),
@@ -204,7 +207,7 @@ class WalletTransactionDetailsScreen extends StatelessWidget {
 
   Widget _buildAmountCard(WalletTransactionModel transaction) {
     final statusColor = _getStatusColor(transaction.status);
-    
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
@@ -383,7 +386,7 @@ class WalletTransactionDetailsScreen extends StatelessWidget {
     String? fullValue,
   }) {
     final statusColor = isStatus ? _getStatusColor(statusValue ?? '') : null;
-    
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
@@ -400,7 +403,8 @@ class WalletTransactionDetailsScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: (isStatus ? statusColor : Colors.grey[600])!.withOpacity(0.1),
+              color:
+                  (isStatus ? statusColor : Colors.grey[600])!.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
@@ -583,10 +587,9 @@ class WalletTransactionDetailsScreen extends StatelessWidget {
                     Text(
                       'Report an Issue',
                       style: TextStyle(
-                        color: Colors.red[600],
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                      ),
+                          color: Colors.red[600],
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),

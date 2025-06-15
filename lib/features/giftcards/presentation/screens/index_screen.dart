@@ -83,7 +83,9 @@ class GiftCardScreen extends StatelessWidget {
                           controller.updateBuyOrSell('sell');
                         },
                         child: Container(
-                          width: Get.width * .4,
+                          width: Get.width < 400
+                              ? Get.width * .35
+                              : Get.width * .4,
                           height: 40,
                           padding: const EdgeInsets.all(10),
                           decoration: ShapeDecoration(

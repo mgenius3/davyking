@@ -13,7 +13,7 @@ class CryptoTransactionListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+      // margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -144,11 +144,10 @@ class CryptoTransactionListWidget extends StatelessWidget {
                 children: [
                   Text(
                     "${data.amount}",
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF1A1A1A),
-                    ),
+                    style: TextStyle(
+                        fontSize: Get.width < 400 ? 9 : 12,
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xFF1A1A1A)),
                   ),
                   const SizedBox(width: 4),
                   Container(
@@ -161,10 +160,9 @@ class CryptoTransactionListWidget extends StatelessWidget {
                     child: Text(
                       data.cryptoCurrency.symbol,
                       style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.orange[700],
-                      ),
+                          fontSize: Get.width < 400 ? 9 : 12,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.orange[700]),
                     ),
                   ),
                 ],
@@ -173,7 +171,7 @@ class CryptoTransactionListWidget extends StatelessWidget {
               Text(
                 "₦${data.fiatAmount}",
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: Get.width < 400 ? 9 : 12,
                   fontWeight: FontWeight.w500,
                   color: Colors.grey[600],
                 ),
@@ -250,7 +248,7 @@ class CryptoTransactionListWidget extends StatelessWidget {
             Text(
               'Date: ${data.createdAt.toString().substring(0, 10)}',
               style: TextStyle(
-                fontSize: 12,
+                fontSize: Get.width < 400 ? 9 : 12,
                 fontWeight: FontWeight.w500,
                 color: Colors.grey[600],
               ),
@@ -268,10 +266,9 @@ class CryptoTransactionListWidget extends StatelessWidget {
             Text(
               'Time: ${data.createdAt.toString().substring(11, 16)}',
               style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey[600],
-              ),
+                  fontSize: Get.width < 400 ? 9 : 12,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey[600]),
             ),
           ],
         ),
