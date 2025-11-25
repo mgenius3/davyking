@@ -37,3 +37,10 @@ String shortenString(String input, int maxLength, {bool addEllipsis = true}) {
   }
   return input.substring(0, maxLength);
 }
+
+
+int parseInt(dynamic value, [int defaultValue = 0]) {
+  if (value is int) return value;
+  if (value is String) return int.tryParse(value) ?? defaultValue;
+  return defaultValue;
+}

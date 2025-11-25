@@ -1,4 +1,4 @@
-package com.example.davyking
+package com.exchange.davyking
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine

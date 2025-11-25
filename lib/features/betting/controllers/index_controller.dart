@@ -19,8 +19,7 @@ class BettingIndexController extends GetxController {
   final customerIdController = TextEditingController();
   final amountController = TextEditingController();
   final BettingRepository electricityRepository = BettingRepository();
-  final VtuRepository verifyCustomerRepository =
-      VtuRepository();
+  final VtuRepository verifyCustomerRepository = VtuRepository();
   final UserAuthDetailsController userAuthDetailsController =
       Get.find<UserAuthDetailsController>();
   final Uuid uuid = Uuid();
@@ -50,23 +49,21 @@ class BettingIndexController extends GetxController {
 
   void setCustomerId(String id) {
     customerId.value = id;
-    customerIdController.text = id;
+    // customerIdController.text = id;
     checkInformation();
   }
 
   void setAmount(String amount) {
     this.amount.value = amount;
-    amountController.text = amount;
+    // amountController.text = amount;
     checkInformation();
   }
 
   void checkInformation() {
     final double? parsedAmount = double.tryParse(amount.value);
     if (
-      // RegExp(r'^[0-9]{11,13}$').hasMatch(customerId.value) &&
-        parsedAmount != null &&
-        parsedAmount >= 100 &&
-        parsedAmount <= 100000) {
+        // RegExp(r'^[0-9]{11,13}$').hasMatch(customerId.value) &&
+        parsedAmount != null && parsedAmount >= 100 && parsedAmount <= 100000) {
       isInformationComplete.value = true;
     } else {
       isInformationComplete.value = false;
@@ -94,9 +91,10 @@ class BettingIndexController extends GetxController {
   }
 
   Future<void> buyBetting() async {
-    if (!isInformationComplete.value) return;
+    // if (!isInformationComplete.value) return;
 
     isLoading.value = true;
+    print("hello starting");
     try {
       final serviceId = bettingMapping[selectedDisco.value]['service_id']!;
       final amountValue = double.parse(amount.value);
@@ -110,16 +108,22 @@ class BettingIndexController extends GetxController {
         requestId: requestId,
       );
 
-      Get.offNamed(RoutesConstant.betting_receipt, arguments: {
-        'disco': serviceId,
-        'customer_id': customerId.value,
-        'amount': amount.value,
-        'response': response
-      });
+      // Get.offNamed(RoutesConstant.betting_receipt, arguments: {
+      //   'disco': serviceId,
+      //   'customer_id': customerId.value,
+      //   'amount': amount.value,
+      //   'response': response
+      // });
+
+// Use the receipt_data returned from the backend
+      final receiptData = response!['receipt_data'];
+
+      Get.offNamed(RoutesConstant.betting_receipt, arguments: receiptData);
 
       Get.snackbar('Success', 'Betting top up succcessful',
           backgroundColor: Colors.green, colorText: Colors.white);
     } catch (e) {
+      print(e);
       Failure failure = ErrorMapper.map(e as Exception);
       if (failure.message.contains('below_minimum_amount')) {
         showSnackbar('Error',

@@ -34,13 +34,13 @@ class SecurityIndexScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 40),
 
-                  GestureDetector(
-                    onTap: () {
-                      Get.toNamed(
-                          RoutesConstant.profileSecurityTermsAndCondition);
-                    },
-                    child: securityList(name: "Terms And Conditions"),
-                  ),
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     Get.toNamed(
+                  //         RoutesConstant.profileSecurityTermsAndCondition);
+                  //   },
+                  //   child: securityList(name: "Terms And Conditions"),
+                  // ),
                   // const SizedBox(height: 40),
                   // securityList(name: "FAQ", route: ''),
                   // const SizedBox(height: 40),

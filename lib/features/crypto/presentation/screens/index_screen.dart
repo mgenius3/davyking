@@ -23,8 +23,22 @@ class CryptoScreen extends StatelessWidget {
             margin: Spacing.defaultMarginSpacing,
             child: Column(
               children: [
-                const TopHeaderWidget(
-                  data: TopHeaderModel(title: 'Crypto'),
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Crypto Transactions',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.black,
+                          letterSpacing: -0.5,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 20),
                 Container(

@@ -34,11 +34,8 @@ class RecentTransactionScreen extends StatelessWidget {
           child: Column(
             children: [
               const TopHeaderWidget(
-                data: TopHeaderModel(
-                  title: "Recent Transactions", 
-                  child: SizedBox()
-                )
-              ),
+                  data: TopHeaderModel(
+                      title: "Recent Transactions", child: SizedBox())),
               const SizedBox(height: 24),
               Expanded(
                 child: Obx(
@@ -133,7 +130,8 @@ class RecentTransactionScreen extends StatelessWidget {
     GiftCardController giftCardController,
     CryptoController cryptoController,
   ) {
-    final transactionType = log.transactionType.replaceAll('_', ' ').capitalizeFirst ?? '';
+    final transactionType =
+        log.transactionType.replaceAll('_', ' ').capitalizeFirst ?? '';
     final amount = '${Symbols.currency_naira}${log.details['total_amount']}';
     final message = shortenString(log.details['message'], 25);
     final type = '${log.details['type']}'.capitalizeFirst ?? '';
@@ -180,7 +178,8 @@ class RecentTransactionScreen extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: _getTransactionColor(log.transactionType).withOpacity(0.1),
+                          color: _getTransactionColor(log.transactionType)
+                              .withOpacity(0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(
@@ -247,17 +246,17 @@ class RecentTransactionScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  
+
                   const SizedBox(height: 16),
-                  
+
                   // Divider
                   Container(
                     height: 1,
                     color: Colors.grey[100],
                   ),
-                  
+
                   const SizedBox(height: 16),
-                  
+
                   // Footer Row
                   Row(
                     children: [
@@ -355,8 +354,6 @@ class RecentTransactionScreen extends StatelessWidget {
       final requestId = log.referenceId.toString();
 
       if (transactionType.contains('gift')) {
-        print('giftcard yes');
-
         Get.toNamed(RoutesConstant.giftCardTransactionDetails,
             arguments:
                 giftCardController.singleTransaction(requestId.toString()));

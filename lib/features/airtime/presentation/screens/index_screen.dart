@@ -4,7 +4,7 @@ import 'package:davyking/core/theme/colors.dart';
 import 'package:davyking/core/utils/snackbar.dart';
 import 'package:davyking/core/utils/spacing.dart';
 import 'package:davyking/features/airtime/controllers/index_controller.dart';
-import 'package:davyking/features/airtime/data/model/input_field_model.dart';
+import 'package:davyking/core/models/input_field_model.dart';
 import 'package:davyking/features/airtime/presentation/widget/amount_widget.dart';
 import 'package:davyking/core/widgets/vtu_input_field.dart';
 import 'package:davyking/features/airtime/presentation/widget/network_widget.dart';
@@ -57,14 +57,14 @@ class _AirtimeScreenState extends State<AirtimeScreen> {
                 const SizedBox(height: 10),
                 const AirtimeAmountWidget(),
                 const SizedBox(height: 20),
-                vtuInputField(AirtimeInputFieldModel(
+                vtuInputField(VtuInputFieldModel(
                   onChanged: airtimeIndexController.setAmount,
                   inputcontroller: airtimeIndexController.amountController,
                   name: 'Amount(${Symbols.currency_naira})',
                   // prefixIcon: Text('₦'),
                 )),
                 const SizedBox(height: 20),
-                vtuInputField(AirtimeInputFieldModel(
+                vtuInputField(VtuInputFieldModel(
                   onChanged: airtimeIndexController.setPhoneNumber,
                   inputcontroller: airtimeIndexController.phoneController,
                   hintText: '08134460259',
@@ -103,7 +103,6 @@ class _AirtimeScreenState extends State<AirtimeScreen> {
           ),
         ),
       ),
-      // bottomNavigationBar: const BottomNavigationWidget(currentIndex: 0),
     );
   }
 }

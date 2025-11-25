@@ -83,35 +83,17 @@ class _WalletScreenState extends State<WalletScreen> {
   Widget _buildTopBar() {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
+      child: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const SizedBox(width: 48),
-          const Text(
+          // SizedBox(width: 48),
+          Text(
             'Wallet',
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w800,
               color: Colors.black,
               letterSpacing: -0.5,
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.06),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: IconButton(
-              icon:
-                  const Icon(Icons.notifications_outlined, color: Colors.black),
-              onPressed: () {},
             ),
           ),
         ],

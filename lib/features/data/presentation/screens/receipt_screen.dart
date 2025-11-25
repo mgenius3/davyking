@@ -428,15 +428,13 @@ class DataReceiptScreen extends StatelessWidget {
                     : Colors.grey.withOpacity(0.1),
             borderRadius: BorderRadius.circular(6),
           ),
-          child: Icon(
-            icon,
-            size: 14,
-            color: isHighlighted
-                ? Colors.green[700]
-                : isStatus
-                    ? Colors.blue[700]
-                    : Colors.grey[600],
-          ),
+          child: Icon(icon,
+              size: 14,
+              color: isHighlighted
+                  ? Colors.green[700]
+                  : isStatus
+                      ? Colors.blue[700]
+                      : Colors.grey[600]),
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -515,49 +513,49 @@ class DataReceiptScreen extends StatelessWidget {
           const SizedBox(height: 20),
           Row(
             children: [
-              Expanded(
-                child: Container(
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: Colors.grey[300]!,
-                      width: 1,
-                    ),
-                  ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(12),
-                      onTap: () {
-                        HapticFeedback.lightImpact();
-                        // Share receipt functionality can be added here
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.share_outlined,
-                            size: 18,
-                            color: Colors.grey[600],
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Share',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
+              // Expanded(
+              //   child: Container(
+              //     height: 48,
+              //     decoration: BoxDecoration(
+              //       color: Colors.grey[100],
+              //       borderRadius: BorderRadius.circular(12),
+              //       border: Border.all(
+              //         color: Colors.grey[300]!,
+              //         width: 1,
+              //       ),
+              //     ),
+              //     child: Material(
+              //       color: Colors.transparent,
+              //       child: InkWell(
+              //         borderRadius: BorderRadius.circular(12),
+              //         onTap: () {
+              //           HapticFeedback.lightImpact();
+              //           // Share receipt functionality can be added here
+              //         },
+              //         child: Row(
+              //           mainAxisAlignment: MainAxisAlignment.center,
+              //           children: [
+              //             Icon(
+              //               Icons.share_outlined,
+              //               size: 18,
+              //               color: Colors.grey[600],
+              //             ),
+              //             const SizedBox(width: 8),
+              //             Text(
+              //               'Share',
+              //               style: TextStyle(
+              //                 fontSize: 14,
+              //                 fontWeight: FontWeight.w600,
+              //                 color: Colors.grey[600],
+              //               ),
+              //             ),
+              //           ],
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              // ),
+              // const SizedBox(width: 12),
               Expanded(
                 flex: 2,
                 child: Container(

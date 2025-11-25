@@ -2,7 +2,7 @@ import 'package:davyking/core/constants/routes.dart';
 import 'package:davyking/core/theme/colors.dart';
 import 'package:davyking/core/utils/spacing.dart';
 import 'package:davyking/core/widgets/vtu_input_field.dart';
-import 'package:davyking/features/airtime/data/model/input_field_model.dart';
+import 'package:davyking/core/models/input_field_model.dart';
 import 'package:davyking/core/controllers/primary_button_controller.dart';
 import 'package:davyking/core/models/primary_button_model.dart';
 import 'package:davyking/core/models/top_header_model.dart';
@@ -68,7 +68,7 @@ class _TvScreenState extends State<TvScreen> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Expanded(
-                          child: vtuInputField(AirtimeInputFieldModel(
+                          child: vtuInputField(VtuInputFieldModel(
                         onChanged: controller.setCustomerId,
                         inputcontroller: controller.customerIdController,
                         hintText: '1111111111',

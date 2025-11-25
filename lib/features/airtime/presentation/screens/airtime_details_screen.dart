@@ -131,48 +131,7 @@ class AirtimeDetailsScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                Text(' By tapping the trade button, you have agreed to our   ',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w300,
-                        height: 2.20)),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Terms and Conditions',
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context)
-                            .textTheme
-                            .displayMedium
-                            ?.copyWith(
-                                color: DarkThemeColors.primaryColor,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w300,
-                                height: 2.20)),
-                    const SizedBox(width: 5),
-                    Text('And Our',
-                        style: Theme.of(context)
-                            .textTheme
-                            .displayMedium
-                            ?.copyWith(
-                                fontSize: 10,
-                                fontWeight: FontWeight.w300,
-                                height: 2.20)),
-                    const SizedBox(width: 5),
-                    Text('Privacy Policy',
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context)
-                            .textTheme
-                            .displayMedium
-                            ?.copyWith(
-                                color: DarkThemeColors.primaryColor,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w300,
-                                height: 2.20))
-                    // SvgPicture.asset(SvgConstant.arrowIcon, color: Colors.black, width: 10, height: 10)
-                  ],
-                )
+              
               ],
             ),
             Obx(() => airtimeIndexController.isLoading.value

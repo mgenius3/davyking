@@ -1,3 +1,6 @@
+import 'package:davyking/core/utils/helper.dart';
+
+
 class UserAuthResponse {
   final User user;
   final String token;
@@ -61,8 +64,10 @@ class User {
       email: json['email'],
       phone: json['phone'],
       walletBalance: json['wallet_balance'],
-      isVerified: json['is_verified'] == 1,
-      isAdmin: json['is_admin'] == 1,
+      // isVerified: json['is_verified'] == 1,
+      // isAdmin: json['is_admin'] == 1,
+      isVerified: parseInt(json['is_verified']) == 1,
+      isAdmin: parseInt(json['is_admin']) == 1,
       dateJoined: json['date_joined'],
       lastLogin: json['last_login'],
       referralCode: json['referral_code'],

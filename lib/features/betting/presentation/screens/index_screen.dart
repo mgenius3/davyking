@@ -4,7 +4,7 @@ import 'package:davyking/core/utils/spacing.dart';
 import 'package:davyking/core/widgets/vtu_input_field.dart';
 import 'package:davyking/features/betting/controllers/index_controller.dart';
 import 'package:davyking/features/betting/presentation/widgets/betting_disco_widget.dart';
-import 'package:davyking/features/airtime/data/model/input_field_model.dart';
+import 'package:davyking/core/models/input_field_model.dart';
 import 'package:davyking/core/controllers/primary_button_controller.dart';
 import 'package:davyking/core/models/primary_button_model.dart';
 import 'package:davyking/core/models/top_header_model.dart';
@@ -51,7 +51,7 @@ class _BettingScreenState extends State<BettingScreen> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Expanded(
-                        child: vtuInputField(AirtimeInputFieldModel(
+                        child: vtuInputField(VtuInputFieldModel(
                       onChanged: controller.setCustomerId,
                       inputcontroller: controller.customerIdController,
                       hintText: '12345678901',
@@ -89,7 +89,7 @@ class _BettingScreenState extends State<BettingScreen> {
                         ))
                   ],
                 ),
-                 Obx(() => controller.customerDetails.isNotEmpty
+                Obx(() => controller.customerDetails.isNotEmpty
                     ? CustomerDetailsWidget(controller: controller)
                     : controller.error_customer_details.isNotEmpty
                         ? Text(
@@ -98,7 +98,7 @@ class _BettingScreenState extends State<BettingScreen> {
                           )
                         : const SizedBox()),
                 const SizedBox(height: 20),
-                vtuInputField(AirtimeInputFieldModel(
+                vtuInputField(VtuInputFieldModel(
                   onChanged: controller.setAmount,
                   inputcontroller: controller.amountController,
                   hintText: '1000',
@@ -116,7 +116,7 @@ class _BettingScreenState extends State<BettingScreen> {
                           ),
                           onPressed: () {
                             if (controller.validateInputs()) {
-                              Get.toNamed(RoutesConstant.electricity_details,
+                              Get.toNamed(RoutesConstant.betting_details,
                                   arguments: {
                                     'disco': controller.bettingMapping[
                                             controller.selectedDisco.value]

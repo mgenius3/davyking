@@ -20,7 +20,7 @@ class EditProfileScreen extends StatelessWidget {
         data: ProfileTemplatesModel(
             title: "Edit Profile",
             child: Container(
-              margin: const EdgeInsets.only(top: 170),
+              // margin: const EdgeInsets.only(top: 170),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [

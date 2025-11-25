@@ -121,7 +121,8 @@ class SellCryptoController extends GetxController {
     } else {
       // Input is in fiat, calculate crypto
       fiatAmount.value = inputAmount;
-      cryptoAmount.value = inputAmount / (rate * currentPrice);
+      // cryptoAmount.value = inputAmount / (rate * currentPrice);
+      cryptoAmount.value = inputAmount / (rate);
     }
   }
 

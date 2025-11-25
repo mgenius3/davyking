@@ -77,7 +77,9 @@ class DepositScreen extends StatelessWidget {
                   ).animate().slideY(begin: 0.2, duration: 600.ms),
                   const SizedBox(height: 24),
                   const Text(
-                    'Select Payment Method',
+                    
+                    // Select 
+                    'Payment Method',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -96,17 +98,17 @@ class DepositScreen extends StatelessWidget {
                               onTap: () => controller.selectGateway('paystack'),
                             ),
                           ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: PaymentMethodCard(
-                              logo: 'assets/images/flutterwave.png',
-                              label: 'Flutterwave',
-                              isSelected: controller.selectedGateway.value ==
-                                  'flutterwave',
-                              onTap: () =>
-                                  controller.selectGateway('flutterwave'),
-                            ),
-                          ),
+                          // const SizedBox(width: 12),
+                          // Expanded(
+                          //   child: PaymentMethodCard(
+                          //     logo: 'assets/images/flutterwave.png',
+                          //     label: 'Flutterwave',
+                          //     isSelected: controller.selectedGateway.value ==
+                          //         'flutterwave',
+                          //     onTap: () =>
+                          //         controller.selectGateway('flutterwave'),
+                          //   ),
+                          // ),
                         ],
                       )).animate().slideY(begin: 0.2, duration: 800.ms),
                   const SizedBox(height: 32),
@@ -196,10 +198,9 @@ class PaymentMethodCard extends StatelessWidget {
             Text(
               label,
               style: TextStyle(
-                fontSize: 16,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                color: isSelected ? Colors.green : Colors.black87,
-              ),
+                  fontSize: 16,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  color: isSelected ? Colors.green : Colors.black87),
             ),
           ],
         ),

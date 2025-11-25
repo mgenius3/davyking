@@ -1,4 +1,6 @@
 // transaction_model.dart
+import 'package:davyking/core/utils/helper.dart';
+
 class TransactionLogModel {
   final int id;
   final String transactionType;
@@ -22,7 +24,7 @@ class TransactionLogModel {
         transactionType: json['transaction_type'],
         referenceId: json['reference_id'],
         details: Map<String, dynamic>.from(json['details']),
-        success: json['success'],
+        success: parseInt(json['success']),
         timestamp: DateTime.parse(json['created_at']),
       );
 }

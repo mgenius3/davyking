@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:davyking/core/utils/helper.dart';
+
 class GiftcardsListModel {
   final int id;
   final String name;
@@ -31,11 +33,13 @@ class GiftcardsListModel {
       try {
         if (json['countries'] is String) {
           parsedCountries = (jsonDecode(json['countries']) as List<dynamic>)
-              .map((item) => CountryRateModel.fromJson(item as Map<String, dynamic>))
+              .map((item) =>
+                  CountryRateModel.fromJson(item as Map<String, dynamic>))
               .toList();
         } else if (json['countries'] is List) {
           parsedCountries = (json['countries'] as List<dynamic>)
-              .map((item) => CountryRateModel.fromJson(item as Map<String, dynamic>))
+              .map((item) =>
+                  CountryRateModel.fromJson(item as Map<String, dynamic>))
               .toList();
         }
       } catch (e) {
@@ -47,12 +51,16 @@ class GiftcardsListModel {
       id: json['id'] as int? ?? 0,
       name: json['name'] as String? ?? '',
       category: json['category'] as String? ?? '',
-      isEnabled: json['is_enabled'] as int? ?? 0,
-      stock: json['stock'] as int? ?? 0,
+      // isEnabled: json['is_enabled'] as int? ?? 0,
+      isEnabled: parseInt(json['is_enabled']),
+      // stock: json['stock'] as int? ?? 0,
+      stock: parseInt(json['stock']),
       image: json['image'] as String? ?? '',
       cloudinaryPublicId: json['cloudinary_public_id'] as String? ?? '',
-      createdAt: DateTime.parse(json['created_at'] as String? ?? '1970-01-01T00:00:00Z'),
-      updatedAt: DateTime.parse(json['updated_at'] as String? ?? '1970-01-01T00:00:00Z'),
+      createdAt: DateTime.parse(
+          json['created_at'] as String? ?? '1970-01-01T00:00:00Z'),
+      updatedAt: DateTime.parse(
+          json['updated_at'] as String? ?? '1970-01-01T00:00:00Z'),
       countries: parsedCountries,
     );
   }

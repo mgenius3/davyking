@@ -15,10 +15,11 @@ import 'package:url_launcher/url_launcher.dart';
 // Only import WebView for non-web platforms
 import 'package:davyking/core/widgets/webview_screen.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+// import 'dart:html' as html; // For web-specific navigation
 
 class DepositController extends GetxController {
   final amountController = TextEditingController();
-  final RxString selectedGateway = RxString('');
+  final RxString selectedGateway = RxString('paystack');
   final RxBool isLoading = false.obs;
   final RxDouble walletBalance = 0.0.obs;
   final RxString authToken = ''.obs;
@@ -106,7 +107,7 @@ class DepositController extends GetxController {
 
       if (checkoutUrl != null) {
         isLoading.value = false;
-        
+
         // Platform-specific navigation
         if (kIsWeb) {
           // For web: Open payment in new tab/window
@@ -129,16 +130,18 @@ class DepositController extends GetxController {
   Future<void> _handleWebPayment(String checkoutUrl, double amount) async {
     try {
       final Uri paymentUri = Uri.parse(checkoutUrl);
-      
+
       // Extract reference from the checkout URL for later verification
       final reference = 'ref_${DateTime.now().millisecondsSinceEpoch}';
-      
+
       if (await canLaunchUrl(paymentUri)) {
+        // html.window.location.assign(checkoutUrl);
+
+
         await launchUrl(
           paymentUri,
           mode: LaunchMode.externalApplication, // Opens in new tab
         );
-        
         // Show dialog to user about payment process with reference
         _showWebPaymentDialog(amount, reference);
       } else {
@@ -208,7 +211,8 @@ class DepositController extends GetxController {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.info_outline, color: Colors.blue[600], size: 20),
+                      Icon(Icons.info_outline,
+                          color: Colors.blue[600], size: 20),
                       const SizedBox(width: 8),
                       const Expanded(
                         child: Text(
@@ -285,31 +289,30 @@ class DepositController extends GetxController {
     try {
       // Wait a bit for payment to process
       await Future.delayed(const Duration(seconds: 2));
-      
+
       // Call the actual verify payment method
       await verifyPayment(reference, selectedGateway.value);
-      
+
       // Close the verification dialog
       if (Get.isDialogOpen ?? false) {
         Get.back();
       }
-      
+
       // Navigate back to home
       Get.toNamed(RoutesConstant.home);
-      
     } catch (e) {
       // Close the verification dialog
       if (Get.isDialogOpen ?? false) {
         Get.back();
       }
-      
+
       // Show fallback success message
       showSnackbar(
         'Info',
         'Payment verification in progress. Your balance will update shortly if successful.',
         isError: false,
       );
-      
+
       // Refresh user data anyway
       Get.find<UserAuthDetailsController>().getUserDetail();
     }
@@ -416,7 +419,7 @@ class DepositController extends GetxController {
           'amount': amount,
           'bank_code': selectedBankCode.value,
           'account_number': accountNumberController.text,
-          'account_name': accountNameController.text,
+          'account_name': accountNameController.text
         }),
       );
 

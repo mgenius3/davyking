@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:davyking/core/utils/helper.dart';
 
 class GiftCardTransactionModel {
   final int id;
@@ -45,10 +46,11 @@ class GiftCardTransactionModel {
 
   factory GiftCardTransactionModel.fromJson(Map<String, dynamic> json) {
     return GiftCardTransactionModel(
-      id: json['id'] as int? ?? 0,
-      userId: json['user_id'] as int? ?? 0,
-      countryId: json['country_id'] as int?,
-      giftCardId: json['gift_card_id'] as int? ?? 0,
+      id: parseInt(json['id']),
+      userId: parseInt(json['user_id']),
+      countryId:
+          json['country_id'] != null ? parseInt(json['country_id']) : null,
+      giftCardId: parseInt(json['gift_card_id']),
       type: json['type'] as String? ?? '',
       balance: json['balance'] as String? ?? '0.00',
       fiatAmount: json['fiat_amount'] as String?,
@@ -60,10 +62,13 @@ class GiftCardTransactionModel {
       paymentMethod: json['payment_method'] as String?,
       giftCardType: json['gift_card_type'] as String? ?? '',
       ecode: json['ecode'] as String?,
-      createdAt: DateTime.parse(json['created_at'] as String? ?? '1970-01-01T00:00:00Z'),
-      updatedAt: DateTime.parse(json['updated_at'] as String? ?? '1970-01-01T00:00:00Z'),
+      createdAt: DateTime.parse(
+          json['created_at'] as String? ?? '1970-01-01T00:00:00Z'),
+      updatedAt: DateTime.parse(
+          json['updated_at'] as String? ?? '1970-01-01T00:00:00Z'),
       user: User.fromJson(json['user'] as Map<String, dynamic>? ?? {}),
-      giftCard: GiftCard.fromJson(json['gift_card'] as Map<String, dynamic>? ?? {}),
+      giftCard:
+          GiftCard.fromJson(json['gift_card'] as Map<String, dynamic>? ?? {}),
     );
   }
 
@@ -134,17 +139,25 @@ class User {
       email: json['email'] as String? ?? '',
       phone: json['phone'] as String? ?? '',
       walletBalance: json['wallet_balance'] as String? ?? '0.00',
-      isVerified: (json['is_verified'] as int? ?? 0) == 1,
-      isAdmin: (json['is_admin'] as int? ?? 0) == 1,
-      dateJoined: DateTime.parse(json['date_joined'] as String? ?? '1970-01-01T00:00:00Z'),
-      lastLogin: json['last_login'] != null ? DateTime.parse(json['last_login'] as String) : null,
+      // isVerified: (json['is_verified'] as int? ?? 0) == 1,
+      // isAdmin: (json['is_admin'] as int? ?? 0) == 1,
+      isVerified: parseInt(json['is_verified']) == 1,
+      isAdmin: parseInt(json['is_admin']) == 1,
+      dateJoined: DateTime.parse(
+          json['date_joined'] as String? ?? '1970-01-01T00:00:00Z'),
+      lastLogin: json['last_login'] != null
+          ? DateTime.parse(json['last_login'] as String)
+          : null,
       referralCode: json['referral_code'] as String?,
       walletAddresses: json['wallet_addresses'] as String?,
       status: json['status'] as String? ?? '',
-      createdAt: DateTime.parse(json['created_at'] as String? ?? '1970-01-01T00:00:00Z'),
-      updatedAt: DateTime.parse(json['updated_at'] as String? ?? '1970-01-01T00:00:00Z'),
+      createdAt: DateTime.parse(
+          json['created_at'] as String? ?? '1970-01-01T00:00:00Z'),
+      updatedAt: DateTime.parse(
+          json['updated_at'] as String? ?? '1970-01-01T00:00:00Z'),
       withdrawalBank: json['withdrawal_bank'] != null
-          ? WithdrawalBank.fromJson(json['withdrawal_bank'] as Map<String, dynamic>)
+          ? WithdrawalBank.fromJson(
+              json['withdrawal_bank'] as Map<String, dynamic>)
           : null,
     );
   }
@@ -229,11 +242,13 @@ class GiftCard {
       try {
         if (json['countries'] is String) {
           parsedCountries = (jsonDecode(json['countries']) as List<dynamic>)
-              .map((item) => CountryRateModel.fromJson(item as Map<String, dynamic>))
+              .map((item) =>
+                  CountryRateModel.fromJson(item as Map<String, dynamic>))
               .toList();
         } else if (json['countries'] is List) {
           parsedCountries = (json['countries'] as List<dynamic>)
-              .map((item) => CountryRateModel.fromJson(item as Map<String, dynamic>))
+              .map((item) =>
+                  CountryRateModel.fromJson(item as Map<String, dynamic>))
               .toList();
         }
       } catch (e) {
@@ -245,12 +260,16 @@ class GiftCard {
       id: json['id'] as int? ?? 0,
       name: json['name'] as String? ?? '',
       category: json['category'] as String? ?? '',
-      isEnabled: (json['is_enabled'] as int? ?? 0) == 1,
-      stock: json['stock'] as int? ?? 0,
+      // isEnabled: (json['is_enabled'] as int? ?? 0) == 1,
+      isEnabled: parseInt(json['is_enabled']) == 1,
+      stock: parseInt(json['stock']),
+      // stock: json['stock'] as int? ?? 0,
       image: json['image'] as String? ?? '',
       cloudinaryPublicId: json['cloudinary_public_id'] as String? ?? '',
-      createdAt: DateTime.parse(json['created_at'] as String? ?? '1970-01-01T00:00:00Z'),
-      updatedAt: DateTime.parse(json['updated_at'] as String? ?? '1970-01-01T00:00:00Z'),
+      createdAt: DateTime.parse(
+          json['created_at'] as String? ?? '1970-01-01T00:00:00Z'),
+      updatedAt: DateTime.parse(
+          json['updated_at'] as String? ?? '1970-01-01T00:00:00Z'),
       countries: parsedCountries,
     );
   }

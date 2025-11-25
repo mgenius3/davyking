@@ -1,4 +1,5 @@
 import 'dart:convert'; // Import for JSON decoding
+import 'package:davyking/core/utils/helper.dart';
 
 class CryptoListModel {
   final int id;
@@ -41,7 +42,7 @@ class CryptoListModel {
       buyRate: json['buy_rate'] as String,
       sellRate: json['sell_rate'] as String,
       currentPrice: json['current_price'] as String,
-      isEnabled: json['is_enabled'] as int,
+      isEnabled: parseInt(json['is_enabled']),
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),
       wallet_address: json['wallet_address'] as String,

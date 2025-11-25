@@ -127,9 +127,9 @@ class BettingDetailsScreen extends StatelessWidget {
                                       : 'Pending'),
                               const SizedBox(height: 5),
                               details('Transaction Type', 'Betting'),
-                              const SizedBox(height: 5),
-                              details('Variation',
-                                  variationId.toString().capitalizeFirst!),
+                              // const SizedBox(height: 5),
+                              // details('Variation',
+                              //     variationId.toString().capitalizeFirst!),
                               const SizedBox(height: 5),
                               details('Amount', '₦$amount'),
                               const SizedBox(height: 5),
@@ -141,51 +141,7 @@ class BettingDetailsScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  Text(
-                    'By tapping the trade button, you have agreed to our',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w300,
-                          height: 2.20,
-                        ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Terms and Conditions',
-                        style:
-                            Theme.of(context).textTheme.displayMedium?.copyWith(
-                                  color: DarkThemeColors.primaryColor,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w300,
-                                  height: 2.20,
-                                ),
-                      ),
-                      const SizedBox(width: 5),
-                      Text(
-                        'And Our',
-                        style:
-                            Theme.of(context).textTheme.displayMedium?.copyWith(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w300,
-                                  height: 2.20,
-                                ),
-                      ),
-                      const SizedBox(width: 5),
-                      Text(
-                        'Privacy Policy',
-                        style:
-                            Theme.of(context).textTheme.displayMedium?.copyWith(
-                                  color: DarkThemeColors.primaryColor,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w300,
-                                  height: 2.20,
-                                ),
-                      ),
-                    ],
-                  ),
+                 
                 ],
               ),
               Obx(() => controller.isLoading.value

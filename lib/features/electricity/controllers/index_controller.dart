@@ -20,8 +20,7 @@ class ElectricityIndexController extends GetxController {
   final customerIdController = TextEditingController();
   final amountController = TextEditingController();
   final ElectricityRepository electricityRepository = ElectricityRepository();
-  final VtuRepository verifyCustomerRepository =
-      VtuRepository();
+  final VtuRepository verifyCustomerRepository = VtuRepository();
   final UserAuthDetailsController userAuthDetailsController =
       Get.find<UserAuthDetailsController>();
   final Uuid uuid = Uuid();
@@ -57,13 +56,13 @@ class ElectricityIndexController extends GetxController {
 
   void setCustomerId(String id) {
     customerId.value = id;
-    customerIdController.text = id;
+    // customerIdController.text = id;
     checkInformation();
   }
 
   void setAmount(String amount) {
     this.amount.value = amount;
-    amountController.text = amount;
+    // amountController.text = amount;
     checkInformation();
   }
 
@@ -123,14 +122,16 @@ class ElectricityIndexController extends GetxController {
         requestId: requestId,
       );
 
+      // Get.offNamed(RoutesConstant.electricity_receipt, arguments: {
+      //   'disco': serviceId,
+      //   'customer_id': customerId.value,
+      //   'variation_id': selectedVariationId.value,
+      //   'amount': amount.value,
+      //   'response': response
+      // });
 
-      Get.offNamed(RoutesConstant.electricity_receipt, arguments: {
-        'disco': serviceId,
-        'customer_id': customerId.value,
-        'variation_id': selectedVariationId.value,
-        'amount': amount.value,
-        'response': response
-      });
+      Get.offNamed(RoutesConstant.electricity_receipt,
+          arguments: response!['receipt_data']);
 
       Get.snackbar('Success', 'Electricity top up succcessful',
           backgroundColor: Colors.green, colorText: Colors.white);

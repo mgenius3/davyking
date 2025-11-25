@@ -50,7 +50,7 @@ class BuyCryptoController extends GetxController {
     // Add listener to amountController for real-time validation
     amountController.addListener(() {
       calculateEquivalentAmount();
-      validateAmountToNotExceedLiquidation();
+      // validateAmountToNotExceedLiquidation();
     });
   }
 
@@ -130,44 +130,46 @@ class BuyCryptoController extends GetxController {
     } else {
       // Input is in fiat, calculate crypto
       fiatAmount.value = inputAmount;
-      cryptoAmount.value = inputAmount / (rate * currentPrice);
+      // cryptoAmount.value = inputAmount / (rate * currentPrice);
+      cryptoAmount.value = inputAmount / (rate);
+
     }
   }
 
   // Real-time validation for amount
-  void validateAmountToNotExceedLiquidation() {
-    // if (selectedCr) {}
-    // if (selectedCrypto.value == null ||
-    //     paymentMethod.value != 'Wallet Balance') {
-    //   return;
-    // }
-    double inputAmount = double.tryParse(amountController.text) ?? 0.0;
-    double availableBalance = selectedCrypto.value!.liquid_balance;
+  // void validateAmountToNotExceedLiquidation() {
+  //   // if (selectedCr) {}
+  //   // if (selectedCrypto.value == null ||
+  //   //     paymentMethod.value != 'Wallet Balance') {
+  //   //   return;
+  //   // }
+  //   double inputAmount = double.tryParse(amountController.text) ?? 0.0;
+  //   double availableBalance = selectedCrypto.value!.liquid_balance;
 
-    if (isCryptoAmount.value) {
-      // Input is in crypto
-      if (inputAmount > availableBalance) {
-        Get.snackbar(
-          'Warning',
-          'Enter amount not greater than  ${(selectedCrypto.value!.liquid_balance).toInt()}',
-          snackPosition: SnackPosition.TOP,
-          backgroundColor: Colors.orange,
-          colorText: Colors.white,
-        );
-      }
-    } else {
-      // Input is in fiat, convert to crypto for comparison
-      double rate = double.tryParse(selectedCrypto.value!.buyRate) ?? 0.0;
-      double cryptoEquivalent = inputAmount / rate;
-      if (cryptoEquivalent > availableBalance) {
-        Get.snackbar('Warning',
-            'Enter amount not greater than  ${(selectedCrypto.value!.liquid_balance * rate).toInt()}',
-            snackPosition: SnackPosition.TOP,
-            backgroundColor: Colors.orange,
-            colorText: Colors.white);
-      }
-    }
-  }
+  //   if (isCryptoAmount.value) {
+  //     // Input is in crypto
+  //     if (inputAmount > availableBalance) {
+  //       Get.snackbar(
+  //         'Warning',
+  //         'Enter amount not greater than  ${(selectedCrypto.value!.liquid_balance).toInt()}',
+  //         snackPosition: SnackPosition.TOP,
+  //         backgroundColor: Colors.orange,
+  //         colorText: Colors.white,
+  //       );
+  //     }
+  //   } else {
+  //     // Input is in fiat, convert to crypto for comparison
+  //     double rate = double.tryParse(selectedCrypto.value!.buyRate) ?? 0.0;
+  //     double cryptoEquivalent = inputAmount / rate;
+  //     if (cryptoEquivalent > availableBalance) {
+  //       Get.snackbar('Warning',
+  //           'Enter amount not greater than  ${(selectedCrypto.value!.liquid_balance * rate).toInt()}',
+  //           snackPosition: SnackPosition.TOP,
+  //           backgroundColor: Colors.orange,
+  //           colorText: Colors.white);
+  //     }
+  //   }
+  // }
 
   // Paste wallet address from clipboard
   Future<void> pasteWalletAddress() async {
@@ -179,7 +181,7 @@ class BuyCryptoController extends GetxController {
 
   // Validate inputs
   bool validateInputs() {
-    validateAmountToNotExceedLiquidation();
+    // validateAmountToNotExceedLiquidation();
 
     if (selectedCrypto.value == null) {
       Get.snackbar('Error', 'Please select a cryptocurrency');

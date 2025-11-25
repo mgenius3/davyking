@@ -37,10 +37,8 @@ class GiftCardRepository {
               GiftcardsListModel.fromJson(json as Map<String, dynamic>))
           .toList();
     } on DioException catch (e) {
-      print(e);
       throw AppException(DioErrorHandler.handleDioError(e));
     } catch (e) {
-      print(e);
       throw AppException(
           "An unexpected error occurred while fetching gift cards.");
     }

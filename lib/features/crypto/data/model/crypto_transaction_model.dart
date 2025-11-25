@@ -1,4 +1,5 @@
 import 'package:davyking/core/models/user_auth_response_model.dart';
+import 'package:davyking/core/utils/helper.dart';
 
 class CryptoTransactionModel {
   final int id;
@@ -41,8 +42,8 @@ class CryptoTransactionModel {
   factory CryptoTransactionModel.fromJson(Map<String, dynamic> json) {
     return CryptoTransactionModel(
       id: json['id'],
-      userId: json['user_id'],
-      cryptoCurrencyId: json['crypto_currency_id'],
+      userId: parseInt(json['user_id']),
+      cryptoCurrencyId: parseInt(json['crypto_currency_id']),
       type: json['type'],
       amount: json['amount'].toString(),
       fiatAmount: json['fiat_amount'].toString(),
@@ -50,7 +51,7 @@ class CryptoTransactionModel {
       proofFile: json['proof_file'],
       paymentMethod: json['payment_method'],
       walletAddress: json['wallet_address'],
-      confirmations: json['confirmations'],
+      confirmations: parseInt(json['confirmations']),
       txHash: json['tx_hash'],
       adminNotes: json['admin_notes'],
       createdAt: DateTime.parse(json['created_at']),
@@ -121,7 +122,7 @@ class CryptoCurrency {
         buyRate: json['buy_rate'].toString(),
         sellRate: json['sell_rate'].toString(),
         currentPrice: json['current_price'].toString(),
-        isEnabled: json['is_enabled'] == 1,
+        isEnabled: parseInt(json['is_enabled']) == 1,
         image: json['image'],
         walletAddress: json['wallet_address'],
         createdAt: DateTime.parse(json['created_at']),

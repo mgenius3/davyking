@@ -1,3 +1,5 @@
+import 'package:davyking/core/utils/helper.dart';
+
 class WalletTransactionModel {
   final int id;
   final int userId;
@@ -24,7 +26,7 @@ class WalletTransactionModel {
   factory WalletTransactionModel.fromJson(Map<String, dynamic> json) {
     return WalletTransactionModel(
       id: json['id'],
-      userId: json['user_id'],
+      userId: parseInt(json['user_id']),
       reference: json['reference'],
       amount: json['amount'],
       type: json['type'],

@@ -22,8 +22,7 @@ class TvIndexController extends GetxController {
   final RxList<dynamic> variations = <dynamic>[].obs;
   final customerIdController = TextEditingController();
   final TvRepository tvRepository = TvRepository();
-  final VtuRepository verifyCustomerRepository =
-      VtuRepository();
+  final VtuRepository verifyCustomerRepository = VtuRepository();
   final UserAuthDetailsController userAuthDetailsController =
       Get.find<UserAuthDetailsController>();
   final Uuid uuid = const Uuid();
@@ -67,7 +66,7 @@ class TvIndexController extends GetxController {
 
   void setCustomerId(String phone) {
     customerId.value = phone;
-    customerIdController.text = phone;
+    // customerIdController.text = phone;
     checkInformation();
   }
 

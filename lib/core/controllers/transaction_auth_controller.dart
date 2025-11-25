@@ -49,7 +49,7 @@ class TransactionAuthController extends GetxController {
     await showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => PinSetupDialog(
+      builder: (context) => PinSetupModal(
         onPinSet: (pin, useBiometrics) async {
           await _storage.write(key: _pinKey, value: pin);
           await _storage.write(
@@ -92,7 +92,7 @@ class TransactionAuthController extends GetxController {
     bool? authenticated = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
-      builder: (context) => PinAuthDialog(
+      builder: (context) => PinAuthModal(
         transactionDescription: transactionDescription,
         onPinEntered: (pin) async {
           final storedPin = await _storage.read(key: _pinKey);
@@ -135,7 +135,7 @@ class TransactionAuthController extends GetxController {
     bool? pinChanged = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
-      builder: (context) => PinSetupDialog(
+      builder: (context) => PinSetupModal(
         onPinSet: (pin, _) async {
           await _storage.write(key: _pinKey, value: pin);
           print('changePin: New PIN saved = $pin');

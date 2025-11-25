@@ -3,7 +3,7 @@ import 'package:davyking/core/theme/colors.dart';
 import 'package:davyking/core/utils/spacing.dart';
 import 'package:davyking/core/widgets/vtu_input_field.dart';
 import 'package:davyking/features/electricity/controllers/index_controller.dart';
-import 'package:davyking/features/airtime/data/model/input_field_model.dart';
+import 'package:davyking/core/models/input_field_model.dart';
 import 'package:davyking/core/controllers/primary_button_controller.dart';
 import 'package:davyking/core/models/primary_button_model.dart';
 import 'package:davyking/core/models/top_header_model.dart';
@@ -65,7 +65,7 @@ class _ElectricityScreenState extends State<ElectricityScreen> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Expanded(
-                        child: vtuInputField(AirtimeInputFieldModel(
+                        child: vtuInputField(VtuInputFieldModel(
                             onChanged: controller.setCustomerId,
                             inputcontroller: controller.customerIdController,
                             hintText: '12345678901',
@@ -111,7 +111,7 @@ class _ElectricityScreenState extends State<ElectricityScreen> {
                           )
                         : const SizedBox()),
                 const SizedBox(height: 20),
-                vtuInputField(AirtimeInputFieldModel(
+                vtuInputField(VtuInputFieldModel(
                   onChanged: controller.setAmount,
                   inputcontroller: controller.amountController,
                   hintText: '1000',

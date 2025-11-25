@@ -35,8 +35,11 @@ class LoginScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildHeader(),
+                const SizedBox(height: 20),
                 _buildLoginForm(controller),
+                const SizedBox(height: 20),
                 _buildSignInButton(controller),
+                const SizedBox(height: 20),
                 _buildFooter(),
               ],
             ),
@@ -67,19 +70,7 @@ class LoginScreen extends StatelessWidget {
           ),
           child: Column(
             children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: LightThemeColors.primaryColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  Icons.login_rounded,
-                  size: 24,
-                  color: LightThemeColors.primaryColor,
-                ),
-              ),
-              const SizedBox(height: 16),
+            
               Text(
                 'Welcome Back',
                 style: TextStyle(
@@ -278,32 +269,6 @@ class LoginScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.green.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(
-                  Icons.login_rounded,
-                  size: 18,
-                  color: Colors.green[700],
-                ),
-              ),
-              const SizedBox(width: 12),
-              const Text(
-                'Ready to Sign In',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF1A1A1A),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
           Obx(() => controller.isLoading.value
               ? Container(
                   width: double.infinity,

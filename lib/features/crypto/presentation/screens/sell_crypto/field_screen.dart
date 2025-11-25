@@ -1,11 +1,9 @@
 import 'package:clipboard/clipboard.dart';
+import 'package:davyking/core/constants/symbols.dart';
 import 'package:davyking/core/controllers/currency_rate_controller.dart';
-import 'package:davyking/core/controllers/primary_button_controller.dart';
-import 'package:davyking/core/models/primary_button_model.dart';
 import 'package:davyking/core/states/mode.dart';
 import 'package:davyking/core/utils/spacing.dart';
 import 'package:davyking/core/models/top_header_model.dart';
-import 'package:davyking/core/widgets/primary_button_widget.dart';
 import 'package:davyking/core/widgets/top_header_widget.dart';
 import 'package:davyking/features/crypto/controllers/sell_crypto_controller.dart';
 import 'package:davyking/features/crypto/data/model/crypto_list_model.dart';
@@ -19,7 +17,6 @@ class SellCryptoInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Access the arguments
     final CryptoListModel data = Get.arguments as CryptoListModel;
     final SellCryptoController controller =
         Get.put(SellCryptoController(cryptoData: data));
@@ -30,13 +27,19 @@ class SellCryptoInputField extends StatelessWidget {
     final TransactionAuthController transactionAuthController =
         Get.find<TransactionAuthController>();
 
+    // Calculate dynamic sizing based on screen width
+    final double screenWidth = Get.width;
+    final double padding = screenWidth * 0.05; // 5% of screen width
+    final double imageSize = screenWidth * 0.6; // 60% of screen width for image
+    final double fontScale = screenWidth < 300 ? 0.85 : 1.0; // Scale down for small screens
+
     return Scaffold(
       backgroundColor: lightningModeController.currentMode.value.mode == "light"
           ? const Color(0xFFF8FAFC)
           : const Color(0xFF0F172A),
       body: SafeArea(
         child: Container(
-          margin: Spacing.defaultMarginSpacing,
+          margin: EdgeInsets.all(padding),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,26 +50,26 @@ class SellCryptoInputField extends StatelessWidget {
                               ? 'Sell ${controller.selectedCrypto.value?.symbol}'
                               : 'Sell Crypto'),
                     )),
-                const SizedBox(height: 24),
+                SizedBox(height: padding * 1.5),
 
-                // Crypto Image with enhanced styling
+                // Crypto Image with dynamic sizing
                 Obx(
                   () => Center(
                     child: Container(
-                      width: 240,
-                      height: 160,
+                      width: imageSize,
+                      height: imageSize * 2 / 3, // Maintain aspect ratio
                       decoration: ShapeDecoration(
                         image: DecorationImage(
                             image: NetworkImage(
                                 controller.selectedCrypto.value!.image),
-                            fit: BoxFit.fill),
+                            fit: BoxFit.cover),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)),
+                            borderRadius: BorderRadius.circular(12)),
                         shadows: [
                           BoxShadow(
                               color: Colors.black.withOpacity(0.1),
-                              blurRadius: 20,
-                              offset: const Offset(0, 8),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
                               spreadRadius: 0)
                         ],
                       ),
@@ -74,11 +77,11 @@ class SellCryptoInputField extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 32),
+                SizedBox(height: padding * 2),
 
-                // Select Asset Dropdown with enhanced styling
-                _buildSectionTitle('Select Asset'),
-                const SizedBox(height: 8),
+                // Select Asset Dropdown
+                _buildSectionTitle('Select Asset', fontScale),
+                SizedBox(height: padding),
                 Obx(() => Container(
                       decoration: _getCardDecoration(lightningModeController),
                       child: DropdownButtonFormField<CryptoListModel>(
@@ -93,7 +96,7 @@ class SellCryptoInputField extends StatelessWidget {
                                       "light"
                                   ? const Color(0xFF1E293B)
                                   : Colors.white,
-                          fontSize: 16,
+                          fontSize: 14 * fontScale,
                           fontWeight: FontWeight.w500,
                         ),
                         icon: Icon(Icons.keyboard_arrow_down,
@@ -101,7 +104,8 @@ class SellCryptoInputField extends StatelessWidget {
                                         .currentMode.value.mode ==
                                     "light"
                                 ? const Color(0xFF64748B)
-                                : Colors.white70),
+                                : Colors.white70,
+                            size: 20 * fontScale),
                         value: controller.selectedCrypto.value,
                         items: controller.availableCryptos
                             .map((crypto) => DropdownMenuItem(
@@ -114,31 +118,32 @@ class SellCryptoInputField extends StatelessWidget {
                                               "light"
                                           ? const Color(0xFF1E293B)
                                           : Colors.white,
-                                      fontSize: 16,
+                                      fontSize: 14 * fontScale,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
                                 ))
                             .toList(),
                         onChanged: controller.updateSelectedCrypto,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                             border: InputBorder.none,
                             contentPadding: EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 12),
+                                horizontal: padding, vertical: padding),
                             hintText: 'Select Asset',
-                            hintStyle: TextStyle(color: Color(0xFF64748B))),
+                            hintStyle: TextStyle(
+                                color: const Color(0xFF64748B),
+                                fontSize: 14 * fontScale)),
                       ),
                     )),
 
-                const SizedBox(height: 24),
+                SizedBox(height: padding * 1.5),
 
-                // Network Display with enhanced styling
-                _buildSectionTitle('Network'),
-                const SizedBox(height: 8),
+                // Network Display
+                _buildSectionTitle('Network', fontScale),
+                SizedBox(height: padding),
                 Container(
-                  width: Get.width,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(horizontal: padding, vertical: padding),
                   decoration: _getCardDecoration(lightningModeController),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -151,24 +156,24 @@ class SellCryptoInputField extends StatelessWidget {
                                       "light"
                                   ? const Color(0xFF64748B)
                                   : Colors.white70,
-                          fontSize: 16,
+                          fontSize: 14 * fontScale,
                         ),
                       ),
                       Obx(() => Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 6),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: padding * 0.75, vertical: padding * 0.5),
                             decoration: BoxDecoration(
                               color: const Color(0xFF3B82F6).withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(8),
                               border: Border.all(
                                 color: const Color(0xFF3B82F6).withOpacity(0.2),
                               ),
                             ),
                             child: Text(
                               controller.selectedCrypto.value!.network,
-                              style: const TextStyle(
-                                  color: Color(0xFF3B82F6),
-                                  fontSize: 14,
+                              style: TextStyle(
+                                  color: const Color(0xFF3B82F6),
+                                  fontSize: 12 * fontScale,
                                   fontWeight: FontWeight.w600),
                             ),
                           )),
@@ -176,39 +181,39 @@ class SellCryptoInputField extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 24),
+                SizedBox(height: padding * 1.5),
 
-                // Enhanced Admin Wallet Address Display
-                _buildSectionTitle('Admin Wallet Address'),
-                const SizedBox(height: 8),
+                // Admin Wallet Address Display
+                _buildSectionTitle('Admin Wallet Address', fontScale),
+                SizedBox(height: padding),
                 Obx(() => Container(
                       decoration: _getCardDecoration(lightningModeController),
                       child: Padding(
-                        padding: const EdgeInsets.all(16),
+                        padding: EdgeInsets.all(padding),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
                               children: [
                                 Container(
-                                  padding: const EdgeInsets.all(8),
+                                  padding: EdgeInsets.all(padding * 0.5),
                                   decoration: BoxDecoration(
                                     color: const Color(0xFF10B981)
                                         .withOpacity(0.1),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
-                                  child: const Icon(
+                                  child: Icon(
                                     Icons.account_balance_wallet,
-                                    color: Color(0xFF10B981),
-                                    size: 20,
+                                    color: const Color(0xFF10B981),
+                                    size: 16 * fontScale,
                                   ),
                                 ),
-                                const SizedBox(width: 12),
+                                SizedBox(width: padding),
                                 Expanded(
                                   child: Text(
                                     'Send your crypto to this address:',
                                     style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: 14 * fontScale,
                                       fontWeight: FontWeight.w600,
                                       color: lightningModeController
                                                   .currentMode.value.mode ==
@@ -220,9 +225,9 @@ class SellCryptoInputField extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 16),
+                            SizedBox(height: padding),
                             Container(
-                              padding: const EdgeInsets.all(12),
+                              padding: EdgeInsets.all(padding * 0.75),
                               decoration: BoxDecoration(
                                 color: lightningModeController
                                             .currentMode.value.mode ==
@@ -251,7 +256,7 @@ class SellCryptoInputField extends StatelessWidget {
                                                 "light"
                                             ? const Color(0xFF1E293B)
                                             : Colors.white,
-                                        fontSize: 14,
+                                        fontSize: 12 * fontScale,
                                         fontWeight: FontWeight.w500,
                                         fontFamily: 'monospace',
                                       ),
@@ -267,21 +272,22 @@ class SellCryptoInputField extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(6),
                                       ),
                                       child: IconButton(
-                                        icon: const Icon(Icons.copy, size: 18),
+                                        icon: Icon(Icons.copy, size: 16 * fontScale),
                                         color: const Color(0xFF10B981),
                                         onPressed: () {
                                           FlutterClipboard.copy(controller
                                               .selectedCrypto
                                               .value!
                                               .wallet_address!);
-                                          Get.snackbar('Success',
+                                          Get.snackbar(
+                                              'Success',
                                               'Admin wallet address copied to clipboard',
                                               snackPosition: SnackPosition.TOP,
                                               backgroundColor:
                                                   const Color(0xFF10B981),
                                               colorText: Colors.white,
                                               borderRadius: 12,
-                                              margin: const EdgeInsets.all(16));
+                                              margin: EdgeInsets.all(padding));
                                         },
                                       ),
                                     ),
@@ -293,22 +299,21 @@ class SellCryptoInputField extends StatelessWidget {
                       ),
                     )),
 
-                const SizedBox(height: 24),
+                SizedBox(height: padding * 1.5),
 
-                // Enhanced Crypto/Fiat Toggle
-                _buildSectionTitle('Amount Type'),
-                const SizedBox(height: 8),
+                // Crypto/Fiat Toggle
+                _buildSectionTitle('Amount Type', fontScale),
+                SizedBox(height: padding),
                 Obx(() => Container(
                       decoration: _getCardDecoration(lightningModeController),
-                      padding: const EdgeInsets.all(6),
+                      padding: EdgeInsets.all(padding * 0.5),
                       child: Row(
                         children: [
                           Expanded(
                             child: GestureDetector(
                               onTap: () => controller.toggleAmountType(true),
                               child: Container(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 12),
+                                padding: EdgeInsets.symmetric(vertical: padding),
                                 decoration: BoxDecoration(
                                   color: controller.isCryptoAmount.value
                                       ? const Color(0xFF3B82F6)
@@ -329,7 +334,7 @@ class SellCryptoInputField extends StatelessWidget {
                                                   "light"
                                               ? const Color(0xFF64748B)
                                               : Colors.white70,
-                                      fontSize: 16,
+                                      fontSize: 14 * fontScale,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -337,13 +342,12 @@ class SellCryptoInputField extends StatelessWidget {
                               ),
                             ),
                           ),
-                          const SizedBox(width: 6),
+                          SizedBox(width: padding * 0.5),
                           Expanded(
                             child: GestureDetector(
                               onTap: () => controller.toggleAmountType(false),
                               child: Container(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 12),
+                                padding: EdgeInsets.symmetric(vertical: padding),
                                 decoration: BoxDecoration(
                                   color: !controller.isCryptoAmount.value
                                       ? const Color(0xFF3B82F6)
@@ -361,7 +365,7 @@ class SellCryptoInputField extends StatelessWidget {
                                                   "light"
                                               ? const Color(0xFF64748B)
                                               : Colors.white70,
-                                      fontSize: 16,
+                                      fontSize: 14 * fontScale,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -373,11 +377,11 @@ class SellCryptoInputField extends StatelessWidget {
                       ),
                     )),
 
-                const SizedBox(height: 24),
+                SizedBox(height: padding * 1.5),
 
-                // Enhanced Amount Input
-                _buildSectionTitle('Amount'),
-                const SizedBox(height: 8),
+                // Amount Input
+                _buildSectionTitle('Amount', fontScale),
+                SizedBox(height: padding),
                 Obx(() => Container(
                       decoration: _getCardDecoration(lightningModeController),
                       child: TextFormField(
@@ -389,58 +393,60 @@ class SellCryptoInputField extends StatelessWidget {
                                       "light"
                                   ? const Color(0xFF1E293B)
                                   : Colors.white,
-                          fontSize: 18,
+                          fontSize: 16 * fontScale,
                           fontWeight: FontWeight.w600,
                         ),
                         decoration: InputDecoration(
                           label: Text(
-                              "Amount to sell (${controller.isCryptoAmount.value ? controller.selectedCrypto.value!.name : '\$'})",
+                              "Amount to sell (${controller.isCryptoAmount.value ? controller.selectedCrypto.value!.name : '${Symbols.currency_naira}'})",
                               style: TextStyle(
                                 color: lightningModeController
                                             .currentMode.value.mode ==
                                         "light"
                                     ? const Color(0xFF64748B)
                                     : Colors.white70,
-                                fontSize: 14,
+                                fontSize: 12 * fontScale,
                               )),
                           border: InputBorder.none,
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 16),
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: padding, vertical: padding),
                           hintText: controller.isCryptoAmount.value
                               ? '0.0'
                               : '\$0.00',
-                          hintStyle: const TextStyle(color: Color(0xFF94A3B8)),
+                          hintStyle: TextStyle(
+                              color: const Color(0xFF94A3B8),
+                              fontSize: 14 * fontScale),
                         ),
                         onChanged: (value) =>
                             controller.calculateEquivalentAmount(),
                       ),
                     )),
 
-                const SizedBox(height: 24),
+                SizedBox(height: padding * 1.5),
 
-                // Enhanced Current Rate Display
+                // Current Rate Display
                 Container(
                   decoration: _getCardDecoration(lightningModeController),
                   child: Padding(
-                    padding: const EdgeInsets.all(16),
+                    padding: EdgeInsets.all(padding),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(
                           children: [
                             Container(
-                              padding: const EdgeInsets.all(8),
+                              padding: EdgeInsets.all(padding * 0.5),
                               decoration: BoxDecoration(
                                 color: const Color(0xFF10B981).withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.trending_up,
-                                color: Color(0xFF10B981),
-                                size: 20,
+                                color: const Color(0xFF10B981),
+                                size: 16 * fontScale,
                               ),
                             ),
-                            const SizedBox(width: 12),
+                            SizedBox(width: padding),
                             Text(
                               'Current Rate',
                               style: TextStyle(
@@ -449,20 +455,20 @@ class SellCryptoInputField extends StatelessWidget {
                                         "light"
                                     ? const Color(0xFF64748B)
                                     : Colors.white70,
-                                fontSize: 16,
+                                fontSize: 14 * fontScale,
                               ),
                             ),
                           ],
                         ),
                         Obx(() => Text(
-                              '\$${controller.currentRate.value.toStringAsFixed(2)}/${controller.selectedCrypto.value?.symbol}',
+                              '${Symbols.currency_naira}${controller.currentRate.value.toStringAsFixed(2)}/${controller.selectedCrypto.value?.symbol}',
                               style: TextStyle(
                                 color: lightningModeController
                                             .currentMode.value.mode ==
                                         "light"
                                     ? const Color(0xFF1E293B)
                                     : Colors.white,
-                                fontSize: 16,
+                                fontSize: 14 * fontScale,
                                 fontWeight: FontWeight.w600,
                               ),
                             )),
@@ -471,50 +477,49 @@ class SellCryptoInputField extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 16),
+                SizedBox(height: padding),
 
-                // Enhanced Crypto Amount to Send Display
+                // Crypto Amount to Send Display
                 Container(
                   decoration: _getCardDecoration(lightningModeController),
                   child: Padding(
-                    padding: const EdgeInsets.all(16),
+                    padding: EdgeInsets.all(padding),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(
                           children: [
                             Container(
-                              padding: const EdgeInsets.all(8),
+                              padding: EdgeInsets.all(padding * 0.5),
                               decoration: BoxDecoration(
                                 color: const Color(0xFFF59E0B).withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.send,
-                                color: Color(0xFFF59E0B),
-                                size: 20,
+                                color: const Color(0xFFF59E0B),
+                                size: 16 * fontScale,
                               ),
                             ),
-                            const SizedBox(width: 12),
+                            SizedBox(width: padding),
                             Text(
                               'Crypto to Send',
                               style: TextStyle(
-                                color: lightningModeController
-                                            .currentMode.value.mode ==
-                                        "light"
-                                    ? const Color(0xFF64748B)
-                                    : Colors.white70,
-                                fontSize: 16
-                              ),
+                                  color: lightningModeController
+                                              .currentMode.value.mode ==
+                                          "light"
+                                      ? const Color(0xFF64748B)
+                                      : Colors.white70,
+                                  fontSize: 14 * fontScale),
                             ),
                           ],
                         ),
                         Obx(() => Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 6),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: padding * 0.75, vertical: padding * 0.5),
                               decoration: BoxDecoration(
                                 color: const Color(0xFFF59E0B).withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(8),
                                 border: Border.all(
                                   color:
                                       const Color(0xFFF59E0B).withOpacity(0.2),
@@ -522,9 +527,9 @@ class SellCryptoInputField extends StatelessWidget {
                               ),
                               child: Text(
                                 '${controller.cryptoAmount.value} ${controller.selectedCrypto.value?.symbol}',
-                                style: const TextStyle(
-                                    color: Color(0xFFF59E0B),
-                                    fontSize: 10,
+                                style: TextStyle(
+                                    color: const Color(0xFFF59E0B),
+                                    fontSize: 12 * fontScale,
                                     fontWeight: FontWeight.w600),
                               ),
                             )),
@@ -533,31 +538,31 @@ class SellCryptoInputField extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 16),
+                SizedBox(height: padding),
 
-                // Enhanced Total Amount Display
+                // Total Amount Display
                 Container(
                   decoration: _getCardDecoration(lightningModeController),
                   child: Padding(
-                    padding: const EdgeInsets.all(16),
+                    padding: EdgeInsets.all(padding),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(
                           children: [
                             Container(
-                              padding: const EdgeInsets.all(8),
+                              padding: EdgeInsets.all(padding * 0.5),
                               decoration: BoxDecoration(
                                 color: const Color(0xFF8B5CF6).withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.account_balance,
-                                color: Color(0xFF8B5CF6),
-                                size: 20,
+                                color: const Color(0xFF8B5CF6),
+                                size: 16 * fontScale,
                               ),
                             ),
-                            const SizedBox(width: 12),
+                            SizedBox(width: padding),
                             Text(
                               'Amount (to receive)',
                               style: TextStyle(
@@ -566,62 +571,55 @@ class SellCryptoInputField extends StatelessWidget {
                                         "light"
                                     ? const Color(0xFF64748B)
                                     : Colors.white70,
-                                fontSize: 16,
+                                fontSize: 14 * fontScale,
                               ),
                             ),
                           ],
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: currencyRateController.currencyRates
-                              .map(
-                                (x) => Obx(() => Text(
-                                      '${x.currencyCode} ${(controller.fiatAmount.value * double.parse(x.rate) * num.parse(controller.isCryptoAmount.value ? controller.selectedCrypto.value!.currentPrice : "1")).toStringAsFixed(2)}',
-                                      style: TextStyle(
-                                        color: lightningModeController
-                                                    .currentMode.value.mode ==
-                                                "light"
-                                            ? const Color(0xFF1E293B)
-                                            : Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    )),
-                              )
-                              .toList(),
-                        ),
+                        Obx(() => Text(
+                              '${Symbols.currency_naira} ${(controller.fiatAmount.value).toStringAsFixed(2)}',
+                              style: TextStyle(
+                                color: lightningModeController
+                                            .currentMode.value.mode ==
+                                        "light"
+                                    ? const Color(0xFF1E293B)
+                                    : Colors.white,
+                                fontSize: 14 * fontScale,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ))
                       ],
                     ),
                   ),
                 ),
 
-                const SizedBox(height: 24),
+                SizedBox(height: padding * 1.5),
 
-                // Enhanced Proof of Transfer Upload Section
-                _buildSectionTitle('Proof of Transfer'),
-                const SizedBox(height: 8),
+                // Proof of Transfer Upload Section
+                _buildSectionTitle('Proof of Transfer', fontScale),
+                SizedBox(height: padding),
                 Container(
                   decoration: _getCardDecoration(lightningModeController),
                   child: Padding(
-                    padding: const EdgeInsets.all(16),
+                    padding: EdgeInsets.all(padding),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
                             Container(
-                              padding: const EdgeInsets.all(8),
+                              padding: EdgeInsets.all(padding * 0.5),
                               decoration: BoxDecoration(
                                 color: const Color(0xFFEF4444).withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.verified_user,
-                                color: Color(0xFFEF4444),
-                                size: 20,
+                                color: const Color(0xFFEF4444),
+                                size: 16 * fontScale,
                               ),
                             ),
-                            const SizedBox(width: 12),
+                            SizedBox(width: padding),
                             Text(
                               "Upload Proof of Coin Transfer",
                               style: TextStyle(
@@ -630,18 +628,17 @@ class SellCryptoInputField extends StatelessWidget {
                                         "light"
                                     ? const Color(0xFF1E293B)
                                     : Colors.white,
-                                fontSize: 16,
+                                fontSize: 14 * fontScale,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: padding),
                         Obx(() => controller.proofScreenshot.value == null
                             ? Container(
                                 width: double.infinity,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 32),
+                                padding: EdgeInsets.symmetric(vertical: padding * 2),
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                     color: const Color(0xFFEF4444)
@@ -654,24 +651,29 @@ class SellCryptoInputField extends StatelessWidget {
                                 ),
                                 child: Column(
                                   children: [
-                                    const Icon(
+                                    Icon(
                                       Icons.cloud_upload_outlined,
-                                      size: 48,
-                                      color: Color(0xFFEF4444),
+                                      size: 36 * fontScale,
+                                      color: const Color(0xFFEF4444),
                                     ),
-                                    const SizedBox(height: 12),
+                                    SizedBox(height: padding),
                                     ElevatedButton.icon(
                                       onPressed: () =>
                                           controller.uploadProofScreenshot(),
-                                      icon:
-                                          const Icon(Icons.add_photo_alternate),
-                                      label: const Text("Choose Image"),
+                                      icon: Icon(
+                                          Icons.add_photo_alternate,
+                                          size: 16 * fontScale),
+                                      label: Text(
+                                        "Choose Image",
+                                        style: TextStyle(fontSize: 12 * fontScale),
+                                      ),
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor:
                                             const Color(0xFFEF4444),
                                         foregroundColor: Colors.white,
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 24, vertical: 12),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: padding * 1.5,
+                                            vertical: padding),
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(8),
@@ -684,7 +686,7 @@ class SellCryptoInputField extends StatelessWidget {
                             : Column(
                                 children: [
                                   Container(
-                                    height: 200,
+                                    height: screenWidth * 0.5,
                                     width: double.infinity,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(12),
@@ -702,22 +704,27 @@ class SellCryptoInputField extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(height: 16),
+                                  SizedBox(height: padding),
                                   Row(
                                     children: [
                                       Expanded(
                                         child: OutlinedButton.icon(
                                           onPressed: () => controller
                                               .uploadProofScreenshot(),
-                                          icon: const Icon(Icons.edit),
-                                          label: const Text("Change Image"),
+                                          icon: Icon(Icons.edit,
+                                              size: 16 * fontScale),
+                                          label: Text(
+                                            "Change Image",
+                                            style: TextStyle(
+                                                fontSize: 12 * fontScale),
+                                          ),
                                           style: OutlinedButton.styleFrom(
                                             foregroundColor:
                                                 const Color(0xFFEF4444),
                                             side: const BorderSide(
                                                 color: Color(0xFFEF4444)),
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 12),
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: padding),
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(8),
@@ -725,19 +732,24 @@ class SellCryptoInputField extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(width: 12),
+                                      SizedBox(width: padding),
                                       Expanded(
                                         child: OutlinedButton.icon(
                                           onPressed: () => controller
                                               .removeProofScreenshot(),
-                                          icon: const Icon(Icons.delete),
-                                          label: const Text("Remove"),
+                                          icon: Icon(Icons.delete,
+                                              size: 16 * fontScale),
+                                          label: Text(
+                                            "Remove",
+                                            style: TextStyle(
+                                                fontSize: 12 * fontScale),
+                                          ),
                                           style: OutlinedButton.styleFrom(
                                             foregroundColor: Colors.red,
                                             side: const BorderSide(
                                                 color: Colors.red),
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 12),
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: padding),
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(8),
@@ -754,24 +766,24 @@ class SellCryptoInputField extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 40),
+                SizedBox(height: padding * 2),
 
-                // Enhanced Sell Button
+                // Sell Button
                 Obx(() => controller.isLoading.value
                     ? Container(
                         width: double.infinity,
-                        height: 56,
+                        height: 48 * fontScale,
                         decoration: BoxDecoration(
                           gradient: const LinearGradient(
                             colors: [Color(0xFFEF4444), Color(0xFFDC2626)],
                           ),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Center(
+                        child: Center(
                           child: SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(
+                            width: 24 * fontScale,
+                            height: 24 * fontScale,
+                            child: const CircularProgressIndicator(
                               color: Colors.white,
                               strokeWidth: 2,
                             ),
@@ -780,7 +792,7 @@ class SellCryptoInputField extends StatelessWidget {
                       )
                     : Container(
                         width: double.infinity,
-                        height: 56,
+                        height: 48 * fontScale,
                         decoration: BoxDecoration(
                           gradient: const LinearGradient(
                             colors: [Color(0xFFEF4444), Color(0xFFDC2626)],
@@ -802,22 +814,19 @@ class SellCryptoInputField extends StatelessWidget {
                               if (controller.validateInputs()) {
                                 bool isAuthenticated =
                                     await transactionAuthController
-                                        .authenticate(
-                                  context,
-                                  'Sell Crypto',
-                                );
+                                        .authenticate(context, 'Sell Crypto');
 
                                 if (isAuthenticated) {
                                   controller.submitSellCrypto();
                                 }
                               }
                             },
-                            child: const Center(
+                            child: Center(
                               child: Text(
                                 'Sell Crypto',
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 18,
+                                  fontSize: 16 * fontScale,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -833,13 +842,13 @@ class SellCryptoInputField extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionTitle(String title) {
+  Widget _buildSectionTitle(String title, double fontScale) {
     return Text(
       title,
-      style: const TextStyle(
-        fontSize: 16,
+      style: TextStyle(
+        fontSize: 14 * fontScale,
         fontWeight: FontWeight.w600,
-        color: Color(0xFF1E293B),
+        color: const Color(0xFF1E293B),
       ),
     );
   }

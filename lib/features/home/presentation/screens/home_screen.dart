@@ -51,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     margin: Spacing.defaultMarginSpacing,
                     child: HomeHeaderWidget(),
                   ),
-                  const SizedBox(height: 10), // Optional spacing
+                  // const SizedBox(height: 10), // Optional spacing
                   // Scrollable Content
                   Expanded(
                       child: RefreshIndicator(

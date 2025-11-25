@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class AirtimeInputFieldModel {
+class VtuInputFieldModel {
   final TextEditingController? inputcontroller;
   final Function(String)? onChanged;
   final String name;
@@ -8,7 +8,7 @@ class AirtimeInputFieldModel {
   final Widget? prefixIcon;
   final bool obscureText;
 
-  const AirtimeInputFieldModel(
+  const VtuInputFieldModel(
       {this.inputcontroller,
       this.onChanged,
       required this.name,

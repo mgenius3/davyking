@@ -50,7 +50,7 @@ class GiftCardTransactionDetailsScreen extends StatelessWidget {
   Widget _buildStatusCard(GiftCardTransactionModel transaction) {
     final statusColor = _getStatusColor(transaction.status);
     final isSuccess = transaction.status.toLowerCase() == 'completed';
-    
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(28),
@@ -232,7 +232,7 @@ class GiftCardTransactionDetailsScreen extends StatelessWidget {
     String? statusValue,
   }) {
     final statusColor = isStatus ? _getStatusColor(statusValue ?? '') : null;
-    
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
@@ -249,7 +249,8 @@ class GiftCardTransactionDetailsScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: (isStatus ? statusColor : Colors.grey[600])!.withOpacity(0.1),
+              color:
+                  (isStatus ? statusColor : Colors.grey[600])!.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
@@ -343,14 +344,14 @@ class GiftCardTransactionDetailsScreen extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Colors.blue[600]!,
-            Colors.blue[700]!,
+            Colors.green[600]!,
+            Colors.green[700]!,
           ],
         ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.blue.withOpacity(0.3),
+            color: Colors.green.withOpacity(0.3),
             blurRadius: 12,
             offset: const Offset(0, 6),
           ),
@@ -368,12 +369,12 @@ class GiftCardTransactionDetailsScreen extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  Icons.arrow_back_rounded,
-                  color: Colors.white,
-                  size: 20,
-                ),
-                SizedBox(width: 8),
+                // Icon(
+                //   Icons.arrow_back_rounded,
+                //   color: Colors.white,
+                //   size: 20,
+                // ),
+                // SizedBox(width: 8),
                 Text(
                   'Go Back',
                   style: TextStyle(

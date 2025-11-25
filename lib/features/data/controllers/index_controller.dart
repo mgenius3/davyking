@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:davyking/core/constants/routes.dart';
 import 'package:davyking/core/errors/error_mapper.dart';
 import 'package:davyking/core/errors/failure.dart';
@@ -5,6 +6,7 @@ import 'package:davyking/core/utils/snackbar.dart';
 import 'package:davyking/features/data/data/repositories/data_repository.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:uuid/uuid.dart';
 import 'package:davyking/core/controllers/user_auth_details_controller.dart';
 
@@ -22,6 +24,10 @@ class DataIndexController extends GetxController {
   final UserAuthDetailsController userAuthDetailsController =
       Get.find<UserAuthDetailsController>();
   final Uuid uuid = const Uuid();
+  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
+
+  // Key for storing variations in FlutterSecureStorage
+  static const String _variationsKey = 'data_variations';
 
   // Map network index to eBills Africa service_id
   final List<String> networkMapping = [
@@ -33,18 +39,53 @@ class DataIndexController extends GetxController {
   ];
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
-    fetchVariations();
+    await _loadVariationsFromStorage(); // Load variations from secure storage
+    fetchVariations(); // Fetch fresh data from API
     phoneController.addListener(() {
       phoneNumber.value = phoneController.text;
       checkInformation();
     });
   }
 
+  // Load variations from FlutterSecureStorage
+  Future<void> _loadVariationsFromStorage() async {
+    try {
+      final variationsJson = await _secureStorage.read(key: _variationsKey);
+      if (variationsJson != null) {
+        final List<dynamic> storedVariations = jsonDecode(variationsJson);
+        variations.value = storedVariations
+            .where((v) => v['availability'] == 'Available')
+            .toList();
+        if (variations.isNotEmpty) {
+          selectedVariationId.value = variations[0]['variation_id'].toString();
+          selectedNetwork.value =
+              networkMapping.indexOf(variations[0]['service_id']);
+        }
+      }
+    } catch (e) {
+      // Handle any errors during reading from storage
+      print('Error loading variations from storage: $e');
+    }
+  }
+
+  // Save variations to FlutterSecureStorage
+  Future<void> _saveVariationsToStorage() async {
+    try {
+      final variationsJson = jsonEncode(variations);
+      await _secureStorage.write(
+        key: _variationsKey,
+        value: variationsJson
+      );
+    } catch (e) {
+      // Handle any errors during saving to storage
+      print('Error saving variations to storage: $e');
+    }
+  }
+
   void setNetwork(int index) {
     selectedNetwork.value = index;
-    // Reset variation when network changes
     final filteredVariations = variations
         .where((v) => v['service_id'] == networkMapping[index])
         .toList();
@@ -64,7 +105,6 @@ class DataIndexController extends GetxController {
 
   void setPhoneNumber(String phone) {
     phoneNumber.value = phone;
-    phoneController.text = phone;
     checkInformation();
   }
 
@@ -77,8 +117,6 @@ class DataIndexController extends GetxController {
     } else {
       isInformationComplete.value = false;
     }
-
-    print(isInformationComplete.value);
   }
 
   bool validateInputs() {
@@ -157,16 +195,16 @@ class DataIndexController extends GetxController {
     isLoading.value = true;
     try {
       final response = await dataRepository.getDataVariations();
-
       variations.value = response['data']
           .where((v) => v['availability'] == 'Available')
           .toList();
-
       if (variations.isNotEmpty) {
         selectedVariationId.value = variations[0]['variation_id'].toString();
         selectedNetwork.value =
             networkMapping.indexOf(variations[0]['service_id']);
       }
+      // Save fetched variations to secure storage
+      await _saveVariationsToStorage();
     } catch (e) {
       Failure failure = ErrorMapper.map(e as Exception);
       showSnackbar('Error', failure.message);
@@ -191,10 +229,7 @@ class DataIndexController extends GetxController {
           variationId: selectedVariationId.value,
           requestId: requestId);
 
-      // Use the receipt_data returned from the backend
       final receiptData = response!['receipt_data'];
-
-      print(receiptData);
       Get.offNamed(RoutesConstant.data_receipt, arguments: receiptData);
     } catch (e) {
       Failure failure = ErrorMapper.map(e as Exception);

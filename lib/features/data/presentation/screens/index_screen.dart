@@ -3,7 +3,7 @@ import 'package:davyking/core/theme/colors.dart';
 import 'package:davyking/core/utils/spacing.dart';
 import 'package:davyking/core/widgets/vtu_input_field.dart';
 import 'package:davyking/features/data/controllers/index_controller.dart';
-import 'package:davyking/features/airtime/data/model/input_field_model.dart';
+import 'package:davyking/core/models/input_field_model.dart';
 import 'package:davyking/core/controllers/primary_button_controller.dart';
 import 'package:davyking/core/models/primary_button_model.dart';
 import 'package:davyking/core/models/top_header_model.dart';
@@ -63,13 +63,13 @@ class _DataScreenState extends State<DataScreen> {
                   const SizedBox(height: 10),
                   const DataVariationWidget(),
                   const SizedBox(height: 20),
-                  vtuInputField(AirtimeInputFieldModel(
-                    onChanged: controller.setPhoneNumber,
-                    inputcontroller: controller.phoneController,
-                    hintText: '08134460259',
-                    name: 'Phone Number',
-                    // keyboardType: TextInputType.phone,
-                  )),
+                  vtuInputField(VtuInputFieldModel(
+                      onChanged: controller.setPhoneNumber,
+                      inputcontroller: controller.phoneController,
+                      hintText: '08134460259',
+                      name: 'Phone Number'
+                      // keyboardType: TextInputType.phone,
+                      )),
                   const SizedBox(height: 40),
                   Obx(() => CustomPrimaryButton(
                         controller: CustomPrimaryButtonController(

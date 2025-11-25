@@ -64,6 +64,18 @@ class _PersistentBottomBarScaffoldState
                         : const Color(0xFFFFFFFF),
                 selectedItemColor: DarkThemeColors.primaryColor,
                 currentIndex: _selectedTab,
+                showUnselectedLabels: true, // Show labels for unselected items
+                showSelectedLabels: true, // Show labels for selected items
+                selectedFontSize: 9, // Font size for selected label
+                unselectedFontSize: 7, // Font size for unselected label
+                selectedLabelStyle: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.3,
+                ),
+                unselectedLabelStyle: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: 0.2,
+                ),
                 onTap: (index) {
                   /// Check if the tab that the user is pressing is currently selected
                   if (index == _selectedTab) {

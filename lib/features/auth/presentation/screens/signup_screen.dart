@@ -40,8 +40,6 @@ class SignupScreen extends StatelessWidget {
                     children: [
                       _buildPersonalInfoCard(controller),
                       const SizedBox(height: 16),
-                      _buildSecurityCard(controller),
-                      const SizedBox(height: 16),
                       _buildTermsCard(controller),
                       const SizedBox(height: 20),
                       _buildCreateAccountButton(controller),
@@ -65,7 +63,7 @@ class SignupScreen extends StatelessWidget {
         const SizedBox(height: 20),
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
@@ -79,19 +77,6 @@ class SignupScreen extends StatelessWidget {
           ),
           child: Column(
             children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: LightThemeColors.primaryColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  Icons.person_add_rounded,
-                  size: 24,
-                  color: LightThemeColors.primaryColor,
-                ),
-              ),
-              const SizedBox(height: 16),
               Text(
                 'Create Account',
                 style: TextStyle(
@@ -134,32 +119,6 @@ class SignupScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.blue.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(
-                  Icons.person_outline,
-                  size: 18,
-                  color: Colors.blue[700],
-                ),
-              ),
-              const SizedBox(width: 12),
-              const Text(
-                'Personal Information',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF1A1A1A),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 24),
           _buildInputSection(
             'Full Name',
             Icons.badge_outlined,
@@ -186,90 +145,43 @@ class SignupScreen extends StatelessWidget {
               name: "Email Address",
             )),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSecurityCard(SignupController controller) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.orange.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(
-                  Icons.security_outlined,
-                  size: 18,
-                  color: Colors.orange[700],
-                ),
-              ),
-              const SizedBox(width: 12),
-              const Text(
-                'Account Security',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF1A1A1A),
-                ),
-              ),
-            ],
-          ),
           const SizedBox(height: 24),
           _buildInputSection(
             'Password',
             Icons.lock_outline,
             Obx(() => authInputField(AuthInputFieldModel(
-              inputcontroller: controller.passwordController,
-              name: "Password",
-              obscureText: controller.obscurePassword.value,
-              suffixIcon: IconButton(
-                onPressed: () {
-                  HapticFeedback.lightImpact();
-                  controller.togglePasswordVisibility();
-                },
-                icon: Icon(controller.obscurePassword.value
-                    ? CupertinoIcons.eye
-                    : CupertinoIcons.eye_slash),
-              ),
-            ))),
+                  inputcontroller: controller.passwordController,
+                  name: "Password",
+                  obscureText: controller.obscurePassword.value,
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      HapticFeedback.lightImpact();
+                      controller.togglePasswordVisibility();
+                    },
+                    icon: Icon(controller.obscurePassword.value
+                        ? CupertinoIcons.eye
+                        : CupertinoIcons.eye_slash),
+                  ),
+                ))),
           ),
           const SizedBox(height: 20),
           _buildInputSection(
             'Confirm Password',
             Icons.lock_outline,
             Obx(() => authInputField(AuthInputFieldModel(
-              inputcontroller: controller.passwordConfirmationController,
-              name: "Confirm Password",
-              obscureText: controller.obscurePassword.value,
-              suffixIcon: IconButton(
-                onPressed: () {
-                  HapticFeedback.lightImpact();
-                  controller.togglePasswordVisibility();
-                },
-                icon: Icon(controller.obscurePassword.value
-                    ? CupertinoIcons.eye
-                    : CupertinoIcons.eye_slash),
-              ),
-            ))),
+                  inputcontroller: controller.passwordConfirmationController,
+                  name: "Confirm Password",
+                  obscureText: controller.obscurePassword.value,
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      HapticFeedback.lightImpact();
+                      controller.togglePasswordVisibility();
+                    },
+                    icon: Icon(controller.obscurePassword.value
+                        ? CupertinoIcons.eye
+                        : CupertinoIcons.eye_slash),
+                  ),
+                ))),
           ),
           const SizedBox(height: 16),
           Container(
@@ -366,19 +278,19 @@ class SignupScreen extends StatelessWidget {
             child: Row(
               children: [
                 Obx(() => Transform.scale(
-                  scale: 1.2,
-                  child: Checkbox(
-                    value: controller.checkedbox.value,
-                    onChanged: (value) {
-                      HapticFeedback.lightImpact();
-                      controller.checkBoxChanged(value);
-                    },
-                    activeColor: const Color(0xFF00CE7C),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                )),
+                      scale: 1.2,
+                      child: Checkbox(
+                        value: controller.checkedbox.value,
+                        onChanged: (value) {
+                          HapticFeedback.lightImpact();
+                          controller.checkBoxChanged(value);
+                        },
+                        activeColor: const Color(0xFF00CE7C),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                    )),
                 const SizedBox(width: 12),
                 const Expanded(
                   child: Text.rich(
@@ -477,32 +389,6 @@ class SignupScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.green.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(
-                  Icons.rocket_launch_outlined,
-                  size: 18,
-                  color: Colors.green[700],
-                ),
-              ),
-              const SizedBox(width: 12),
-              const Text(
-                'Ready to Get Started',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF1A1A1A),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
           Obx(() => controller.isLoading.value
               ? Container(
                   width: double.infinity,

@@ -45,13 +45,13 @@ class AirtimeIndexController extends GetxController {
 
   void setAmount(String amount) {
     selectedAmount.value = amount;
-    amountController.text = amount;
+    // amountController.text = amount;
     checkInformation();
   }
 
   void setPhoneNumber(String phone) {
     phoneNumber.value = phone;
-    phoneController.text = phone;
+    // phoneController.text = phone;
     checkInformation();
   }
 
