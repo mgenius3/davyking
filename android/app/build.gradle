@@ -7,8 +7,9 @@ plugins {
 
 android {
     namespace = "com.exchange.davyking"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+           compileSdk = 35
+       ndkVersion = "29.0.142606865"
+
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -57,4 +58,10 @@ android {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    implementation 'com.google.crypto.tink:tink-android:1.11.0'
+    implementation 'com.google.errorprone:error_prone_annotations:2.23.0'
+    implementation 'javax.annotation:javax.annotation-api:1.3.2'
 }

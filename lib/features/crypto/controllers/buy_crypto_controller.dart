@@ -305,3 +305,16 @@ class BuyCryptoController extends GetxController {
     }
   }
 }
+
+
+// BNB
+// BNB
+// Buy Rate: NGN 1520.00000000
+// Sell Rate: NGN 1420.00000000
+// Wallet: 0x0087e0cb468f17f30ef557265b710161076f2b3c
+  
+// SOL
+// SOL
+// Buy Rate: NGN 1520.00000000
+// Sell Rate: NGN 1420.00000000
+// Wallet: AmyaQhmAxnjTugVBCyECsyRQxAxAiNtn3pJ6Wc238c49

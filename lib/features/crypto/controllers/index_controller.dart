@@ -44,6 +44,7 @@ class CryptoController extends GetxController {
       isLoading.value = true;
       errorMessage.value = '';
       final cryptos = await _repository.getAllCrypto();
+     
       getAllCrypto(cryptos); // Update the reactive list
     } catch (e) {
       Failure errormessage = ErrorMapper.map(e as Exception);
@@ -79,7 +80,6 @@ class CryptoController extends GetxController {
   }
 
   CryptoTransactionModel singleTransaction(String id) {
-   
     return all_cryptoTransaction
         .firstWhere((transaction) => transaction.id.toString() == id);
   }

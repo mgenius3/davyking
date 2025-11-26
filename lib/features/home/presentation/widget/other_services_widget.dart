@@ -39,8 +39,8 @@ class OtherServicesWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildHeader(),
-            const SizedBox(height: 24),
+            // _buildHeader(),
+            // const SizedBox(height: 24),
             _buildServicesGrid()
           ],
         ),
@@ -105,9 +105,9 @@ class OtherServicesWidget extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: Get.width < 400 ? 2 : 3,
-          childAspectRatio: 1.1,
-          crossAxisSpacing: 12,
+          crossAxisCount: Get.width < 300 ? 2 : 3,
+          childAspectRatio: .9,
+          crossAxisSpacing: 30,
           mainAxisSpacing: 12),
       itemCount: services.length,
       itemBuilder: (context, index) {

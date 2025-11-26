@@ -23,12 +23,14 @@ class CryptoRepository {
       }
       final List<dynamic> cryptoJson =
           response.data['data'] as List<dynamic>? ?? [];
+          print(cryptoJson);
       return cryptoJson
           .map((json) => CryptoListModel.fromJson(json as Map<String, dynamic>))
           .toList();
     } on DioException catch (e) {
       throw AppException(DioErrorHandler.handleDioError(e));
     } catch (e) {
+      print(e);
       throw AppException("An unexpected error occurred while fetching crypto.");
     }
   }
@@ -69,11 +71,15 @@ class CryptoRepository {
     try {
       // Prepare files
 
-      String? file_url = await uploadImageToCloudinary(filepath);
+      // String? file_url = await uploadImageToCloudinary(filepath);
 
-      data['proof_file'] = file_url;
+      // data['proof_file'] = file_url;
 
-      print(data);
+       Map<String, dynamic>? imageJsonResponse =
+          await uploadImageToCloudinary(filepath);
+
+      data['proof_file'] = imageJsonResponse!['image'];
+      data['cloudinary_public_id'] = imageJsonResponse['public_id'];
 
       final response =
           await apiClient.post(ApiUrl.crypto_transaction, data: data);
