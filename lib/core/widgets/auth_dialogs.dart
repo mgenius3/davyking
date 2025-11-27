@@ -483,10 +483,10 @@ class PinSetupModalState extends State<PinSetupModal> {
                                 ),
                                 child: Center(
                                   child: _pin.length > index
-                                      ? const Icon(
+                                      ?  Icon(
                                           Icons.circle,
                                           size: 16,
-                                          color: Color(0xFFFFD700),
+                                          color: LightThemeColors.primaryColor,
                                         )
                                       : null,
                                 ),

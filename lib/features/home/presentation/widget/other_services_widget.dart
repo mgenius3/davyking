@@ -107,7 +107,7 @@ class OtherServicesWidget extends StatelessWidget {
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: Get.width < 300 ? 2 : 3,
           childAspectRatio: .9,
-          crossAxisSpacing: 30,
+          crossAxisSpacing: 25,
           mainAxisSpacing: 12),
       itemCount: services.length,
       itemBuilder: (context, index) {
@@ -245,8 +245,8 @@ class OtherServicesWidget extends StatelessWidget {
                           Text(
                             service.name,
                             textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontSize: 10,
+                            style:  TextStyle(
+                              fontSize:  10,
                               fontWeight: FontWeight.w700,
                               color: Color(0xFF1A1A1A),
                               letterSpacing: -0.2,

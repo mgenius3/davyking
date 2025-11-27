@@ -45,7 +45,10 @@ class AirtimeIndexController extends GetxController {
 
   void setAmount(String amount) {
     selectedAmount.value = amount;
-    // amountController.text = amount;
+    amountController.value = amountController.value.copyWith(
+      text: amount,
+      selection: TextSelection.collapsed(offset: amount.length),
+    );
     checkInformation();
   }
 
